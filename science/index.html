@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="6th grade Scientific Method study lab: lessons, study guide practice, a boss quiz, and games.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Science Lab">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15241C" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Scientific Method Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: a lab notebook. Ruled-paper header with a red margin line, one column sized for a 375x667 phone, thumb-height tab bar, highlighter yellow for every answer reveal. */
+:root{
+  --bg:#EDF2EE; --surf:#FFFFFF; --ink:#12261D; --mut:#566F63; --line:#D1DDD5; --on:#FFFFFF; --rule:rgba(47,110,190,.16); --margin:rgba(214,64,86,.45);
+  --w:#6B3FD6; --wt:#ECE6FD; --x:#0A8273; --xt:#D3F0EA; --d:#C42F78; --dt:#FBE2EE;
+  --hl:#FFD84D; --hlk:#12261D;
+  --ok:#14804A; --okt:#D8F1E3; --no:#C43333; --not:#F9DEDE;
+  --fd:'Fredoka',ui-rounded,system-ui,sans-serif; --fb:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1712; --surf:#15241C; --ink:#E4EFE8; --mut:#93AA9D; --line:#27392F; --on:#0D1712; --rule:rgba(140,180,255,.10); --margin:rgba(255,120,140,.35);
+  --w:#AE92FF; --wt:#2A2150; --x:#3FD3BE; --xt:#103D37; --d:#FF7DB8; --dt:#4A1C33;
+  --hl:#F2C830; --hlk:#12261D; --ok:#4BD38B; --okt:#123D29; --no:#FF8585; --not:#451C1C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1712; --surf:#15241C; --ink:#E4EFE8; --mut:#93AA9D; --line:#27392F; --on:#0D1712; --rule:rgba(140,180,255,.10); --margin:rgba(255,120,140,.35);
+  --w:#AE92FF; --wt:#2A2150; --x:#3FD3BE; --xt:#103D37; --d:#FF7DB8; --dt:#4A1C33;
+  --hl:#F2C830; --hlk:#12261D; --ok:#4BD38B; --okt:#123D29; --no:#FF8585; --not:#451C1C; color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding-inline:16px;padding-block:0 84px;background:var(--bg);color:var(--ink);font:16px/1.4 var(--fb);touch-action:manipulation;overflow-x:hidden;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+h1,h2,h3{font-family:var(--fd);font-weight:600;margin:0;text-wrap:balance}
+.wrap{max-width:560px;margin-inline:auto}
+.u-w{--ac:var(--w);--at:var(--wt)}.u-x{--ac:var(--x);--at:var(--xt)}.u-d{--ac:var(--d);--at:var(--dt)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;margin-inline:-16px;padding:7px 16px 7px 36px;display:flex;align-items:center;justify-content:space-between;gap:10px;background-color:var(--surf);background-image:linear-gradient(90deg,transparent 24px,var(--margin) 24px,var(--margin) 26px,transparent 26px),repeating-linear-gradient(180deg,transparent 0 15px,var(--rule) 15px 16px);border-bottom:1px solid var(--line)}
+.kick{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.kick b{color:var(--d)}
+.top h1{font-size:22px;line-height:1.1}
+.lv{font-size:11px;font-weight:700;color:var(--mut);text-align:right;line-height:1.25}
+.ring{position:relative;width:42px;height:42px;flex:none}
+.ring svg{width:42px;height:42px;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 11px var(--fb)}
+main{padding-block:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;min-width:0}
+.pad{padding:12px}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sp{justify-content:space-between}
+.mut{color:var(--mut)}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.hint{font-size:13px;color:var(--mut)}
+.c{text-align:center}
+.big-out{font:600 21px/1.2 var(--fd);color:var(--ac,var(--ink));text-align:center;min-height:26px}
+.hl{background:var(--hl);color:var(--hlk);border-radius:6px;padding:0 6px;font-weight:700}
+.fx{display:block;width:100%;height:auto}
+svg text{font-family:var(--fb)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+
+.chip{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:6px 12px;border-radius:20px;border:2px solid transparent;background:var(--at,var(--bg));color:var(--ink);font-weight:700;line-height:1.2}
+.chip.sel,button.chip.on{border-color:var(--ac,var(--ink))}
+.btn{min-height:48px;padding:0 16px;border:0;border-radius:14px;background:var(--ac,var(--ink));color:var(--on);font-weight:700;font-size:16px}
+.btn.ghost{background:var(--at,var(--surf));color:var(--ink);border:1px solid var(--line)}
+.btn.hlb{background:var(--hl);color:var(--hlk)}
+.btn:disabled{opacity:.4}
+.back{min-height:38px;align-self:flex-start;padding:0 14px}
+.seg{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.seg button{flex:1 1 0;min-height:38px;padding:0 6px;border:0;border-radius:10px;background:transparent;font-weight:700;color:var(--mut);font-size:14px}
+.seg button.on{background:var(--surf);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);background:var(--surf);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px))}
+nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:50px;border:0;background:none;border-radius:12px;font-size:11px;font-weight:700;color:var(--mut)}
+nav button svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--ink);background:var(--bg)}
+nav button.on svg{stroke:var(--x)}
+
+/* Learn */
+.unit h2{font-size:15px;color:var(--ac);display:flex;align-items:center;gap:8px;padding-top:4px}
+.unit h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.tp{overflow:hidden;scroll-margin-top:64px}
+.tp>button{width:100%;display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 12px;border:0;background:none;text-align:left;font-weight:700;font-size:16px}
+.ico{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--at);font-size:19px}
+.tp .dot{margin-left:auto;width:12px;height:12px;border-radius:50%;border:2px solid var(--line);flex:none}
+.tp .dot.m{background:var(--ok);border-color:var(--ok)}
+.tp .dot.h{border-color:var(--ac);background:linear-gradient(90deg,var(--ac) 50%,transparent 50%)}
+.tp .body{padding:0 12px 14px;display:flex;flex-direction:column;gap:10px}
+.stage{border-radius:14px;background:var(--at);overflow:hidden}
+.rule{padding:8px 12px;border-radius:12px;background:var(--hl);color:var(--hlk);font-weight:700;text-align:center;font-size:15px}
+input[type=range]{width:100%;height:34px;accent-color:var(--ac,var(--x))}
+.tile{min-height:52px;padding:6px 8px;border-radius:14px;border:2px solid var(--line);background:var(--surf);font-weight:700;line-height:1.2;text-align:center;display:grid;place-items:center;font-size:15px}
+.tile.sel{border-color:var(--ac,var(--ink));background:var(--at,var(--bg))}
+.tile.good{border-color:var(--ok);background:var(--okt)}.tile.bad{border-color:var(--no);background:var(--not)}
+.tile.dim{opacity:.35}
+.def{padding:12px;border-radius:14px;background:var(--at);display:flex;flex-direction:column;gap:4px;min-height:92px}
+.def b{font:600 20px var(--fd);color:var(--ac)}
+.num-t{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.num-t span{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--surf);border:2px solid var(--line);font:600 20px var(--fd);transition:transform .25s}
+.num-t span.mid{background:var(--hl);border-color:var(--hlk);color:var(--hlk)}
+.num-t span.mo{border-color:var(--ac);background:var(--at)}
+
+/* Cards */
+.fc{perspective:1000px;height:260px;position:relative;touch-action:pan-y}
+.fc .in{position:absolute;inset:0;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;text-align:center;border-radius:20px;border:2px solid var(--ac);background:var(--surf);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.back{transform:rotateY(180deg);background:var(--at)}
+.face .q{font:600 30px/1.1 var(--fd)}
+.face .a{font:700 19px/1.3 var(--fb)}
+.face .tapn{position:absolute;bottom:10px;font-size:12px;color:var(--mut)}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ac,var(--x));border-radius:99px;transition:width .3s}
+
+/* Practice engine */
+.dots{display:flex;gap:3px}
+.dots i{flex:1;height:7px;border-radius:99px;background:var(--line)}
+.dots i.g{background:var(--ok)}.dots i.b{background:var(--no)}.dots i.c{background:var(--ink)}.dots i.m{background:var(--x)}
+.ctx{padding:10px 12px;border-radius:14px;background:var(--at);display:flex;flex-direction:column;gap:6px;font-size:15px}
+.pq{font:600 19px/1.22 var(--fd)}
+.opt{display:block;width:100%;min-height:48px;padding:8px 14px;text-align:left;border:2px solid var(--line);background:var(--surf);border-radius:14px;font-weight:700;font-size:16px;line-height:1.25}
+.opt.sel{border-color:var(--ink);background:var(--bg)}
+.opt.good{border-color:var(--ok);background:var(--okt)}
+.opt.bad{border-color:var(--no);background:var(--not)}
+.opts{display:grid;gap:8px}
+.opts.g2{grid-template-columns:1fr 1fr}.opts.g2 .opt{text-align:center;padding:8px 6px;font-size:15px}
+.opts.big .opt{min-height:72px;font-size:18px;text-align:center}
+.ord{display:flex;flex-direction:column;gap:5px}
+.ord .slot{display:flex;align-items:center;gap:10px;min-height:38px;padding:4px 10px;border-radius:12px;border:2px dashed var(--line);font-weight:700}
+.ord .slot i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--at,var(--bg));font-size:13px;flex:none}
+.ord .slot.full{border-style:solid;border-color:var(--ac,var(--ink));background:var(--surf)}
+.ord .slot.good{border-color:var(--ok);background:var(--okt)}.ord .slot.bad{border-color:var(--no);background:var(--not)}
+.pick{display:flex;flex-wrap:wrap;gap:6px}
+.pick button{min-height:42px;padding:4px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surf);font-weight:700;font-size:15px}
+.pick button.sel{border-color:var(--ink);background:var(--hl);color:var(--hlk)}
+.pick button.good{border-color:var(--ok);background:var(--okt)}.pick button.bad{border-color:var(--no);background:var(--not)}
+.pick button:disabled{opacity:.35}
+.blank{min-width:64px;min-height:42px;padding:4px 12px;border-radius:12px;border:2px dashed var(--mut);background:var(--surf);font:600 19px var(--fd);color:var(--ink);vertical-align:middle}
+.blank.on{border:2px solid var(--x);box-shadow:0 0 0 3px var(--xt)}
+.blank.good{border:2px solid var(--ok);background:var(--okt)}.blank.bad{border:2px solid var(--no);background:var(--not)}
+.blank:empty::before{content:"?";color:var(--mut)}
+.fld{display:flex;align-items:center;gap:8px;font-weight:700}
+.fld>span:first-child{min-width:62px}
+.flds3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.flds3 .fld{flex-direction:column;align-items:stretch;gap:3px}.flds3 .fld>span:first-child{min-width:0;font-size:13px;text-align:center;color:var(--mut)}.flds3 .blank{width:100%;min-width:0}
+.pick.g2{display:grid;grid-template-columns:1fr 1fr}.pick.g2 button{font-size:14px;line-height:1.2}
+.pad4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pad4 button{min-height:44px;border-radius:12px;background:var(--surf);border:2px solid var(--line);font:600 20px var(--fd)}
+.pad4 button:active{background:var(--hl);color:var(--hlk)}
+.pad4 .wide{grid-column:span 2;font-size:15px}
+.fb{padding:10px 12px;border-radius:14px;font-weight:700}
+.fb.good{background:var(--okt);border:2px solid var(--ok)}
+.fb.bad{background:var(--not);border:2px solid var(--no)}
+table.tb{border-collapse:collapse;font-weight:700;margin:2px auto}
+.tb th,.tb td{border:1px solid var(--mut);padding:4px 9px;text-align:center;min-width:40px}
+.tb th{background:var(--bg);font-family:var(--fd);font-weight:600}
+.hpbar{height:14px;border-radius:99px;background:var(--line);overflow:hidden;border:2px solid var(--ink)}
+.hpbar i{display:block;height:100%;background:var(--no);transition:width .5s}
+.score{font:700 58px/1 var(--fd);text-align:center}
+.mrow{display:grid;grid-template-columns:34px 1fr 40px;gap:10px;align-items:center;padding:8px 12px}
+.mrow .nm{font-weight:700;font-size:15px;line-height:1.2}
+.pct{font-size:13px;font-weight:700;text-align:right;color:var(--mut)}
+.chk{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:6px 12px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;font-weight:700;font-size:15px}
+.chk:last-child{border-bottom:0}
+.chk i{flex:none;width:24px;height:24px;border-radius:7px;border:2px solid var(--mut);display:grid;place-items:center;font-style:normal;font-size:15px}
+.chk.on i{background:var(--ok);border-color:var(--ok);color:var(--on)}
+.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pop{animation:pp .35s}@keyframes pp{50%{transform:scale(1.06)}}
+.toast{position:fixed;left:50%;bottom:calc(70px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;padding:9px 16px;border-radius:99px;background:var(--ink);color:var(--bg);font-weight:700;font-size:14px;max-width:90vw}
+:focus-visible{outline:3px solid var(--x);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+/* hosted, full-screen app extras */
+html{background:var(--bg)}
+button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.a2hs{position:fixed;left:12px;right:12px;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:15;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.35;box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:536px;margin-inline:auto}
+.a2hs svg{width:16px;height:16px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.a2hs button{flex:none;width:32px;height:32px;border:0;border-radius:50%;background:rgba(127,127,127,.3);color:inherit;font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div><div class="kick" id="kick">6th Grade Science</div><h1>Science Lab</h1></div>
+    <div class="row" style="flex-wrap:nowrap;gap:8px"><div class="lv" id="lv"></div><div class="ring" id="ring"></div></div>
+  </header>
+  <main id="view"></main>
+</div>
+<nav id="nav" aria-label="Sections"></nav>
+<div class="toast" id="toast" hidden></div>
+<script>
+(()=>{'use strict';
+/* ---------- CORE ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+function h(tag, a, ...kids){
+  const e = document.createElement(tag);
+  if (a) for (const k in a){
+    const v = a[k];
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k.slice(0,2) === 'on') e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat(9)) if (c != null && c !== false) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+}
+const shuffle = arr => { const a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const N = x => String(Math.round(x*1000)/1000);
+
+/* state */
+const KEY = 'sci-method-lab-v1';
+let S = { m:{}, tab:'learn', xp:0, best:0, bossRuns:0, hs:{}, chk:{} };
+try { const r = localStorage.getItem(KEY); if (r) S = Object.assign(S, JSON.parse(r)); } catch(e){}
+S.hs = S.hs || {}; S.chk = S.chk || {}; S.m = S.m || {};
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+const mast = id => S.m[id] || 0;
+
+const UNITS = { w:'Words & Observing', x:'Experiments', d:'Data & Conclusions' };
+const SKILLS = [
+  [1,'w','Science Words','🔤'],[2,'w','Observe or Infer?','👀'],
+  [3,'x','Testable Questions','❓'],[4,'x','Fair Tests','⚖️'],[5,'x','Science Steps','🪜'],[6,'x','IV & DV','🎯'],
+  [7,'d','Graphs & Patterns','📈'],[8,'d','Mean, Median, Mode','🧮'],[9,'d','Models & Conclusions','🌋']
+].map(([id,u,n,e]) => ({id,u,n,e}));
+const SK = Object.fromEntries(SKILLS.map(t => [t.id, t]));
+
+/* test day: Wednesday, Oct 28, 2026 (from the class slides) */
+function testLine(){
+  const t = new Date(2026, 9, 28), now = new Date(), d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round((t - d0) / 864e5);
+  if (days < 0) return '6th Grade Science';
+  if (days === 0) return '<b>Test today!</b> You got this';
+  if (days === 1) return '<b>Test tomorrow</b> · Wed Oct 28';
+  return `<b>Test in ${days} days</b> · Wed Oct 28`;
+}
+
+const lvl = () => Math.floor(S.xp / 100) + 1;
+const overall = () => Math.round(SKILLS.reduce((s,t) => s + mast(t.id), 0) / SKILLS.length);
+function drawRing(){
+  const p = overall(), C = 2*Math.PI*17;
+  $('#ring').innerHTML = `<svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="17" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="var(--x)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p/100)}"/></svg><b>${p}%</b>`;
+  $('#ring').setAttribute('role','img'); $('#ring').setAttribute('aria-label','Overall mastery ' + p + ' percent');
+  $('#lv').innerHTML = `Level ${lvl()}<br>${S.xp} XP`;
+  $('#kick').innerHTML = testLine();
+}
+function bump(id, d){ S.m[id] = Math.max(0, Math.min(100, mast(id) + d)); save(); drawRing(); }
+function xp(n){ const was = lvl(); S.xp += n; save(); drawRing(); if (lvl() > was) toast('Level up! Level ' + lvl()); }
+let tt;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 1600); }
+
+const ICONS = {
+  learn:'<path d="M9 3h6M10 3v6L5 18a2 2 0 0 0 1.7 3h10.6A2 2 0 0 0 19 18l-5-9V3"/><path d="M7.5 14h9"/>',
+  guide:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  boss:'<path d="M6 3v18M6 4h11l-2 4 2 4H6"/>',
+  games:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/>',
+  me:'<path d="M5 19V11M12 19V5M19 19v-5"/>'
+};
+const TABS = [['learn','Learn'],['guide','Study Guide'],['boss','Boss Quiz'],['games','Games'],['me','Progress']];
+const VIEWS = {};
+let cleanup = null;
+function go(tab){
+  if (cleanup){ cleanup(); cleanup = null; }
+  S.tab = tab; save();
+  document.querySelectorAll('#nav button').forEach(b => { const on = b.dataset.t === tab; b.classList.toggle('on', on); on ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'); });
+  const v = $('#view'); v.replaceChildren(); VIEWS[tab](v);
+  window.scrollTo(0,0);
+}
+function buildNav(){
+  const n = $('#nav');
+  TABS.forEach(([k,l]) => n.append(h('button',{'data-t':k,onclick:()=>go(k)}, h('span',{html:`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`}), l)));
+}
+function seg(items, cur, fn){
+  const el = h('div',{class:'seg'});
+  items.forEach(([k,l]) => el.append(h('button',{class:k===cur?'on':'',onclick:ev => { el.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === ev.currentTarget)); fn(k); }}, l)));
+  return el;
+}
+const backBtn = (label, fn) => h('button',{class:'btn ghost back',onclick:fn}, '← ' + label);
+const tbl = rows => `<table class="tb">${rows.map(r => `<tr><th>${r[0]}</th>${r.slice(1).map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+
+/* small line graph for patterns: xs labels, ys values */
+function lineGraph(o){
+  const W = 280, H = 170, L = o.bare ? 14 : 40, R = 12, T = o.title ? 26 : 12, B = o.bare ? 14 : 34, n = o.ys.length, ymax = o.ymax;
+  const px = i => L + (i + .5) * (W - L - R) / n, py = y => H - B - y / ymax * (H - B - T);
+  let s = `<rect width="${W}" height="${H}" rx="10" fill="var(--surf)"/>`;
+  if (o.scale !== false) for (let y = 0; y <= ymax; y += o.ystep) s += `<line x1="${L}" x2="${W-R}" y1="${py(y)}" y2="${py(y)}" stroke="var(--line)"/>` + (o.bare ? '' : `<text x="${L-6}" y="${py(y)+4}" font-size="10" text-anchor="end" fill="var(--mut)">${y}</text>`);
+  s += `<path d="M${L} ${T}V${H-B}H${W-R}" fill="none" stroke="var(--ink)" stroke-width="1.8"/>`;
+  if (o.scale !== false && !o.bare) o.xs.forEach((x,i) => { s += `<text x="${px(i)}" y="${H-B+14}" font-size="10" text-anchor="middle" fill="var(--mut)">${x}</text>`; });
+  s += `<polyline points="${o.ys.map((y,i) => px(i)+','+py(y)).join(' ')}" fill="none" stroke="var(--ac,var(--d))" stroke-width="3" stroke-linejoin="round"/>`;
+  o.ys.forEach((y,i) => { s += `<circle cx="${px(i)}" cy="${py(y)}" r="4.5" fill="var(--ink)"/>`; });
+  if (o.title) s += `<text x="${(L+W-R)/2}" y="17" font-size="13" font-weight="700" text-anchor="middle" fill="var(--ink)">${o.title}</text>`;
+  if (o.xlab) s += `<text x="${(L+W-R)/2}" y="${H-4}" font-size="11" font-weight="700" text-anchor="middle" fill="var(--ink)">${o.xlab}</text>`;
+  if (o.ylab) s += `<text transform="translate(11 ${(T+H-B)/2}) rotate(-90)" font-size="11" font-weight="700" text-anchor="middle" fill="var(--ink)">${o.ylab}</text>`;
+  return `<svg class="fx" viewBox="0 0 ${W} ${H}" role="img" aria-label="Line graph">${s}</svg>`;
+}
+
+/* ---------- CONTENT (from the study guide, its answer key, and the class slides) ---------- */
+/* [word, meaning, example, emoji] */
+const WORDS = [
+  ['Hypothesis','A testable prediction about what may happen in an investigation.','If plants get more light, then they will grow taller.','🔮'],
+  ['Quantitative','Information that uses numbers or measurements.','The leaf is 8 cm long.','📏'],
+  ['Qualitative','Information that describes color, shape, sound, or texture. Words, not numbers.','The leaf is dark green.','🎨'],
+  ['Inference','A reasonable explanation based on what you observe.','The plant may need water.','💡'],
+  ['Observation','Information you notice with your senses or tools.','The thermometer reads 18°C.','👀'],
+  ['Model','A representation of something real.','A globe, or a small model volcano.','🌍'],
+  ['Properties','Characteristics that help identify or compare materials.','Color, hardness, mass.','🧱'],
+  ['Science','Knowledge gained from observations and experiments.','Testing which soil grows the tallest beans.','🔬'],
+  ['Controlled experiment','A test where only one variable is changed. Everything else stays the same.','Only the water amount changes.','🧪'],
+  ['Conclusion','Explains the results and whether the evidence supports the hypothesis.','The results support the hypothesis: 12 cm vs 8 cm.','📝'],
+  ['Variable','A factor that can affect the result of an experiment.','Sunlight, water, temperature.','🎚️']
+];
+/* the nine words in the study guide's word bank */
+const BANK = ['inference','qualitative','quantitative','properties','model','science','controlled experiment','hypothesis','conclusion'];
+
+/* [statement, 'O' or 'I', why] */
+const OI = [
+  ['The liquid in the beaker is blue.','O','You can see the color.'],
+  ['The dog is hiding because it is scared.','I','"Because" explains why.'],
+  ['The thermometer reads 18°C.','O','18°C is a measurement.'],
+  ['The sidewalk is wet, so it must have rained.','I','"Must have" is an explanation.'],
+  ['It is raining outside.','O','You can see the rain.'],
+  ['That dog looks mean.','I','"Looks mean" is an opinion.'],
+  ['The plant is 12 cm tall.','O','12 cm is a measurement.'],
+  ['The plant is drooping because it needs water.','I','"Because it needs water" explains.'],
+  ['The sunset might look red because of the air.','I','"Might... because" suggests a cause.'],
+  ['The temperature outside is 5°C.','O','5°C is a measurement.'],
+  ['The dog is dangerous.','I','"Dangerous" is an interpretation.'],
+  ['The boy is wearing a jacket.','O','You can see the jacket.'],
+  ['The plant may need more water.','I','"May need" is an explanation.'],
+  ['The rock feels rough.','O','You can feel the texture.'],
+  ['The bell rang 3 times.','O','You can hear and count it.'],
+  ['The milk smells sour, so it is probably old.','I','"Probably old" is an explanation.'],
+  ['The cookie has 12 chocolate chips.','O','You can count them.'],
+  ['The cat is purring because it is happy.','I','"Because it is happy" explains.'],
+  ['The ice cube melted in 10 minutes.','O','You timed it.'],
+  ['The baby is crying because she is hungry.','I','"Because she is hungry" explains.'],
+  ['The water in the cup is 250 mL.','O','250 mL is a measurement.'],
+  ['The coach must be angry.','I','"Must be" is a guess about why.'],
+  ['The apple is red and shiny.','O','You can see it.'],
+  ['The window broke, so a ball probably hit it.','I','"Probably" means you are explaining.']
+];
+
+/* [testable question, not testable question, what you would measure] */
+const TESTQ = [
+  ['How does fertilizer amount affect flower height?','What is the prettiest flower?','flower height (cm)'],
+  ['Which type of soil helps bean plants grow the tallest?','Why are flowers beautiful?','plant height (cm)'],
+  ['Does water temperature affect how fast sugar dissolves?','Is sugar better than salt?','time to dissolve (seconds)'],
+  ['How does ramp height affect how far a toy car rolls?','Which toy car is the coolest?','distance rolled (cm)'],
+  ['Does the amount of sunlight change how tall a seedling grows?','What is the best color for a flower pot?','seedling height (cm)'],
+  ['Does adding salt change how fast ice melts?','Is winter the best season?','melting time (minutes)'],
+  ['Which paper towel brand soaks up the most water?','Which paper towel has the nicest design?','water soaked up (mL)'],
+  ['Does a ball bounce higher on grass or on concrete?','Which sport is the most fun?','bounce height (cm)']
+];
+
+/* fair tests: question, what changes (IV), what you measure, keep the same (correct), unfair choices */
+const FAIR = [
+  {q:'Two groups grow beans with different amounts of water.', iv:'amount of water', dv:'how tall the beans grow', same:['same soil','same seed type','same container size','same amount of light','same temperature'], bad:['different seed types','one group in a dark closet','a bigger pot for one group']},
+  {q:'Does sunlight affect plant growth?', iv:'amount of sunlight', dv:'how tall the plants grow', same:['same soil','same pot','same amount of water','same plant type'], bad:['more water for one plant','different plant types','a bigger pot for one plant']},
+  {q:'Does ramp height change how far a toy car rolls?', iv:'ramp height', dv:'distance the car rolls', same:['same toy car','same floor surface','same starting spot on the ramp'], bad:['a heavier car on the high ramp','carpet for one ramp','pushing the car on one ramp']},
+  {q:'Does water temperature change how fast sugar dissolves?', iv:'water temperature', dv:'time for the sugar to dissolve', same:['same amount of water','same amount of sugar','same cup','same amount of stirring'], bad:['more sugar in the hot cup','stirring only one cup','a bigger cup of cold water']}
+];
+
+const STEPS = [
+  ['Ask a question','What do I want to find out?'],
+  ['Make a hypothesis','What do I predict?'],
+  ['Write a procedure','How will I test it?'],
+  ['Perform experiment / collect data','Do the test. Record results.'],
+  ['Analyze data','Look for patterns.'],
+  ['Draw a conclusion','Explain what the results show.']
+];
+
+/* if-then hypotheses: [if part, then part, IV, DV, a decoy that is neither] */
+const IFS = [
+  ['a ramp is raised higher','a toy car will travel farther','ramp height','distance the car travels','color of the car'],
+  ['the temperature of water increases','sugar will dissolve faster','water temperature','how fast the sugar dissolves','size of the cup'],
+  ['plants get sunlight','plants will grow','sunlight','plant growth','type of pot'],
+  ['hands are washed with soap and water','germs will be killed','washing with soap and water','germs killed','time of day'],
+  ['students use too much screen time','a headache will occur','screen time','headaches','type of phone'],
+  ['more fertilizer is added','flowers will grow taller','amount of fertilizer','flower height','color of the flowers'],
+  ['a ball is dropped from higher up','it will bounce higher','drop height','bounce height','color of the ball'],
+  ['more salt is added to ice','the ice will melt faster','amount of salt','how fast the ice melts','shape of the bowl'],
+  ['students sleep more hours','their test scores will go up','hours of sleep','test scores','name of the test'],
+  ['a paper airplane has bigger wings','it will fly farther','wing size','distance it flies','color of the paper']
+];
+
+/* science and engineering practices: [what students do, practice] */
+const PRACTICES = ['Asking questions','Developing and using models','Using mathematics','Communicating information'];
+const SEP = [
+  ['A class builds a small working representation of a volcano.',1],
+  ['A student builds a small solar system to show how planets move around the Sun.',1],
+  ['Students use a globe to show where the equator is.',1],
+  ['Students find the average height of their bean plants.',2],
+  ['A team calculates the mean of five measurements.',2],
+  ['A scientist writes a report to share her results with others.',3],
+  ['Students make a poster to explain their results to the class.',3],
+  ['Students wonder why ice melts faster on the sidewalk than on grass.',0],
+  ['A student asks, "Does the amount of light change how fast seeds sprout?"',0]
+];
+
+/* what a good graph needs (study guide #21) */
+const GRAPH_GOOD = ['Title','Labeled x-axis','Labeled y-axis','Even scale'];
+const GRAPH_BAD = ['Rainbow colors','A drawing of the plant','Your name in big letters','A pie chart'];
+
+/* ---------- QUESTIONS ---------- */
+const MC = (o) => Object.assign({type:'mc'}, o);
+const shufMC = (o, correct, wrongs) => { const all = shuffle([correct, ...wrongs]); return MC(Object.assign(o, {choices:all, answer:all.indexOf(correct)})); };
+const OIC = ['👀 Observation','💡 Inference'];
+const numsHTML = arr => `<div class="num-t">${arr.map(n => `<span>${n}</span>`).join('')}</div>`;
+
+function gWord(){
+  const w = pick(WORDS), others = shuffle(WORDS.filter(x => x !== w)).slice(0,3);
+  if (Math.random() < .55) return shufMC({skill:1, title:'Science words', prompt:`Which word means: <span class="hl">${w[1]}</span>`, layout:'g2', why:`${w[3]} <b>${w[0]}</b>: ${w[1]} Example: ${w[2]}`}, w[0], others.map(x => x[0]));
+  return shufMC({skill:1, title:'Science words', prompt:`What does <span class="hl">${w[0]}</span> mean?`, why:`${w[3]} <b>${w[0]}</b>. Example: ${w[2]}`}, w[1], others.map(x => x[1]));
+}
+function gOI(){
+  const s = pick(OI);
+  return MC({skill:2, title:'Observe or infer?', prompt:`“${s[0]}”`, choices:OIC, answer:s[1] === 'O' ? 0 : 1, layout:'big', why:`${s[1] === 'O' ? 'Observation' : 'Inference'}. ${s[2]}`});
+}
+function gTest(){
+  const p = pick(TESTQ);
+  return shufMC({skill:3, title:'Testable question', prompt:'Which question is <span class="hl">testable</span>?', why:`You can test it and measure ${p[2]}. “${p[1]}” is an opinion.`}, p[0], [p[1]]);
+}
+function gFair(){
+  const f = pick(FAIR);
+  if (Math.random() < .5){
+    const ch = shuffle([...shuffle(f.same).slice(0,3), ...shuffle(f.bad).slice(0,2)]);
+    return {type:'multi', skill:4, title:'Fair test', ctx:`${f.q} They change only the <b>${f.iv}</b>.`, prompt:'Pick <span class="hl">TWO</span> things to keep the same.', choices:ch, correct:ch.map((c,i) => f.same.includes(c) ? i : -1).filter(i => i >= 0), pick:2, why:`Keep everything the same except the ${f.iv}. Then you know the ${f.iv} caused the result.`};
+  }
+  const b = pick(f.bad);
+  return shufMC({skill:4, title:'Fair test', ctx:`${f.q} They change only the <b>${f.iv}</b>.`, prompt:'Which choice would make the test <span class="hl">UNFAIR</span>?', why:`“${b}” changes a second thing. A fair test changes only one thing.`}, b, shuffle(f.same).slice(0,3));
+}
+function gSteps(){
+  const r = Math.random();
+  if (r < .4) return {type:'order', skill:5, title:'Science steps', prompt:'Put the steps in order. Tap them 1 to 6.', items:STEPS.map(s => s[0]), why:'Question → Hypothesis → Procedure → Experiment → Analyze → Conclusion.'};
+  if (r < .7){ const i = rnd(0,4); return shufMC({skill:5, title:'Science steps', prompt:`What comes right after <span class="hl">${STEPS[i][0]}</span>?`, why:`Order: ${STEPS.map(s => s[0]).join(' → ')}.`}, STEPS[i+1][0], shuffle(STEPS.filter((s,k) => k !== i + 1 && k !== i).map(s => s[0])).slice(0,3)); }
+  const i = rnd(0,5);
+  return shufMC({skill:5, title:'Science steps', prompt:`Which step is this? <span class="hl">${STEPS[i][1]}</span>`, why:`${STEPS[i][0]}: ${STEPS[i][1]}`}, STEPS[i][0], shuffle(STEPS.filter((s,k) => k !== i).map(s => s[0])).slice(0,3));
+}
+function ivRows(f){
+  const opts = shuffle([f[2], f[3], f[4]]);
+  return [{h:'IV (cause)', opts, a:opts.indexOf(f[2])}, {h:'DV (effect)', opts, a:opts.indexOf(f[3])}];
+}
+function gIV(f){
+  f = f || pick(IFS);
+  return {type:'rows', skill:6, title:'IV and DV', ctx:`<b>If</b> ${f[0]}, <b>then</b> ${f[1]}.`, prompt:'Find the IV and the DV.', rows:ivRows(f), why:`IV = what is changed: <b>${f[2]}</b>. DV = what is measured: <b>${f[3]}</b>.`};
+}
+function gGraph(){
+  if (Math.random() < .35){
+    const ch = shuffle([...GRAPH_GOOD, ...shuffle(GRAPH_BAD).slice(0,2)]);
+    return {type:'multi', skill:7, title:'Good graphs', prompt:'Pick <span class="hl">THREE</span> things a good science graph needs.', choices:ch, correct:ch.map((c,i) => GRAPH_GOOD.includes(c) ? i : -1).filter(i => i >= 0), pick:3, why:'A good graph has a title, labels on both axes, and an even scale.'};
+  }
+  const kind = pick(['up','up','down','same']), T = pick([['Seedling height','Week','Height (cm)'],['Ice cube size','Minute','Size (cm)'],['Puppy weight','Month','Weight (kg)']]);
+  let ys = []; let y = kind === 'down' ? rnd(14,18) : kind === 'same' ? rnd(5,9) : rnd(2,4);
+  for (let i = 0; i < 4; i++){ ys.push(y); y += kind === 'up' ? rnd(2,4) : kind === 'down' ? -rnd(2,4) : 0; }
+  const right = {up:'It increases each time.', down:'It decreases each time.', same:'It stays the same.'}[kind];
+  const ymax = Math.ceil((Math.max(...ys) + 2) / 5) * 5;
+  return shufMC({skill:7, title:'Read the pattern', ctx:`${T[0]} over 4 ${T[1].toLowerCase()}s:`, fig:tbl([[T[1],1,2,3,4],[T[2],...ys]]) + `<div style="max-width:260px;margin:6px auto 0">${lineGraph({xs:[1,2,3,4], ys, ymax, ystep:5, xlab:T[1], ylab:T[2]})}</div>`, prompt:'What pattern do the data show?', why:`${ys.join(' → ')}. ${right}`}, right, Object.values({up:'It increases each time.', down:'It decreases each time.', same:'It stays the same.'}).filter(x => x !== right).concat(['It goes up, then down.']));
+}
+function mmmSet(){
+  for (let t = 0; t < 500; t++){
+    const noMode = Math.random() < .3; let a = [];
+    if (noMode){ const s = new Set(); while (s.size < 5) s.add(rnd(1,14)); a = [...s]; }
+    else { const m = rnd(1,12); a = [m, m]; while (a.length < 5){ const v = rnd(1,14); if (v !== m && !a.includes(v)) a.push(v); } }
+    const sum = a.reduce((x,y) => x + y, 0); if (sum % 5) continue;
+    const srt = a.slice().sort((x,y) => x - y), cnt = {}; a.forEach(v => cnt[v] = (cnt[v] || 0) + 1);
+    const top = Math.max(...Object.values(cnt)), modes = Object.keys(cnt).filter(k => cnt[k] === top).map(Number);
+    return {a, srt, mean:sum / 5, sum, median:srt[2], mode: top === 1 ? null : modes[0]};
+  }
+}
+const mmmWhy = m => [`Mean: ${m.a.join(' + ')} = ${m.sum}. ${m.sum} ÷ 5 = ${m.mean}.`, `Median: in order ${m.srt.join(', ')}. The middle is ${m.median}.`, m.mode == null ? 'Mode: no number repeats, so there is no mode.' : `Mode: ${m.mode} shows up most often.`];
+function gMMM(set){
+  const m = set || mmmSet(), shown = Math.random() < .5 ? m.a : m.srt;
+  return {type:'num', skill:8, title:'Mean, median, mode', ctx:'Numbers:', fig:numsHTML(shown), prompt:'Find the mean, median, and mode.', blanks:[{label:'Mean', answer:m.mean},{label:'Median', answer:m.median},{label:'Mode', answer:m.mode, none:true}], why:mmmWhy(m).join('<br>')};
+}
+function gModel(){
+  if (Math.random() < .3) return MC({skill:9, title:'Honest results', prompt:'An experiment’s results do <span class="hl">NOT</span> support the hypothesis. What should the scientist do?', choices:['Change the results','Ignore the investigation','Report the evidence honestly and explain it','Repeat until it agrees'], answer:2, why:'Scientists report what really happened, even when the hypothesis was wrong.'});
+  const s = pick(SEP);
+  return MC({skill:9, title:'Science practices', ctx:s[0], prompt:'Which practice is being used?', choices:PRACTICES, answer:s[1], why:`${PRACTICES[s[1]]}.` + (s[1] === 1 ? ' A model represents something real.' : '')});
+}
+function conclusionScenario(){
+  const T = pick([
+    () => { const a = rnd(9,15), b = a - rnd(2,5); return {pred:'Students predicted that plants with 6 hours of light would grow taller than plants with 3 hours.', A:`6-hour plants averaged ${a} cm`, B:`3-hour plants averaged ${b} cm`, sup:true, ev:`Plants with 6 hours of light averaged ${a} cm, compared with ${b} cm for plants with 3 hours, a ${a - b} cm difference.`}; },
+    () => { const hot = rnd(20,40), cold = hot + rnd(20,50), flip = Math.random() < .4; return flip
+      ? {pred:'Students predicted that sugar would dissolve faster in cold water than in hot water.', A:`Hot water: ${hot} seconds`, B:`Cold water: ${cold} seconds`, sup:false, ev:`Sugar dissolved in ${hot} seconds in hot water but took ${cold} seconds in cold water, ${cold - hot} seconds slower.`}
+      : {pred:'Students predicted that sugar would dissolve faster in hot water than in cold water.', A:`Hot water: ${hot} seconds`, B:`Cold water: ${cold} seconds`, sup:true, ev:`Sugar dissolved in ${hot} seconds in hot water and ${cold} seconds in cold water, ${cold - hot} seconds faster.`}; },
+    () => { const lo = rnd(60,90), hi = lo + rnd(20,60); return {pred:'Students predicted that a higher ramp would make a toy car roll farther.', A:`High ramp: ${hi} cm`, B:`Low ramp: ${lo} cm`, sup:true, ev:`The car rolled ${hi} cm from the high ramp and ${lo} cm from the low ramp, ${hi - lo} cm farther.`}; },
+    () => { const more = rnd(10,14), less = more + rnd(2,4); return {pred:'Students predicted that more fertilizer would make flowers grow taller.', A:`More fertilizer: ${more} cm`, B:`Less fertilizer: ${less} cm`, sup:false, ev:`Flowers with more fertilizer averaged ${more} cm, but flowers with less fertilizer averaged ${less} cm, ${less - more} cm taller.`}; }
+  ]);
+  return T();
+}
+function gConc(sc){
+  const c = sc || conclusionScenario(), say = s => `The results ${s ? 'support' : 'do not support'} the hypothesis.`;
+  return shufMC({skill:9, title:'Strong conclusion', ctx:`${c.pred}<br><b>${c.A}</b> · <b>${c.B}</b>`, prompt:'Which is the <span class="hl">strongest</span> conclusion?', why:'A strong conclusion says if the evidence supports the hypothesis and uses the numbers.'},
+    `${say(c.sup)} ${c.ev}`, [`${say(!c.sup)} ${c.ev}`, 'My hypothesis was right.', 'I liked doing this experiment.']);
+}
+const GENS = [null, gWord, gOI, gTest, gFair, gSteps, gIV, gGraph, gMMM, gModel];
+const buildBoss = () => [gWord(), gWord(), gWord(), gOI(), gOI(), gTest(), gFair(), Object.assign(gSteps(), {}), gIV(), gIV(), gGraph(), gGraph(), gMMM(), gModel(), gConc()];
+
+/* ---------- THE STUDY GUIDE, question by question ---------- */
+const wb = (no, def, ans) => MC({no, part:'A', skill:1, title:'Vocabulary', prompt:def, choices:BANK, answer:BANK.indexOf(ans), layout:'g2', why:`<b>${ans[0].toUpperCase() + ans.slice(1)}</b>.`});
+const oi = (no, s, a, why) => MC({no, part:'B', skill:2, title:'Observation or inference?', prompt:`“${s}”`, choices:OIC, answer:a === 'O' ? 0 : 1, layout:'big', why:`${a === 'O' ? 'Observation' : 'Inference'}. ${why}`});
+const GUIDE = [
+  wb(1,'A testable prediction explaining what may happen in an investigation.','hypothesis'),
+  wb(2,'Information using numbers or measurements.','quantitative'),
+  wb(3,'Information describing a color, shape, sound, or texture.','qualitative'),
+  wb(4,'A reasonable explanation based on what you observe.','inference'),
+  wb(5,'A representation of something real, such as a globe.','model'),
+  wb(6,'Characteristics that help identify or compare materials.','properties'),
+  wb(7,'Knowledge gained from observations and experiments.','science'),
+  wb(8,'An investigation in which only one variable is changed while other conditions stay the same.','controlled experiment'),
+  wb(9,'The part of a lab report that explains results and whether the evidence supports the hypothesis.','conclusion'),
+  oi(10,'The liquid in the beaker is blue.','O','You can see the color.'),
+  oi(11,'The dog is hiding because it is scared.','I','"Because it is scared" explains why.'),
+  oi(12,'The thermometer reads 18°C.','O','18°C is a measurement.'),
+  oi(13,'The sidewalk is wet, so it must have rained.','I','"Must have rained" explains the wet sidewalk.'),
+  MC({no:14, part:'C', skill:3, title:'Testable question', prompt:'Which question is testable, and why?', choices:['“How does fertilizer amount affect flower height?” You can change the fertilizer and measure the height.','“What is the prettiest flower?” Everyone can look at flowers.','“What is the prettiest flower?” You can measure how pretty it is.','“How does fertilizer amount affect flower height?” It is an opinion.'], answer:0, why:'Fertilizer amount and flower height can be measured, so it is testable. “Prettiest” is an opinion.'}),
+  (() => { const ch = ['same soil','different amounts of water','same seed type','one group in a dark closet','same container size','same amount of light','different seed types','same temperature']; return {type:'multi', no:15, part:'C', skill:4, title:'Fair test', ctx:'Two groups grow beans using different amounts of water.', prompt:'Pick <span class="hl">TWO</span> conditions to keep the same.', choices:ch, correct:[0,2,4,5,7], pick:2, why:'Any two: same soil, seed type, container size, light, or temperature. Only the water changes.'}; })(),
+  {type:'order', no:16, part:'D', skill:5, title:'Scientific process', prompt:'Number the steps from 1 to 6. Tap them in order.', items:STEPS.map(s => s[0]), why:'Ask a question → Make a hypothesis → Write a procedure → Perform experiment/collect data → Analyze data → Draw a conclusion.'},
+  Object.assign(gIV(IFS[0]), {no:17, part:'E', ctx:'<b>If</b> a ramp is raised higher, <b>then</b> a toy car will travel farther.'}),
+  Object.assign(gIV(IFS[1]), {no:18, part:'E', ctx:'<b>If</b> the temperature of water increases, <b>then</b> sugar will dissolve faster.'}),
+  {type:'rows', no:19, part:'E', skill:6, title:'Build a hypothesis', ctx:'How does the amount of sunlight affect the growth of a seedling?', prompt:'Build an IF–THEN hypothesis.', rows:[{h:'IF…', opts:['the seedling is green','sunlight hours increase','I like plants'], a:1},{h:'THEN…', opts:['the sun will get hotter','the pot will change color','seedlings will grow taller'], a:2}], why:'If sunlight hours increase, then seedlings will grow taller. The IF part is the cause (IV). The THEN part is the effect (DV).'},
+  MC({no:20, part:'F', skill:7, title:'Patterns', ctx:'A student recorded how tall a seedling was over four weeks.', fig:tbl([['Week',1,2,3,4],['Height (cm)',3,5,8,11]]), prompt:'What pattern do the data show?', choices:['The seedling gets taller each week.','The seedling gets shorter each week.','The height stays the same.','The seedling grew 11 cm every week.'], answer:0, why:'3 → 5 → 8 → 11 cm. The seedling increases in height each week.'}),
+  (() => { const ch = ['Title','Rainbow colors','Labeled x-axis','A drawing of the plant','Labeled y-axis','Even scale']; return {type:'multi', no:21, part:'F', skill:7, title:'Good graphs', prompt:'Pick <span class="hl">THREE</span> things a well-made graph should include.', choices:ch, correct:[0,2,4,5], pick:3, why:'Title, labeled x-axis, labeled y-axis. An even scale also counts.'}; })(),
+  Object.assign(gMMM({a:[2,4,4,6,9], srt:[2,4,4,6,9], sum:25, mean:5, median:4, mode:4}), {no:22, part:'F', fig:numsHTML([2,4,4,6,9])}),
+  Object.assign(gMMM({a:[3,5,7,9,11], srt:[3,5,7,9,11], sum:35, mean:7, median:7, mode:null}), {no:23, part:'F', fig:numsHTML([3,5,7,9,11])}),
+  MC({no:24, part:'G', skill:9, title:'Science practices', ctx:'A class builds a small working representation of a volcano.', prompt:'Which practice is being used?', choices:['A. Asking questions','B. Developing and using models','C. Using mathematics','D. Communicating information'], answer:1, why:'B. A small volcano represents a real one, so it is a model.'}),
+  MC({no:25, part:'G', skill:9, title:'Honest results', prompt:'An experiment produces results that do NOT support the hypothesis. What should the scientist do?', choices:['A. Change the results','B. Ignore the investigation','C. Report the evidence honestly and explain it','D. Repeat until it agrees'], answer:2, why:'C. Report the evidence honestly and explain it.'}),
+  MC({no:26, part:'G', skill:9, title:'Strong conclusion', ctx:'Students predicted that 6 hours of light would produce taller plants than 3 hours. <b>6-hour plants averaged 12 cm</b> · <b>3-hour plants averaged 8 cm</b>', prompt:'Which is the strongest conclusion?', choices:['The results support the hypothesis that more light increases plant growth. Plants with 6 hours of light averaged 12 cm, compared with 8 cm for plants with 3 hours, a 4 cm difference.','My hypothesis was right because the plants grew.','The results do not support the hypothesis. The 6-hour plants averaged 12 cm and the 3-hour plants averaged 8 cm.','I liked growing the plants. It was fun.'], answer:0, why:'It says the results support the hypothesis and uses the numbers: 12 cm vs 8 cm, a 4 cm difference.'})
+];
+const PARTS = [['A','Vocabulary',1,9],['B','Observe or infer',10,13],['C','Testable & fair',14,15],['D','Science steps',16,16],['E','Hypotheses & variables',17,19],['F','Graphs & math',20,23],['G','Practices & conclusions',24,26]];
+
+/* ---------- PRACTICE ENGINE ---------- */
+const partMax = p => p.type === 'rows' ? p.rows.length : p.type === 'num' ? p.blanks.length : p.type === 'multi' ? p.pick : 1;
+function parseNum(s){
+  s = String(s == null ? '' : s).trim(); if (!s) return NaN;
+  const m = s.match(/^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/); if (m) return +m[2] ? m[1] / m[2] : NaN;
+  return /^\d*\.?\d+$|^\d+\.$/.test(s) ? Number(s) : NaN;
+}
+const isRight = (typed, b) => b.answer == null ? typed === 'none' : (typed !== 'none' && Math.abs(parseNum(typed) - b.answer) < 1e-6);
+function grade(p, r){
+  const max = partMax(p);
+  if (p.type === 'mc') return {got: r === p.answer ? 1 : 0, max};
+  if (p.type === 'rows') return {got: p.rows.filter((row,i) => r && r[i] === row.a).length, max};
+  if (p.type === 'num') return {got: p.blanks.filter((b,i) => r && isRight(r[i], b)).length, max};
+  if (p.type === 'order') return {got: r && r.length === p.items.length && r.every((v,i) => v === i) ? 1 : 0, max};
+  return {got: Math.min(p.pick, (r || []).filter(i => p.correct.includes(i)).length), max};
+}
+const showVal = v => v === 'none' ? 'no mode' : v;
+function answerText(p){
+  if (p.type === 'mc') return p.choices[p.answer];
+  if (p.type === 'rows') return p.rows.map(r => `${r.h} ${r.opts[r.a]}`).join(' · ');
+  if (p.type === 'num') return p.blanks.map(b => `${b.label} ${b.answer == null ? 'no mode' : N(b.answer)}`).join(' · ');
+  if (p.type === 'order') return p.items.join(' → ');
+  return (p.correct.length > p.pick ? `Any ${p.pick}: ` : '') + p.correct.map(i => p.choices[i]).join(', ');
+}
+function userText(p, r){
+  if (r == null || (Array.isArray(r) && !r.length)) return '(no answer)';
+  if (p.type === 'mc') return p.choices[r];
+  if (p.type === 'rows') return p.rows.map((row,i) => `${row.h} ${r[i] != null ? row.opts[r[i]] : '–'}`).join(' · ');
+  if (p.type === 'num') return p.blanks.map((b,i) => `${b.label} ${showVal(r[i]) || '–'}`).join(' · ');
+  if (p.type === 'order') return r.map(i => p.items[i]).join(' → ');
+  return r.map(i => p.choices[i]).join(', ');
+}
+/* the order puzzle shows items shuffled; keep one shuffle per question */
+const orderView = p => p._sh || (p._sh = shuffle(p.items.map((_,i) => i)));
+
+function runSet(box, items, o){
+  const boss = o.mode === 'boss';
+  const resp = items.map(() => null), res = items.map(() => null), total = items.reduce((s,p) => s + partMax(p), 0);
+  let idx = 0, kd = null;
+  const stopKd = () => { if (kd){ document.removeEventListener('keydown', kd); kd = null; } };
+  cleanup = stopKd;
+
+  function render(){
+    stopKd();
+    if (idx >= items.length) return finish();
+    const p = items[idx], done = !boss && res[idx] !== null, last = idx === items.length - 1;
+    const wrap = h('div',{class:'col u-' + SK[p.skill].u});
+    wrap.append(h('div',{class:'dots'}, items.map((it,k) => h('i',{class: boss ? (k < idx ? 'm' : k === idx ? 'c' : '') : (res[k] ? (res[k].got === res[k].max ? 'g' : 'b') : k === idx ? 'c' : '')}))));
+    wrap.append(h('div',{class:'row sp'}, h('span',{class:'lbl'}, p.no ? `#${p.no}${p.part ? ' · Part ' + p.part : ''}` : `${idx + 1} of ${items.length}`), h('span',{class:'chip',style:'min-height:26px;font-size:12px;padding:2px 10px'}, SK[p.skill].e + ' ' + p.title)));
+    if (p.ctx || p.fig) wrap.append(h('div',{class:'ctx'}, p.ctx ? h('div',{html:p.ctx}) : null, p.fig ? h('div',{html:p.fig,style:'overflow-x:auto'}) : null));
+    wrap.append(h('div',{class:'pq',html:p.prompt}));
+    let primary; const canCheck = () => primary && (primary.disabled = !ready());
+    const ready = () => { const r = resp[idx]; if (p.type === 'mc') return r != null; if (p.type === 'rows') return r && p.rows.every((_,i) => r[i] != null); if (p.type === 'num') return r && r.every(v => v !== ''); if (p.type === 'order') return r && r.length === p.items.length; return r && r.length === p.pick; };
+
+    if (p.type === 'mc'){
+      const list = h('div',{class:'opts' + (p.layout ? ' ' + p.layout : '')});
+      p.choices.forEach((c,k) => {
+        const b = h('button',{class:'opt' + (resp[idx] === k ? ' sel' : ''),html:c,onclick:() => { if (done) return; resp[idx] = k; if (boss){ list.querySelectorAll('.opt').forEach((x,j) => x.classList.toggle('sel', j === k)); canCheck(); } else check(); }});
+        if (done){ b.classList.remove('sel'); if (k === p.answer) b.classList.add('good'); else if (k === resp[idx]) b.classList.add('bad'); }
+        list.append(b);
+      });
+      wrap.append(list);
+    }
+    if (p.type === 'rows'){
+      const R = resp[idx] || (resp[idx] = []);
+      p.rows.forEach((row,k) => {
+        const pk = h('div',{class:'pick'}, row.opts.map((t,j) => { const b = h('button',{class:R[k] === j ? 'sel' : '',onclick:() => { if (done) return; R[k] = j; pk.querySelectorAll('button').forEach((x,y) => x.classList.toggle('sel', y === j)); canCheck(); }}, t);
+          if (done){ b.classList.remove('sel'); if (j === R[k]) b.classList.add(j === row.a ? 'good' : 'bad'); else if (j === row.a) b.classList.add('good'); } return b; }));
+        wrap.append(h('div',{class:'col',style:'gap:6px'}, h('b',{}, row.h), pk));
+      });
+    }
+    if (p.type === 'multi'){
+      const R = resp[idx] || (resp[idx] = []), cnt = h('div',{class:'hint'});
+      const pk = h('div',{class:'pick g2'});
+      const paint = () => { pk.querySelectorAll('button').forEach((b,j) => { b.classList.toggle('sel', !done && R.includes(j)); b.disabled = !done && !R.includes(j) && R.length >= p.pick; }); cnt.textContent = `${R.length} of ${p.pick} picked`; };
+      p.choices.forEach((c,j) => { const b = h('button',{onclick:() => { if (done) return; const at = R.indexOf(j); if (at >= 0) R.splice(at,1); else if (R.length < p.pick) R.push(j); paint(); canCheck(); }}, c);
+        if (done && R.includes(j)) b.classList.add(p.correct.includes(j) ? 'good' : 'bad'); pk.append(b); });
+      wrap.append(pk); if (!done){ wrap.append(cnt); paint(); }
+    }
+    if (p.type === 'order'){
+      const R = resp[idx] || (resp[idx] = []), ord = h('div',{class:'ord'}), pk = h('div',{class:'pick'});
+      const paint = () => {
+        ord.replaceChildren(...p.items.map((_,k) => { const v = R[k]; const s = h('button',{class:'slot' + (v != null ? ' full' : '') + (done && v != null ? (v === k ? ' good' : ' bad') : ''),style:'background:none;text-align:left;width:100%',onclick:() => { if (done || v == null) return; R.splice(k,1); paint(); canCheck(); }}, h('i',{}, k + 1), v != null ? p.items[v] : h('span',{class:'mut',style:'font-weight:400'},'tap a step below')); return s; }));
+        pk.replaceChildren(...orderView(p).filter(i => !R.includes(i)).map(i => h('button',{onclick:() => { if (done) return; R.push(i); paint(); canCheck(); }}, p.items[i])));
+      };
+      paint(); wrap.append(ord); if (!done) wrap.append(pk);
+    }
+    if (p.type === 'num'){
+      const R = resp[idx] || (resp[idx] = p.blanks.map(() => ''));
+      let act = Math.max(0, R.findIndex(v => !v));
+      const bl = p.blanks.map((b,k) => h('button',{class:'blank',onclick:() => { if (!done){ act = k; paint(); } }}));
+      const paint = () => bl.forEach((b,k) => { b.textContent = showVal(R[k]); b.classList.toggle('on', !done && k === act); if (done) b.classList.add(isRight(R[k], p.blanks[k]) ? 'good' : 'bad'); });
+      wrap.append(h('div',{class:p.blanks.length === 3 ? 'flds3' : 'col',style:'gap:6px'}, p.blanks.map((b,k) => h('div',{class:'fld'}, h('span',{}, b.label), bl[k]))));
+      paint();
+      if (!done){
+        const key = c => { let s = R[act]; if (c === '⌫') s = s === 'none' ? '' : s.slice(0,-1); else if (c === 'none') s = 'none'; else { if (s === 'none') s = ''; if (s.length < 6) s += c; } R[act] = s; if (c !== '⌫' && c !== '.' && R[act] && act < R.length - 1 && c === 'none'){ act++; } paint(); canCheck(); };
+        const pad = h('div',{class:'pad4'});
+        ['1','2','3','⌫','4','5','6','.','7','8','9','0'].forEach(c => pad.append(h('button',{onclick:() => key(c),'aria-label':c === '⌫' ? 'Backspace' : c}, c)));
+        if (p.blanks.some(b => b.none)) pad.append(h('button',{class:'wide',onclick:() => key('none')},'No mode'), h('button',{class:'wide',onclick:() => { act = (act + 1) % R.length; paint(); }},'Next box →'));
+        else pad.append(h('button',{class:'wide',style:'grid-column:span 4',onclick:() => { act = (act + 1) % R.length; paint(); }},'Next box →'));
+        wrap.append(pad);
+        kd = e => { if (e.metaKey || e.ctrlKey || e.altKey) return; if (/^[0-9.]$/.test(e.key)) key(e.key); else if (e.key === 'Backspace') key('⌫'); else if (e.key === 'Tab'){ e.preventDefault(); act = (act + 1) % R.length; paint(); } else if (e.key === 'Enter'){ e.preventDefault(); if (!primary.disabled) primary.click(); } };
+        document.addEventListener('keydown', kd);
+      }
+    }
+
+    if (done){
+      const r = res[idx], ok = r.got === r.max;
+      const fb = h('div',{class:'fb ' + (ok ? 'good' : 'bad')}, ok ? pick(['Nice!','Got it!','Correct!','Yes!']) + ` +${r.got * 10} XP` : [(r.max > 1 ? `${r.got} of ${r.max} right. ` : 'Not quite. '), 'Answer: ', h('span',{html:answerText(p)})]);
+      wrap.append(fb, h('div',{class:'hint',style:'font-size:14px;color:var(--ink)',html:'💡 ' + p.why}));
+      setTimeout(() => fb.scrollIntoView({block:'nearest',behavior:'smooth'}), 30);
+    }
+    primary = h('button',{class:'btn' + (done || boss ? '' : ' hlb'),onclick:() => { if (done || boss){ idx++; render(); window.scrollTo(0,0); } else check(); }}, done || boss ? (last ? 'Finish' : 'Next') : 'Check');
+    if (!done) canCheck();
+    if (!(p.type === 'mc' && !boss && !done)) wrap.append(primary);
+    box.replaceChildren(wrap);
+  }
+
+  function check(){
+    const p = items[idx]; res[idx] = grade(p, resp[idx]);
+    const ok = res[idx].got === res[idx].max; xp(res[idx].got * 10); bump(p.skill, ok ? 6 : -2); render();
+  }
+
+  function finish(){
+    stopKd();
+    items.forEach((p,k) => { if (!res[k]) res[k] = grade(p, resp[k]); });
+    const got = res.reduce((s,r) => s + r.got, 0), pct = Math.round(100 * got / total);
+    if (boss){ items.forEach((p,k) => bump(p.skill, res[k].got === res[k].max ? 8 : -3)); xp(got * 8); S.bossRuns++; if (pct > S.best) S.best = pct; save(); }
+    if (o.onDone) o.onDone(got, total);
+    const verdict = boss ? (pct >= 90 ? 'Beast defeated! 🎉' : pct >= 70 ? 'The Beaker Beast is hurt. Fix the misses.' : 'The Beast wins this round. Review and retry.') : (pct === 100 ? 'Perfect! 🎉' : pct >= 70 ? 'Solid work' : 'Keep going');
+    const card = h('div',{class:'card pad col'}, h('div',{class:'score'}, `${got}/${total}`), h('div',{class:'big-out',style:'color:var(--ink)'}, verdict));
+    if (boss) card.append(h('div',{class:'hpbar','aria-label':'Boss health'}, h('i',{style:`width:${100 - pct}%`})));
+    const list = h('div',{class:'col'}, h('div',{class:'lbl'},'Review'));
+    items.forEach((p,k) => {
+      const r = res[k], ok = r.got === r.max;
+      list.append(h('details',{class:'card pad',style:'padding:6px 12px'},
+        h('summary',{style:'font-weight:700;min-height:40px;display:flex;align-items:center;gap:8px;cursor:pointer'}, h('span',{style:`color:var(--${ok ? 'ok' : 'no'})`}, ok ? '✓' : '✗'), p.no ? `#${p.no} · ${p.title}` : `${k + 1}. ${p.title}`, h('span',{class:'mut',style:'margin-left:auto'}, `${r.got}/${r.max}`)),
+        h('div',{class:'col',style:'margin-top:6px;gap:6px'}, p.ctx ? h('div',{class:'hint',html:p.ctx}) : null, h('div',{html:p.prompt,style:'font-weight:700'}), h('div',{class:'hint'}, 'Your answer: ', h('span',{html:userText(p, resp[k])})), h('div',{class:'hint'}, 'Answer: ', h('span',{html:answerText(p)})), h('div',{class:'hint',style:'color:var(--ink)',html:'💡 ' + p.why}))));
+    });
+    box.replaceChildren(card, ...(o.actions ? o.actions() : []), list);
+    window.scrollTo(0,0);
+  }
+  render();
+}
+
+/* ---------- LEARN LABS ---------- */
+const L = {};
+const out = (t, sz) => h('div',{class:'big-out',style:'font-size:' + (sz || 19) + 'px',html:t || ''});
+
+/* 1 · science words */
+L[1] = box => {
+  let mode = 'look', target = null, streak = 0;
+  const def = h('div',{class:'def'}), grid = h('div',{class:'grid3'});
+  const show = w => { def.innerHTML = `<b>${w[3]} ${w[0]}</b><div>${w[1]}</div><div class="hint">Example: ${w[2]}</div>`; };
+  const ask = () => { target = pick(WORDS.filter(w => w !== target)); def.innerHTML = `<div class="lbl">Tap the word that means…</div><div style="font-weight:700;font-size:17px">${target[1]}</div><div class="hint">Streak: ${streak} 🔥</div>`; };
+  WORDS.forEach(w => { const t = h('button',{class:'tile',style:'font-size:13px;min-height:58px',onclick:() => {
+    grid.querySelectorAll('.tile').forEach(x => x.classList.remove('sel','good','bad'));
+    if (mode === 'look'){ t.classList.add('sel'); show(w); return; }
+    if (w === target){ streak++; t.classList.add('good'); xp(2); setTimeout(() => { t.classList.remove('good'); ask(); }, 600); if (streak === 5){ bump(1, 10); toast('5 in a row! +10 mastery'); } }
+    else { streak = 0; t.classList.add('bad','shake'); setTimeout(() => t.classList.remove('bad','shake'), 500); def.querySelector('.hint').textContent = 'Streak: 0. Try again.'; }
+  }}, h('div',{style:'font-size:20px'}, w[3]), w[0]); grid.append(t); });
+  def.innerHTML = '<div class="hint" style="margin:auto">Tap a word to see what it means.</div>';
+  box.append(seg([['look','Explore'],['quiz','Quiz me']], 'look', k => { mode = k; streak = 0; grid.querySelectorAll('.tile').forEach(x => x.classList.remove('sel','good','bad')); if (k === 'quiz') ask(); else def.innerHTML = '<div class="hint" style="margin:auto">Tap a word to see what it means.</div>'; }), def, grid);
+};
+
+/* 2 · observe or infer */
+const PLANT = `<svg class="fx" viewBox="0 0 260 150" role="img" aria-label="A drooping plant in dry soil next to a ruler"><rect width="260" height="150" fill="var(--at)"/>
+<g stroke="#2E8B57" stroke-width="3" fill="none" stroke-linecap="round"><path d="M110 108V60"/><path d="M110 70c-14 2-24 12-28 26"/><path d="M110 64c14 2 24 12 28 28"/><path d="M110 82c-10 4-16 12-18 22"/></g>
+<g fill="#3FA36B"><ellipse cx="80" cy="98" rx="9" ry="4" transform="rotate(60 80 98)"/><ellipse cx="140" cy="94" rx="9" ry="4" transform="rotate(-60 140 94)"/><ellipse cx="91" cy="105" rx="8" ry="3.5" transform="rotate(70 91 105)"/></g>
+<path d="M82 108h56l-8 34H90z" fill="#C0643A"/><rect x="80" y="104" width="60" height="7" rx="2" fill="#D9C08F"/><path d="M92 106l5 3 4-2M118 106l4 3 5-2" stroke="#9C7B45" stroke-width="1.4" fill="none"/>
+<g><rect x="176" y="34" width="18" height="108" fill="#F2D35B" stroke="#8C6E12"/>${Array.from({length:13},(_,i) => `<line x1="176" x2="${i % 2 ? 182 : 186}" y1="${142 - i*8.5}" y2="${142 - i*8.5}" stroke="#5A4708"/>`).join('')}<text x="200" y="42" font-size="11" font-weight="700" fill="var(--ink)">12 cm</text><line x1="112" x2="176" y1="40" y2="40" stroke="var(--ink)" stroke-dasharray="3 3"/></g></svg>`;
+L[2] = box => {
+  const S2 = [['The plant is 12 cm tall.','O','You measured it with a ruler.'],['The leaves are drooping.','O','You can see it.'],['The plant needs water.','I','It explains why the plant droops.'],['The soil is light brown and cracked.','O','You can see the soil.'],['Someone forgot to water it.','I','It is a guess about why.']];
+  const list = h('div',{class:'col',style:'gap:6px'}); let done = 0;
+  S2.forEach(s => {
+    const note = h('div',{class:'hint'});
+    const mk = (lab, v) => h('button',{class:'chip',style:'min-height:36px;padding:4px 10px;background:var(--surf);border-color:var(--line)',onclick:ev => { if (row.dataset.d) return; const ok = v === s[1]; row.dataset.d = 1; ev.currentTarget.style.borderColor = `var(--${ok ? 'ok' : 'no'})`; row.style.borderColor = `var(--${ok ? 'ok' : 'no'})`; note.textContent = (ok ? '✓ ' : '✗ ') + (s[1] === 'O' ? 'Observation. ' : 'Inference. ') + s[2]; if (ok) xp(2); if (++done === S2.length){ bump(2, 10); toast('All 5 sorted!'); } }}, lab);
+    const row = h('div',{class:'card',style:'padding:8px 10px;display:flex;flex-direction:column;gap:6px;border-width:2px'}, h('div',{class:'row sp',style:'flex-wrap:nowrap'}, h('b',{style:'font-size:15px'}, s[0]), h('div',{class:'row',style:'flex-wrap:nowrap;gap:4px'}, mk('👀','O'), mk('💡','I'))), note);
+    list.append(row);
+  });
+  box.append(h('div',{class:'stage',html:PLANT}), h('div',{class:'rule'},'Did I notice it 👀, or am I explaining it 💡?'), list,
+    h('div',{class:'hint c'},'Clue words for inferences: because · must · might · may · probably'));
+};
+
+/* 3 · testable questions */
+L[3] = box => {
+  let i = rnd(0, TESTQ.length - 1);
+  const area = h('div',{class:'col'}), msg = out('', 17);
+  const paint = () => {
+    const p = TESTQ[i], two = shuffle([[p[0],1],[p[1],0]]); msg.innerHTML = '';
+    area.replaceChildren(...two.map(([q,ok]) => { const b = h('button',{class:'opt',onclick:() => {
+      area.querySelectorAll('.opt').forEach(x => x.disabled = true); b.classList.add(ok ? 'good' : 'bad');
+      msg.innerHTML = ok ? `✓ Testable! You can measure <span class="hl">${p[2]}</span>.` : `✗ That one is an opinion. Words like best, prettiest, coolest can’t be measured.`; msg.style.color = `var(--${ok ? 'ok' : 'no'})`;
+      if (ok){ xp(2); bump(3, 4); }
+    }}, q); return b; }));
+  };
+  box.append(h('div',{class:'rule'},'Testable = you can change something and measure the result.'), h('div',{class:'hint'},'Tap the question a scientist could test.'), area, msg,
+    h('button',{class:'btn ghost',onclick:() => { i = (i + 1) % TESTQ.length; paint(); }},'Next pair →'));
+  paint();
+};
+
+/* 4 · fair tests: make two bean pots match except the water */
+L[4] = box => {
+  const C = [['Water','50 mL','100 mL',true],['Soil','potting soil','sand'],['Seed','bean','bean'],['Pot size','small','large'],['Light','sunny window','dark closet'],['Temperature','room temp','room temp']];
+  const B = C.map(c => c[2]); const fig = h('div',{class:'stage'}), rows = h('div',{class:'col',style:'gap:6px'}), msg = out('', 17);
+  const pot = (x, big, sand, sun, drops, lab) => { const w = big ? 64 : 48, hh = big ? 40 : 32, y = 132 - hh;
+    return `<g>${sun ? `<circle cx="${x}" cy="22" r="10" fill="#F5B82E"/>` : `<path d="M${x+4} 14a10 10 0 1 0 6 14a8 8 0 1 1-6-14z" fill="var(--mut)"/>`}
+    ${Array.from({length:drops},(_,k) => `<path d="M${x - 12 + k*12} 40c-3 5-4 7 0 9c4-2 3-4 0-9z" fill="#3F8FE0"/>`).join('')}
+    <path d="M${x} ${y}V76M${x} 86c-8-4-14-2-16 2M${x} 82c8-4 14-2 16 2" stroke="#2E8B57" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M${x-w/2} ${y}h${w}l-6 ${hh}h${-w+12}z" fill="#C0643A"/><rect x="${x-w/2-2}" y="${y-4}" width="${w+4}" height="7" rx="2" fill="${sand ? '#E8D48A' : '#6B4A2B'}"/>
+    <text x="${x}" y="146" font-size="11" font-weight="700" text-anchor="middle" fill="var(--ink)">${lab}</text></g>`; };
+  const paint = () => {
+    const A = C.map(c => c[1]);
+    fig.innerHTML = `<svg class="fx" viewBox="0 0 260 150" role="img" aria-label="Two bean pots">${pot(70, A[3] === 'large', A[1] === 'sand', A[4] === 'sunny window', 2, 'Group A')}${pot(190, B[3] === 'large', B[1] === 'sand', B[4] === 'sunny window', 4, 'Group B')}</svg>`;
+    const diff = C.filter((c,k) => !c[3] && B[k] !== c[1]).length;
+    rows.replaceChildren(...C.map((c,k) => { const same = B[k] === c[1];
+      return h('div',{class:'card',style:`display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;padding:6px 10px;border-color:var(--${c[3] ? 'x' : same ? 'line' : 'no'})`},
+        h('div',{style:'min-width:0'}, h('b',{}, c[0]), h('div',{class:'hint'}, `A: ${c[1]} · B: ${B[k]}`)),
+        c[3] ? h('span',{class:'chip',style:'min-height:30px;font-size:12px'},'changes (IV)') : same ? h('span',{style:'color:var(--ok);font-weight:700'},'✓ same') : h('button',{class:'chip',style:'min-height:34px;background:var(--hl);color:var(--hlk)',onclick:() => { B[k] = c[1]; paint(); }},'Make same')); }));
+    msg.innerHTML = diff ? `✗ Not fair yet: ${diff} other thing${diff > 1 ? 's are' : ' is'} different` : '✓ Fair test! Only the water changes.'; msg.style.color = `var(--${diff ? 'no' : 'ok'})`;
+    if (!diff && !box.dataset.won){ box.dataset.won = 1; bump(4, 12); xp(5); }
+  };
+  box.append(h('div',{class:'rule'},'Change ONE thing. Keep everything else the same.'), fig, msg, rows,
+    h('button',{class:'btn ghost',onclick:() => { C.forEach((c,k) => B[k] = c[2]); delete box.dataset.won; paint(); }},'Mess it up again'));
+  paint();
+};
+
+/* 5 · science steps */
+L[5] = box => {
+  let next = 0; const slots = h('div',{class:'ord'}), pk = h('div',{class:'pick'}), msg = out('', 16);
+  const paint = () => {
+    slots.replaceChildren(...STEPS.map((s,k) => h('div',{class:'slot' + (k < next ? ' good' : '')}, h('i',{}, k + 1), k < next ? h('div',{}, s[0], h('div',{class:'hint',style:'font-weight:400'}, s[1])) : h('span',{class:'mut',style:'font-weight:400'}, k === next ? 'Which step is next?' : ''))));
+  };
+  const deal = () => { next = 0; pk.replaceChildren(...shuffle(STEPS.map((s,i) => i)).map(i => { const b = h('button',{onclick:() => {
+    if (i === next){ b.remove(); next++; paint(); if (next === 6){ msg.innerHTML = '🐹 <b>Q</b>uick <b>H</b>amsters <b>P</b>ack <b>E</b>xtra <b>A</b>pple <b>C</b>hips'; bump(5, 12); xp(5); } }
+    else { b.classList.add('bad','shake'); setTimeout(() => b.classList.remove('bad','shake'), 450); }
+  }}, STEPS[i][0]); return b; })); msg.innerHTML = ''; paint(); };
+  box.append(h('div',{class:'hint'},'Tap the steps in order, 1 to 6.'), slots, pk, msg, h('button',{class:'btn ghost',onclick:deal},'Shuffle again'));
+  deal();
+};
+
+/* 6 · IV and DV with a ramp */
+L[6] = box => {
+  let ht = 2; const fig = h('div',{class:'stage'}), msg = h('div',{class:'col',style:'gap:6px'}), sl = h('input',{type:'range',min:1,max:4,step:1,value:ht,'aria-label':'Ramp height'});
+  const paint = () => {
+    const rh = ht * 22, dist = 40 + ht * 45, x0 = 20, base = 120, rw = 70, px = x0 + rw + dist * .7;
+    fig.innerHTML = `<svg class="fx" viewBox="0 0 280 150" role="img" aria-label="A toy car rolling off a ramp"><path d="M${x0} ${base}V${base - rh}L${x0 + rw} ${base}z" fill="var(--wt)" stroke="var(--w)" stroke-width="2.5"/>
+    <line x1="0" x2="280" y1="${base}" y2="${base}" stroke="var(--ink)" stroke-width="2"/><line x1="${x0 + rw}" x2="${px}" y1="${base + 14}" y2="${base + 14}" stroke="var(--x)" stroke-width="2.5" marker-end="url(#ar)"/>
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--x)"/></marker></defs>
+    <text x="${x0 + rw + (px - x0 - rw) / 2}" y="${base + 28}" font-size="12" font-weight="700" text-anchor="middle" fill="var(--x)">${dist} cm</text>
+    <text x="${x0 + 4}" y="${base - rh - 6}" font-size="12" font-weight="700" fill="var(--w)">${ht * 10} cm high</text>
+    <g transform="translate(${px - 14} ${base - 14})"><rect width="28" height="10" rx="3" fill="var(--d)"/><circle cx="7" cy="12" r="3.5" fill="var(--ink)"/><circle cx="21" cy="12" r="3.5" fill="var(--ink)"/></g></svg>`;
+    msg.innerHTML = `<div><b style="color:var(--w)">IF</b> the ramp is <span class="chip u-w" style="min-height:28px;padding:2px 8px">${ht * 10} cm high</span><div class="hint">↑ IV: the thing I change</div></div><div><b style="color:var(--x)">THEN</b> the car rolls <span class="chip u-x" style="min-height:28px;padding:2px 8px">${dist} cm</span><div class="hint">↑ DV: the data I measure</div></div>`;
+  };
+  sl.addEventListener('input', () => { ht = +sl.value; paint(); });
+  let k = 0; const ex = h('div',{class:'card pad col',style:'gap:6px'});
+  const showEx = (rev) => { const f = IFS[k]; ex.innerHTML = `<div><b>If</b> ${f[0]}, <b>then</b> ${f[1]}.</div>` + (rev ? `<div><span class="chip u-w" style="min-height:28px">IV: ${f[2]}</span></div><div><span class="chip u-x" style="min-height:28px">DV: ${f[3]}</span></div>` : ''); };
+  box.append(h('div',{class:'rule'},'IV = what I change (cause). DV = what I measure (effect).'), fig, h('div',{class:'row sp'}, h('span',{class:'lbl'},'Ramp height'), h('b',{},'slide it')), sl, msg,
+    h('div',{class:'lbl'},'Your turn'), ex, h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:() => { showEx(true); bump(6, 3); }},'Show IV & DV'), h('button',{class:'btn ghost',onclick:() => { k = (k + 1) % IFS.length; showEx(false); }},'Next one →')));
+  paint(); showEx(false);
+};
+
+/* 7 · graphs and patterns */
+L[7] = box => {
+  const on = {title:false, x:false, y:false, scale:false}, fig = h('div',{class:'stage',style:'padding:6px'}), meter = h('div',{class:'hint c'}), pat = out('', 17);
+  const paint = () => {
+    fig.innerHTML = lineGraph({xs:[1,2,3,4], ys:[3,5,8,11], ymax:12, ystep:2, title:on.title ? 'Seedling Height Over Time' : '', xlab:on.x ? 'Week' : '', ylab:on.y ? 'Height (cm)' : '', scale:on.scale});
+    const n = Object.values(on).filter(Boolean).length; meter.innerHTML = n === 4 ? '<b style="color:var(--ok)">✓ Great graph! 4 of 4</b>' : `Graph checklist: ${n} of 4`;
+    if (n === 4 && !box.dataset.g){ box.dataset.g = 1; bump(7, 6); xp(3); }
+  };
+  const tg = (k, lab) => { const b = h('button',{class:'chip',onclick:() => { on[k] = !on[k]; b.classList.toggle('sel', on[k]); b.textContent = (on[k] ? '✓ ' : '+ ') + lab; paint(); }}, '+ ' + lab); return b; };
+  box.append(h('div',{class:'hint'},'Add the parts a good graph needs.'), h('div',{class:'grid2'}, tg('title','Title'), tg('x','X-axis label'), tg('y','Y-axis label'), tg('scale','Even scale')), fig, meter,
+    h('div',{html:tbl([['Week',1,2,3,4],['Height (cm)',3,5,8,11]])}), h('b',{},'What is the pattern?'),
+    h('div',{class:'grid3'}, [['Goes up',1],['Goes down',0],['Stays same',0]].map(([t,ok]) => h('button',{class:'tile',style:'font-size:14px',onclick:ev => { box.querySelectorAll('.grid3 .tile').forEach(x => x.classList.remove('good','bad')); ev.currentTarget.classList.add(ok ? 'good' : 'bad'); pat.innerHTML = ok ? '✓ The seedling gets taller each week: 3 → 5 → 8 → 11 cm.' : '✗ Look at the numbers again.'; pat.style.color = `var(--${ok ? 'ok' : 'no'})`; if (ok) bump(7, 4); }}, t))), pat);
+  paint();
+};
+
+/* 8 · mean, median, mode */
+L[8] = box => {
+  let m = {a:[3,10,5,7,5], srt:[3,5,5,7,10], sum:30, mean:6, median:5, mode:5}, sorted = false;
+  const tiles = h('div',{class:'num-t'}), steps = h('div',{class:'card pad',style:'min-height:86px'});
+  const paint = (hi) => {
+    const arr = sorted ? m.srt : m.a;
+    tiles.innerHTML = arr.map((n,i) => `<span class="${hi === 'med' && sorted && i === 2 ? 'mid' : hi === 'mode' && n === m.mode ? 'mo' : ''}">${n}</span>`).join('');
+  };
+  const say = html => { steps.innerHTML = html; };
+  const B = (lab, fn) => h('button',{class:'btn ghost',style:'min-height:44px',onclick:fn}, lab);
+  box.append(h('div',{class:'rule'},'Mean = average · Median = middle · Mode = most'), tiles,
+    h('div',{class:'grid2'},
+      B('↕ Sort', () => { sorted = true; paint(); say('Put the numbers in order, smallest to biggest. You need this for the median.'); }),
+      B('➗ Mean', () => { paint(); say(`<b>Step 1: add.</b> ${m.a.join(' + ')} = ${m.sum}<br><b>Step 2: divide</b> by how many numbers: ${m.sum} ÷ 5 = <span class="hl">${m.mean}</span>`); xp(1); }),
+      B('🎯 Median', () => { sorted = true; paint('med'); say(`In order: ${m.srt.join(', ')}.<br>The middle number is <span class="hl">${m.median}</span>.`); xp(1); }),
+      B('🔁 Mode', () => { paint('mode'); say(m.mode == null ? 'No number repeats, so there is <span class="hl">no mode</span>.' : `<span class="hl">${m.mode}</span> appears most often, so the mode is ${m.mode}.`); xp(1); })),
+    steps, h('button',{class:'btn hlb',onclick:() => { m = mmmSet(); sorted = false; paint(); say('New numbers! Try mean, median, and mode in your head first.'); bump(8, 3); }},'New numbers'),
+    h('div',{class:'hint c'},'Tip: MOde = MOst. Median is in the middle, like the median of a road.'));
+  paint(); say('Tap a button to see how it works.');
+};
+
+/* 9 · models and conclusions */
+L[9] = box => {
+  const area = h('div',{class:'col'});
+  const models = () => {
+    let s = pick(SEP); const card = h('div',{class:'def'}), opts = h('div',{class:'col',style:'gap:6px'}), msg = h('div',{class:'hint',style:'min-height:20px'});
+    const deal = () => { card.innerHTML = `<div class="lbl">What practice is this?</div><div style="font-weight:700">${s[0]}</div>`; msg.textContent = '';
+      opts.replaceChildren(...PRACTICES.map((p,i) => { const b = h('button',{class:'opt',style:'min-height:42px;padding:6px 12px',onclick:() => { opts.querySelectorAll('.opt').forEach(x => x.disabled = true); b.classList.add(i === s[1] ? 'good' : 'bad'); if (i !== s[1]) opts.children[s[1]].classList.add('good'); msg.innerHTML = i === s[1] ? '✓ Yes!' + (i === 1 ? ' A model represents something real.' : '') : `✗ It is <b>${PRACTICES[s[1]]}</b>.`; if (i === s[1]){ bump(9, 3); xp(2); } }}, p); return b; })); };
+    area.replaceChildren(h('div',{class:'rule'},'🌍 Globe · 🌋 volcano · ☀️ solar system = MODELS'), card, opts, msg, h('button',{class:'btn ghost',onclick:() => { s = pick(SEP.filter(x => x !== s)); deal(); }},'Next →'));
+    deal();
+  };
+  const concl = () => {
+    const parts = [['The results support the hypothesis.',1],['6-hour plants averaged 12 cm.',1],['3-hour plants averaged 8 cm.',1],['That is a 4 cm difference.',1],['I liked the experiment.',0],['My hypothesis was right.',0],['Change the data so it looks better.',0]];
+    let used = []; const para = h('div',{class:'card pad',style:'min-height:70px;font-weight:700'}), meter = h('div',{class:'bar u-d'}, h('i',{style:'width:0%'})), msg = h('div',{class:'hint',style:'min-height:20px'});
+    const chips = h('div',{class:'pick'}, shuffle(parts).map(p => { const b = h('button',{onclick:() => {
+      if (!p[1]){ b.classList.add('bad','shake'); msg.innerHTML = p[0].startsWith('Change') ? '✗ Never change data. Report results honestly.' : '✗ That is not evidence. Use the numbers.'; setTimeout(() => b.classList.remove('shake'), 400); return; }
+      if (used.includes(p)) return; used.push(p); b.disabled = true; para.textContent = used.map(x => x[0]).join(' '); meter.firstChild.style.width = used.length * 25 + '%'; msg.textContent = used.length === 4 ? '✓ Strong conclusion! It answers the question and uses evidence.' : 'Keep going: add more evidence.';
+      if (used.length === 4){ bump(9, 10); xp(5); }
+    }}, p[0]); return b; }));
+    para.innerHTML = '<span class="hint" style="font-weight:400">Tap sentences to build the conclusion.</span>';
+    area.replaceChildren(h('div',{class:'stage',style:'padding:6px'}, h('div',{html:`<svg class="fx" viewBox="0 0 260 110" role="img" aria-label="Bar chart: 6 hours of light 12 cm, 3 hours 8 cm"><rect width="260" height="110" fill="var(--surf)" rx="10"/><line x1="30" x2="240" y1="92" y2="92" stroke="var(--ink)" stroke-width="1.6"/><rect x="60" y="20" width="56" height="72" fill="var(--d)"/><rect x="150" y="44" width="56" height="48" fill="var(--dt)" stroke="var(--d)" stroke-width="2"/><text x="88" y="15" font-size="12" font-weight="700" text-anchor="middle" fill="var(--ink)">12 cm</text><text x="178" y="39" font-size="12" font-weight="700" text-anchor="middle" fill="var(--ink)">8 cm</text><text x="88" y="105" font-size="11" text-anchor="middle" fill="var(--ink)">6 hours light</text><text x="178" y="105" font-size="11" text-anchor="middle" fill="var(--ink)">3 hours light</text></svg>`})),
+      h('div',{class:'hint'},'Prediction: more light = taller plants.'), para, meter, chips, msg);
+  };
+  box.append(seg([['m','Models & practices'],['c','Conclusions']], 'm', k => k === 'm' ? models() : concl()), area);
+  models();
+};
+
+/* the Learn tab */
+function practiceSet(id, n){
+  const out = [], seen = new Set();
+  for (let t = 0; t < 60 && out.length < n; t++){ const q = GENS[id](), key = JSON.stringify([q.prompt, q.ctx, q.fig, q.choices && q.choices.slice().sort(), q.rows && q.rows.map(r => r.opts.slice().sort()), q.blanks && q.blanks.map(b => b.answer), q.type]); if (!seen.has(key)){ seen.add(key); out.push(q); } }
+  return out;
+}
+VIEWS.learn = v => {
+  let open = null; const heads = {};
+  v.append(h('div',{class:'card pad row sp',style:'flex-wrap:nowrap'}, h('div',{}, h('b',{style:'font:600 17px var(--fd)'},'9 skills for the test'), h('div',{class:'hint'},'Open one, play with it, then practice 5.')), h('span',{style:'font-size:30px'},'🧪')));
+  Object.entries(UNITS).forEach(([u,name]) => {
+    v.append(h('div',{class:'unit u-' + u}, h('h2',{}, name)));
+    SKILLS.filter(t => t.u === u).forEach(t => {
+      const m = mast(t.id), dot = h('i',{class:'dot ' + (m >= 80 ? 'm' : m >= 30 ? 'h' : '')}), body = h('div',{class:'body',hidden:true});
+      const head = h('button',{'aria-expanded':'false'}, h('span',{class:'ico'}, t.e), t.n, dot), card = h('div',{class:'card tp u-' + t.u}, head, body); heads[t.id] = head;
+      const lesson = () => {
+        if (cleanup){ cleanup(); cleanup = null; }
+        body.replaceChildren(); L[t.id](body);
+        body.append(h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:() => practice()},'Practice 5'), h('button',{class:'btn ghost',onclick:() => { bump(t.id, 15); dot.className = 'dot ' + (mast(t.id) >= 80 ? 'm' : 'h'); xp(5); toast('Nice! +15 mastery'); }},'I know this')));
+      };
+      const practice = () => {
+        const box = h('div',{class:'col'});
+        body.replaceChildren(backBtn('Back to lesson', lesson), box);
+        const run = () => runSet(box, practiceSet(t.id, 5), {mode:'drill', actions:() => [h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:run},'5 more'), h('button',{class:'btn ghost',onclick:lesson},'Back to lesson'))]});
+        run(); card.scrollIntoView({block:'start'});
+      };
+      head.addEventListener('click', () => {
+        const was = !body.hidden;
+        if (open){ open.b.hidden = true; open.b.replaceChildren(); open.h.setAttribute('aria-expanded','false'); open = null; if (cleanup){ cleanup(); cleanup = null; } }
+        if (!was){ lesson(); body.hidden = false; head.setAttribute('aria-expanded','true'); open = {b:body, h:head}; setTimeout(() => card.scrollIntoView({behavior:'smooth',block:'start'}), 50); }
+      });
+      v.append(card);
+    });
+  });
+  if (S.focus){ const f = heads[S.focus]; S.focus = null; if (f) setTimeout(() => f.click(), 0); }
+};
+
+/* ---------- FLASH CARDS ---------- */
+const CARDS = [
+  ...WORDS.map(w => [w[0] === 'Observation' || w[0] === 'Inference' ? 2 : w[0] === 'Model' || w[0] === 'Conclusion' ? 9 : w[0] === 'Controlled experiment' || w[0] === 'Variable' ? 4 : w[0] === 'Hypothesis' ? 6 : 1, w[3] + ' ' + w[0], w[1] + `<div class="hint" style="margin-top:6px">${w[2]}</div>`]),
+  [6,'IV','Independent variable: what you <b>change</b>. The cause.'],
+  [6,'DV','Dependent variable: what you <b>measure</b>. The effect.'],
+  [4,'Fair test','Change <b>one</b> thing. Keep everything else the same.'],
+  [3,'Testable question','You can change something and <b>measure</b> the result.'],
+  [5,'The 6 steps','Question → Hypothesis → Procedure → Experiment → Analyze → Conclusion'],
+  [2,'Which comes first: observation or inference?','<b>Observation.</b> You notice before you explain.'],
+  [8,'Mean','Add them up. Divide by how many.'],
+  [8,'Median','The <b>middle</b> number, once they are in order.'],
+  [8,'Mode','The number that shows up <b>most</b>. No repeats = no mode.'],
+  [7,'A good graph has…','Title · labeled x-axis · labeled y-axis · even scale'],
+  [9,'Strong conclusion','Says if the results support the hypothesis and <b>uses the numbers</b>.'],
+  [9,'Results don’t support the hypothesis?','Report the evidence <b>honestly</b> and explain it.']
+];
+function cardsGame(box, exit){
+  let unit = S.cu || 'all', deck = [], i = 0, flip = false;
+  const wrap = h('div',{class:'col'});
+  box.replaceChildren(backBtn('Games', exit), wrap);
+  const build = () => { deck = shuffle(CARDS.filter(c => unit === 'all' || SK[c[0]].u === unit)); i = 0; flip = false; draw(); };
+  function next(good){ const c = deck[i]; if (good){ bump(c[0], 4); xp(1); } else deck.splice(Math.min(deck.length, i + 4), 0, c); i++; flip = false; draw(); }
+  function draw(){
+    wrap.replaceChildren(h('div',{class:'row',style:'gap:6px'}, [['all','All'],['w','Words'],['x','Experiments'],['d','Data']].map(([k,l]) => h('button',{class:'chip' + (unit === k ? ' sel' : ''),style:'min-height:34px',onclick:() => { unit = k; S.cu = k; save(); build(); }}, l))));
+    if (i >= deck.length){ wrap.append(h('div',{class:'card pad col c'}, h('h2',{style:'font-size:28px'},'Deck done! 🎉'), h('button',{class:'btn hlb',onclick:build},'Shuffle again'))); return; }
+    const c = deck[i], t = SK[c[0]], toggle = () => { flip = !flip; card.classList.toggle('flip', flip); };
+    const card = h('div',{class:'fc u-' + t.u + (flip ? ' flip' : ''),role:'button',tabindex:'0','aria-label':'Flashcard. Tap to flip.'},
+      h('div',{class:'in'}, h('div',{class:'face'}, h('div',{class:'lbl'}, t.n), h('div',{class:'q',style:c[1].length > 24 ? 'font-size:23px' : '',html:c[1]}), h('div',{class:'tapn'},'tap to flip · swipe right = got it')),
+        h('div',{class:'face back'}, h('div',{class:'a',html:c[2]}))));
+    let x0 = null, y0 = 0;
+    card.addEventListener('pointerdown', e => { x0 = e.clientX; y0 = e.clientY; });
+    card.addEventListener('pointerup', e => { if (x0 === null) return; const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)) next(dx > 0); else if (Math.abs(dx) < 12 && Math.abs(dy) < 12) toggle(); });
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
+    wrap.append(h('div',{class:'bar u-' + t.u}, h('i',{style:`width:${Math.round(i / deck.length * 100)}%`})), card,
+      h('div',{class:'grid2'}, h('button',{class:'btn ghost',onclick:() => next(false)},'Again'), h('button',{class:'btn',onclick:() => next(true)},'Got it')), h('div',{class:'hint c'}, `${i + 1} / ${deck.length}`));
+  }
+  build();
+}
+
+/* ---------- ROUND GAMES ---------- */
+function gmOI(){ const s = pick(OI); return {prompt:`“${s[0]}”`, choices:OIC, answer:s[1] === 'O' ? 0 : 1, cols:2, big:true, why:`${s[1] === 'O' ? 'Observation' : 'Inference'}. ${s[2]}`}; }
+function gmCause(){
+  const f = pick(IFS), iv = Math.random() < .5, ch = shuffle([f[2], f[3], f[4]]);
+  return {prompt:`Tap the <span class="hl">${iv ? 'IV (cause)' : 'DV (effect)'}</span>`, fig:`<div class="card pad"><b>If</b> ${f[0]}, <b>then</b> ${f[1]}.</div>`, choices:ch, answer:ch.indexOf(iv ? f[2] : f[3]), why:`IV: ${f[2]}. DV: ${f[3]}.`};
+}
+function gmMMM(){
+  const m = mmmSet(), w = pick(['mean','median','mode']), ans = w === 'mean' ? m.mean : w === 'median' ? m.median : m.mode;
+  const pool = shuffle([m.mean, m.median, m.mode, m.mean + 1, m.median + 1, m.median - 1, m.sum, ...m.a]).filter(x => x != null && x > 0);
+  const ch = [ans == null ? 'No mode' : String(ans)]; if (w === 'mode' && ans != null) ch.push('No mode');
+  pool.forEach(x => { if (ch.length < 4 && !ch.includes(String(x))) ch.push(String(x)); });
+  const all = shuffle(ch), wy = mmmWhy(m)[w === 'mean' ? 0 : w === 'median' ? 1 : 2];
+  return {prompt:`What is the <span class="hl">${w}</span>?`, fig:numsHTML(m.a), choices:all, answer:all.indexOf(ans == null ? 'No mode' : String(ans)), cols:2, why:wy};
+}
+const GAMES = [
+  {id:'oi', e:'👀', name:'Observe or Infer', d:'45-second rush', u:'w', skill:2, time:45, par:15, gen:gmOI, how:'Read it. Did someone notice it 👀 or explain it 💡? Go fast.'},
+  {id:'match', e:'🔤', name:'Word Match', d:'Match words to meanings', u:'w', custom:matchGame},
+  {id:'steps', e:'🪜', name:'Step Sorter', d:'Beat the clock', u:'x', custom:stepGame},
+  {id:'cause', e:'🎯', name:'Cause & Effect', d:'Find the IV and DV', u:'x', skill:6, rounds:8, par:8, gen:gmCause, how:'IV = what you change. DV = what you measure. 8 rounds.'},
+  {id:'mmm', e:'🧮', name:'Mean Machine', d:'Mean, median, mode', u:'d', skill:8, rounds:8, par:8, gen:gmMMM, how:'Mean = average. Median = middle. Mode = most. 8 rounds.'},
+  {id:'cards', e:'🃏', name:'Flash Cards', d:'Flip. Swipe. Learn.', u:'d', custom:cardsGame}
+];
+
+function playGame(box, G, exit){
+  const st = {n:0, score:0, streak:0, best:0, tl:G.time || 0, over:false};
+  let timer = null, adv = null, locked = false;
+  const stop = () => { clearInterval(timer); clearTimeout(adv); timer = adv = null; };
+  cleanup = stop;
+  const back = backBtn('Games', () => { stop(); cleanup = null; exit(); });
+  const hud = h('div',{class:'row sp',style:'font-weight:700'}), area = h('div',{class:'col'}), bar = G.time ? h('div',{class:'bar'}, h('i',{style:'width:100%;transition:width 1s linear'})) : null;
+  const paintHud = () => { hud.replaceChildren(h('span',{}, G.rounds ? `Round ${Math.min(st.n, G.rounds)}/${G.rounds}` : `Streak ${st.streak} 🔥`), h('span',{class:'hl'}, `Score ${st.score}`), h('span',{}, G.time ? `${st.tl}s` : '')); if (bar) bar.firstChild.style.width = (st.tl / G.time * 100) + '%'; };
+  const isLast = () => G.rounds && st.n >= G.rounds;
+  function next(){
+    clearTimeout(adv); if (st.over) return; if (isLast()) return end();
+    const q = G.gen(); st.n++; locked = false; paintHud();
+    const btns = [], list = h('div',{class:'opts' + (q.cols === 2 ? ' g2' : '') + (q.big ? ' big' : '')});
+    q.choices.forEach((c,k) => { const b = h('button',{class:'opt',html:c,onclick:() => choose(k)}); btns.push(b); list.append(b); });
+    function choose(k){
+      if (locked || st.over) return; locked = true;
+      const ok = k === q.answer; btns[q.answer].classList.add('good');
+      if (ok){ st.score++; st.streak++; st.best = Math.max(st.best, st.streak); btns[k].classList.add('pop'); } else { st.streak = 0; btns[k].classList.add('bad','shake'); }
+      paintHud();
+      if (!(ok && G.time)) area.append(h('div',{class:'fb ' + (ok ? 'good' : 'bad'),html:(ok ? (st.streak >= 3 ? `🔥 ${st.streak} in a row! ` : '✓ ') : '✗ ') + q.why}));
+      if (ok) adv = setTimeout(next, G.time ? 300 : 1100); else if (G.time) adv = setTimeout(next, 1500); else area.append(h('button',{class:'btn',onclick:next}, isLast() ? 'See results' : 'Next'));
+    }
+    area.replaceChildren(...[h('div',{class:'pq',html:q.prompt,style:q.big ? 'font-size:22px;min-height:84px' : ''}), q.fig ? h('div',{html:q.fig}) : null, list].filter(Boolean));
+  }
+  function end(){
+    st.over = true; stop(); cleanup = null;
+    const sc = st.score, prev = S.hs[G.id] || 0, nb = sc > prev; if (nb) S.hs[G.id] = sc;
+    xp(sc * 3); bump(G.skill, Math.round(8 * Math.min(1, sc / G.par))); save();
+    box.replaceChildren(back, h('div',{class:'card pad col c'}, h('div',{class:'lbl'}, G.name), h('div',{class:'score'}, G.rounds ? `${sc}/${G.rounds}` : String(sc)),
+      h('div',{class:'big-out'}, nb && prev > 0 ? 'New best! 🎉' : sc >= G.par ? 'Great run!' : 'Nice try'), h('div',{class:'hint'}, `Best: ${S.hs[G.id]} · longest streak: ${st.best} · +${sc * 3} XP`)),
+      h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:() => playGame(box, G, exit)},'Play again'), h('button',{class:'btn ghost',onclick:exit},'All games')));
+    window.scrollTo(0,0);
+  }
+  box.replaceChildren(back, hud, ...(bar ? [bar] : []), area); paintHud();
+  if (G.time) timer = setInterval(() => { st.tl--; paintHud(); if (st.tl <= 0) end(); }, 1000);
+  next();
+}
+
+/* a stopwatch shared by the timed puzzles; lower time is better */
+function stopwatch(el){ const t0 = Date.now(); let pen = 0; const iv = setInterval(() => { el.textContent = `⏱ ${((Date.now() - t0) / 1000 + pen).toFixed(0)}s`; }, 250); return {add:s => pen += s, stop:() => { clearInterval(iv); return Math.round(((Date.now() - t0) / 1000 + pen) * 10) / 10; }, kill:() => clearInterval(iv)}; }
+function timeResult(box, id, name, secs, exit, again, extra){
+  const prev = S.hs[id], nb = !prev || secs < prev; if (nb) S.hs[id] = secs; xp(15); save();
+  box.replaceChildren(backBtn('Games', exit), h('div',{class:'card pad col c'}, h('div',{class:'lbl'}, name), h('div',{class:'score'}, secs + 's'), h('div',{class:'big-out'}, nb && prev ? 'New record! 🎉' : nb ? 'First record set!' : 'Done!'), h('div',{class:'hint'}, `Best: ${S.hs[id]}s · ${extra} · +15 XP`)),
+    h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:again},'Play again'), h('button',{class:'btn ghost',onclick:exit},'All games')));
+}
+
+const SHORT = {Hypothesis:'A testable prediction', Quantitative:'Uses numbers or measurements', Qualitative:'Describes with words: color, shape, texture', Inference:'An explanation of what you observe', Observation:'What you notice with senses or tools', Model:'A representation of something real', Properties:'Traits that help identify materials', Science:'Knowledge from observations and experiments', 'Controlled experiment':'Only one variable changes', Conclusion:'Explains the results using evidence', Variable:'A factor that can affect results'};
+function matchGame(box, exit){
+  const clock = h('b',{}), area = h('div',{class:'col'}), rounds = shuffle(Object.keys(SHORT));
+  let r = 0, miss = 0, sel = null; const sw = stopwatch(clock); cleanup = sw.kill;
+  box.replaceChildren(backBtn('Games', () => { sw.kill(); cleanup = null; exit(); }), h('div',{class:'row sp'}, h('span',{class:'hint'},'Tap a word, then its meaning.'), clock), area);
+  const deal = () => {
+    const words = rounds.slice(r*4, r*4 + 4), left = h('div',{class:'col',style:'gap:6px'}), right = h('div',{class:'col',style:'gap:6px'}); let left4 = words.length;
+    shuffle(words).forEach(w => { const b = h('button',{class:'tile u-w',style:'min-height:60px',onclick:() => { if (b.disabled) return; left.querySelectorAll('.tile').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = w; }}, w); left.append(b); });
+    shuffle(words).forEach(w => { const b = h('button',{class:'tile',style:'min-height:60px;font-size:13px',onclick:() => {
+      if (b.disabled || !sel) return;
+      const lb = [...left.children].find(x => x.textContent === sel);
+      if (sel === w){ [lb, b].forEach(x => { x.classList.remove('sel'); x.classList.add('good'); x.disabled = true; }); sel = null; if (--left4 === 0){ r++; if (r * 4 >= rounds.length){ const s = sw.stop(); cleanup = null; bump(1, 10); timeResult(box, 'match', 'Word Match', s, exit, () => matchGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } else setTimeout(deal, 350); } }
+      else { miss++; sw.add(2); [lb, b].forEach(x => x.classList.add('bad','shake')); setTimeout(() => [lb, b].forEach(x => x.classList.remove('bad','shake')), 450); toast('+2 seconds'); }
+    }}, SHORT[w]); right.append(b); });
+    area.replaceChildren(h('div',{class:'lbl'}, `Round ${r + 1} of ${Math.ceil(rounds.length / 4)}`), h('div',{class:'grid2'}, left, right));
+  };
+  deal();
+}
+function stepGame(box, exit){
+  const clock = h('b',{}), slots = h('div',{class:'ord'}), pk = h('div',{class:'pick'}); let nxt = 0, miss = 0; const sw = stopwatch(clock); cleanup = sw.kill;
+  const paint = () => slots.replaceChildren(...STEPS.map((s,k) => h('div',{class:'slot' + (k < nxt ? ' good' : '')}, h('i',{}, k + 1), k < nxt ? s[0] : '')));
+  shuffle(STEPS.map((s,i) => i)).forEach(i => { const b = h('button',{style:'min-height:48px',onclick:() => {
+    if (i === nxt){ b.remove(); nxt++; paint(); if (nxt === 6){ const s = sw.stop(); cleanup = null; bump(5, 8); timeResult(box, 'steps', 'Step Sorter', s, exit, () => stepGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } }
+    else { miss++; sw.add(2); b.classList.add('bad','shake'); setTimeout(() => b.classList.remove('bad','shake'), 450); toast('+2 seconds'); }
+  }}, STEPS[i][0]); pk.append(b); });
+  box.replaceChildren(backBtn('Games', () => { sw.kill(); cleanup = null; exit(); }), h('div',{class:'row sp'}, h('span',{class:'hint'},'Tap the 6 steps in order. Wrong tap = +2s.'), clock), slots, pk);
+  paint();
+}
+
+VIEWS.games = v => {
+  const show = () => {
+    if (cleanup){ cleanup(); cleanup = null; }
+    v.replaceChildren(h('div',{class:'grid2'}, GAMES.map(G => h('button',{class:'tile u-' + G.u,style:'min-height:118px;gap:2px;align-content:center;border-color:var(--ac);padding:8px',onclick:() => open(G)},
+      h('span',{style:'font-size:30px;line-height:1.1'}, G.e), h('b',{style:'font:600 17px/1.1 var(--fd)'}, G.name), h('span',{class:'hint'}, G.d),
+      S.hs[G.id] != null ? h('span',{class:'hl',style:'font-size:12px;margin-top:2px'}, 'Best ' + S.hs[G.id] + (G.custom && G.id !== 'cards' ? 's' : '')) : null))));
+    window.scrollTo(0,0);
+  };
+  const open = G => {
+    const box = h('div',{class:'col u-' + G.u}); v.replaceChildren(box); window.scrollTo(0,0);
+    if (G.custom) return G.custom(box, show);
+    box.append(backBtn('Games', show), h('div',{class:'card pad col c'}, h('div',{style:'font-size:44px;line-height:1'}, G.e), h('h2',{style:'font-size:26px'}, G.name), h('div',{}, G.how), S.hs[G.id] != null ? h('div',{class:'hint'}, 'Best: ' + S.hs[G.id]) : null, h('button',{class:'btn hlb',onclick:() => playGame(box, G, show)},'Start')));
+  };
+  show();
+};
+
+/* ---------- STUDY GUIDE / BOSS QUIZ / PROGRESS ---------- */
+VIEWS.guide = v => {
+  S.gp = S.gp || {};
+  const home = () => { if (cleanup){ cleanup(); cleanup = null; } v.replaceChildren(); VIEWS.guide(v); window.scrollTo(0,0); };
+  const run = (items, key) => {
+    if (cleanup){ cleanup(); cleanup = null; }
+    const box = h('div',{class:'col'});
+    v.replaceChildren(backBtn('Study guide', home), box);
+    runSet(box, items, {mode:'drill', onDone:(g,t) => { S.gp[key] = `${g}/${t}`; save(); }, actions:() => [h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:() => run(items, key)},'Try again'), h('button',{class:'btn ghost',onclick:home},'All parts'))]});
+    window.scrollTo(0,0);
+  };
+  v.append(h('div',{class:'card pad row sp',style:'flex-wrap:nowrap'}, h('div',{}, h('b',{style:'font:600 17px var(--fd)'},'Your class study guide'), h('div',{class:'hint'},'All 26 questions, checked with the answer key.')), h('span',{style:'font-size:30px'},'📋')),
+    h('button',{class:'btn hlb',onclick:() => run(GUIDE, 'all')}, 'Do all 26' + (S.gp.all ? ` · last ${S.gp.all}` : '')));
+  PARTS.forEach(([L0, name, a, b]) => {
+    const items = GUIDE.filter(q => q.no >= a && q.no <= b), u = SK[items[0].skill].u;
+    v.append(h('button',{class:'card mrow u-' + u,style:'width:100%;text-align:left',onclick:() => run(items, L0)},
+      h('span',{class:'ico',style:'font:600 17px var(--fd)'}, L0), h('div',{}, h('div',{class:'nm'}, name), h('div',{class:'hint'}, a === b ? `#${a}` : `#${a}–${b}`)), h('span',{class:'pct',style:S.gp[L0] ? 'color:var(--ok)' : ''}, S.gp[L0] || '→')));
+  });
+};
+
+const BEAST = `<svg class="fx" viewBox="0 0 160 140" role="img" aria-label="A cartoon beaker monster"><ellipse cx="80" cy="132" rx="46" ry="5" fill="var(--line)"/>
+<path d="M62 14h36M66 14v34L34 108c-5 10 2 20 13 20h66c11 0 18-10 13-20L94 48V14" fill="var(--surf)" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M50 80h60l18 30c4 8-1 14-10 14H42c-9 0-14-6-10-14z" fill="var(--x)"/>
+<circle cx="70" cy="60" r="4" fill="var(--x)" opacity=".7"/><circle cx="88" cy="44" r="3" fill="var(--x)" opacity=".6"/><circle cx="80" cy="28" r="2.5" fill="var(--x)" opacity=".5"/>
+<circle cx="64" cy="96" r="9" fill="#fff"/><circle cx="96" cy="96" r="9" fill="#fff"/><circle cx="66" cy="98" r="4" fill="#12261D"/><circle cx="94" cy="98" r="4" fill="#12261D"/>
+<path d="M52 84l20 6M108 84l-20 6" stroke="#12261D" stroke-width="4" stroke-linecap="round"/><path d="M62 114l6 5 6-5 6 5 6-5 6 5 6-5" fill="none" stroke="#12261D" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+VIEWS.boss = v => {
+  const home = () => { if (cleanup){ cleanup(); cleanup = null; } v.replaceChildren(); VIEWS.boss(v); window.scrollTo(0,0); };
+  const run = () => {
+    if (cleanup){ cleanup(); cleanup = null; }
+    const box = h('div',{class:'col'}); v.replaceChildren(box);
+    runSet(box, buildBoss(), {mode:'boss', actions:() => [h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:run},'New quiz'), h('button',{class:'btn ghost',onclick:home},'Done'))]});
+    window.scrollTo(0,0);
+  };
+  v.append(h('div',{class:'card pad col c u-x'}, h('div',{style:'max-width:132px;margin-inline:auto;width:100%',html:BEAST}),
+    h('div',{class:'hpbar','aria-label':'Boss health full'}, h('i',{style:'width:100%'})),
+    h('h2',{style:'font-size:26px'},'The Beaker Beast'),
+    h('div',{}, '15 new questions from every part of the test. Answers come at the end.'),
+    h('div',{class:'grid2'}, h('div',{class:'card pad'}, h('div',{class:'lbl'},'Best'), h('b',{style:'font:600 26px var(--fd)'}, S.bossRuns ? S.best + '%' : '–')), h('div',{class:'card pad'}, h('div',{class:'lbl'},'Tries'), h('b',{style:'font:600 26px var(--fd)'}, String(S.bossRuns)))),
+    h('button',{class:'btn hlb',onclick:run},'Fight the Beast')),
+    h('div',{class:'hint c'},'90% or better defeats the Beast. New questions every try.'));
+};
+
+const READY = ['I can explain the science vocabulary.','I can tell observations from inferences.','I can identify IV (cause) and DV (effect).','I can explain how to make a fair test.','I can put the scientific process in order.','I can choose a testable question and recognize a model.','I can read graph patterns and find mean, median, and mode.','I can use evidence and report results honestly.'];
+VIEWS.me = v => {
+  const into = S.xp % 100;
+  v.append(h('div',{class:'card pad col'}, h('div',{class:'row sp'}, h('b',{style:'font:600 24px var(--fd)'}, 'Level ' + lvl()), h('span',{class:'hint'}, `${S.xp} XP · ${100 - into} to next`)), h('div',{class:'bar'}, h('i',{style:`width:${into}%`})),
+    h('div',{class:'grid2'}, h('div',{class:'card pad c'}, h('div',{class:'lbl'},'Mastery'), h('b',{style:'font:600 26px var(--fd)'}, overall() + '%')), h('div',{class:'card pad c'}, h('div',{class:'lbl'},'Best boss'), h('b',{style:'font:600 26px var(--fd)'}, S.bossRuns ? S.best + '%' : '–')))));
+  const weak = SKILLS.slice().sort((a,b) => mast(a.id) - mast(b.id))[0];
+  v.append(h('button',{class:'btn hlb',onclick:() => { S.focus = weak.id; go('learn'); }}, `Practice next: ${weak.e} ${weak.n}`));
+  const list = h('div',{class:'card'}), n = () => READY.filter((_,i) => S.chk[i]).length, head = h('div',{class:'lbl',style:'padding:10px 12px 0'});
+  const paintHead = () => head.textContent = `Before the test · ${n()} of ${READY.length} checked`;
+  list.append(head, ...READY.map((t,i) => { const b = h('button',{class:'chk' + (S.chk[i] ? ' on' : ''),onclick:() => { S.chk[i] = !S.chk[i]; b.classList.toggle('on', S.chk[i]); b.firstChild.textContent = S.chk[i] ? '✓' : ''; save(); paintHead(); if (n() === READY.length) toast('Ready for the test! 🎉'); }}, h('i',{}, S.chk[i] ? '✓' : ''), t); return b; }));
+  paintHead(); v.append(list);
+  Object.entries(UNITS).forEach(([u,name]) => {
+    v.append(h('div',{class:'unit u-' + u}, h('h2',{}, name)));
+    SKILLS.filter(t => t.u === u).forEach(t => v.append(h('button',{class:'card mrow u-' + t.u,style:'width:100%;text-align:left',onclick:() => { S.focus = t.id; go('learn'); }},
+      h('span',{class:'ico'}, t.e), h('div',{}, h('div',{class:'nm'}, t.n), h('div',{class:'bar',style:'margin-top:5px'}, h('i',{style:`width:${mast(t.id)}%`}))), h('span',{class:'pct'}, mast(t.id) + '%'))));
+  });
+  const rs = h('button',{class:'btn ghost',style:'color:var(--no)'},'Reset my progress'); let armed = false, to;
+  rs.addEventListener('click', () => {
+    if (!armed){ armed = true; rs.textContent = 'Tap again to erase everything'; clearTimeout(to); to = setTimeout(() => { armed = false; rs.textContent = 'Reset my progress'; }, 3000); return; }
+    Object.keys(S).forEach(k => delete S[k]); Object.assign(S, {m:{}, tab:'me', xp:0, best:0, bossRuns:0, hs:{}, chk:{}, gp:{}});
+    save(); drawRing(); toast('Progress reset'); v.replaceChildren(); VIEWS.me(v);
+  });
+  v.append(rs);
+};
+
+/* ---------- BOOT ---------- */
+buildNav(); drawRing(); go(VIEWS[S.tab] ? S.tab : 'learn');
+
+})();
+</script>
+
+<div class="a2hs" id="a2hs" hidden><span>📲 <b>Make it full screen:</b> tap <b>Share</b> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> then <b>Add to Home Screen</b>.</span><button id="a2hsx" aria-label="Dismiss">✕</button></div>
+<script>
+(function(){ try { if (window.navigator.standalone === false && !localStorage.getItem('a2hs-x')){ var b = document.getElementById('a2hs'); b.hidden = false; document.getElementById('a2hsx').onclick = function(){ b.hidden = true; try { localStorage.setItem('a2hs-x','1'); } catch(e){} }; } } catch(e){} })();
+</script>
+</body>
+</html>

@@ -5,5 +5,12 @@
     "app_name": "Science Lab",
     "subtitle": "6th grade · Scientific Method",
     "added": "2026-10-27"
+  },
+  {
+    "path": "math/add-subtract",
+    "class": "Math",
+    "app_name": "Plus & Minus",
+    "subtitle": "7th grade · Adding & subtracting rational numbers",
+    "added": "2026-11-03"
   }
 ]

@@ -6,6 +6,7 @@ https://grand1llusion.github.io/middle-school-projects/
 | Lab | Class | Path |
 | --- | --- | --- |
 | Science Lab · 6th grade Scientific Method | Science | [`science/`](science/) |
+| Plus & Minus Lab · 7th grade adding & subtracting rational numbers | Math | [`math/add-subtract/`](math/add-subtract/) |
 
 ## How it is organized
 

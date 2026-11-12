@@ -25,18 +25,23 @@ S.hs = S.hs || {}; S.chk = S.chk || {}; S.m = S.m || {};
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
 const mast = id => S.m[id] || 0;
 
-const UNITS = { w:'Number Lines', x:'Adding', d:'Subtracting' };
-const SKILLS = [
+/* two topics share one page: 'c' Classic (add & subtract) and 'm' Mult·Div. Each topic fills MODES[k]; setMode() points these at it. */
+const MODES = {};
+let MODE = 'c', UNITS, SKILLS, GUIDE, PARTS, LAB, CARDS, GAMES, SHORT, STEPS, READY, buildBoss;
+const UNITS_C = { w:'Number Lines', x:'Adding', d:'Subtracting' };
+const SKILLS_C = [
   [1,'w','Hop on the Number Line','🐸'],[2,'w','Distance Between Points','📏'],
   [3,'x','Same Signs','🤝'],[4,'x','Opposite Signs','🪢'],[5,'x','Estimate First','🎯'],
   [6,'d','Keep · Change · Change','🔄'],[7,'d','Subtract Fractions & Decimals','🍕'],[8,'d','Temperature Problems','🌡️']
 ].map(([id,u,n,e]) => ({id,u,n,e}));
-const SK = Object.fromEntries(SKILLS.map(t => [t.id, t]));
+const SK = {}; /* every skill of both topics, by id */
+const addSkills = list => list.forEach(t => SK[t.id] = t);
+addSkills(SKILLS_C);
 
 /* no test date in the materials: the kicker names the unit instead */
 const TEST_DATE = null; /* e.g. new Date(2026, 10, 6) */
 function testLine(){
-  if (!TEST_DATE) return '<b>Grade 7</b> · Module 2';
+  if (!TEST_DATE) return LAB.kick;
   const now = new Date(), d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((TEST_DATE - d0) / 864e5);
   const lab = TEST_DATE.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
   if (days < 0) return '<b>Grade 7</b> · Module 2';
@@ -48,10 +53,24 @@ const lvl = () => Math.floor(S.xp / 100) + 1;
 const overall = () => Math.round(SKILLS.reduce((s,t) => s + mast(t.id), 0) / SKILLS.length);
 function drawRing(){
   const p = overall(), C = 2*Math.PI*17;
-  $('#ring').innerHTML = `<svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="17" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="var(--pos)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p/100)}"/></svg><b>${p}%</b>`;
+  $('#ring').innerHTML = `<svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="17" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="var(--w)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p/100)}"/></svg><b>${p}%</b>`;
   $('#ring').setAttribute('role','img'); $('#ring').setAttribute('aria-label','Overall mastery ' + p + ' percent');
   $('#lv').innerHTML = `Level ${lvl()}<br>${S.xp} XP`;
   $('#kick').innerHTML = testLine();
+  $('#h1').innerHTML = LAB.h1;
+}
+const bossStat = () => { S.boss = S.boss || {c:{best:S.best || 0, runs:S.bossRuns || 0}, m:{best:0, runs:0}}; return S.boss[MODE]; };
+const chk = () => MODE === 'c' ? (S.chk = S.chk || {}) : (S.chkM = S.chkM || {});
+const gpKey = k => MODE === 'c' ? k : 'm:' + k;
+function setMode(m){
+  const M = MODES[m] ? m : 'c', X = MODES[M]; MODE = M; S.mode = M;
+  ({units:UNITS, skills:SKILLS, guide:GUIDE, parts:PARTS, lab:LAB, cards:CARDS, games:GAMES, short:SHORT, steps:STEPS, ready:READY, boss:buildBoss} = X);
+  document.documentElement.dataset.mode = M;
+  document.querySelectorAll('#modebar button').forEach(b => { const on = b.dataset.m === M; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+}
+function buildModebar(){
+  const bar = $('#modebar');
+  [['c','<b>±</b> Classic'],['m','<b>×÷</b> Mult · Div']].forEach(([k, lab]) => bar.append(h('button',{'data-m':k,html:lab,onclick:() => { if (k === MODE) return; if (cleanup){ cleanup(); cleanup = null; } setMode(k); save(); drawRing(); go(VIEWS[S.tab] ? S.tab : 'learn'); toast(k === 'c' ? 'Classic: add & subtract' : 'Mult · Div: multiply & divide'); }})));
 }
 function bump(id, d){ S.m[id] = Math.max(0, Math.min(100, mast(id) + d)); save(); drawRing(); }
 function xp(n){ const was = lvl(); S.xp += n; save(); drawRing(); if (lvl() > was) toast('Level up! Level ' + lvl()); }

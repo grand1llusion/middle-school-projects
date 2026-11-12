@@ -5,8 +5,8 @@
 #   build/_page.html  full HTML document for local phone-size screenshots
 set -e
 cd "$(dirname "$0")"; mkdir -p build
-PARTS="s-core.js s-data.js s-gen.js s-engine.js s-learn.js s-games.js s-views.js"
-EXPORTS="GENS,GUIDE,PARTS,SHORT,STEPS,buildBoss,runSet,S,SKILLS,partMax,grade,isRight,parseNum,answerText,N,GAMES,CARDS,VIEWS,go,mast,lvl,LAB,qv,Q"
+PARTS="s-core.js s-data.js s-mdata.js s-gen.js s-mgen.js s-engine.js s-learn.js s-mlearn.js s-games.js s-mgames.js s-views.js"
+EXPORTS="GENS,MODES,setMode,runSet,S,SK,partMax,grade,isRight,parseNum,answerText,N,VIEWS,go,mast,lvl,qv,Q,cur:()=>({GUIDE,PARTS,SHORT,STEPS,buildBoss,SKILLS,UNITS,GAMES,CARDS,LAB,READY,MODE})"
 { cat s-head.html; echo "<script>"; echo "(()=>{'use strict';"; for f in $PARTS; do cat "$f"; echo; done; echo "})();"; echo "</script>"; } > build/index.html
 EXPORTS="$EXPORTS" python3 - <<'PY'
 import os, re

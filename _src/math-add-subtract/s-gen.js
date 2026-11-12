@@ -130,8 +130,8 @@ function gWord(){
   return NUM({skill:8, title:'Money', tpl:'bank', ctx:`Ava’s lunch account is at <b>${m2(neg(B))}</b> (she owes money). She deposits <b>${m2(P)}</b>.`, prompt:'What is her balance now, in dollars?', why:`${m2(neg(B))} + ${m2(P)}. ` + whyAdd(neg(B), P)}, e, {show:m2(e)});
 }
 
-const GENS = [null, gLine, gDist, gSame, gOpp, gEst, gKCC, gSub, gWord];
-const buildBoss = () => [gLine(), gDist(), gSame(), gSame(), gOpp(), gOpp(), gOpp(), gEst(), gKCC(), gKCC(), gSub(), gSub(), gSub(), gWord(), gWord()];
+const GENS = {1:gLine, 2:gDist, 3:gSame, 4:gOpp, 5:gEst, 6:gKCC, 7:gSub, 8:gWord}; /* Mult·Div adds 11–18 */
+const buildBossC = () => [gLine(), gDist(), gSame(), gSame(), gOpp(), gOpp(), gOpp(), gEst(), gKCC(), gKCC(), gSub(), gSub(), gSub(), gWord(), gWord()];
 
 /* ---------- THE PRACTICE QUIZ AND LESSON 6, problem by problem ---------- */
 const I = n => mk(Q(n), 'i'), D = (n, m) => mk(Q(n, m), 'd'), Fm = (w, n, d) => mk(Q(Math.sign(w || 1) * (Math.abs(w) * d + n), d), 'f');
@@ -143,7 +143,7 @@ const q5 = (op) => { const a = I(8), b = op === '+' ? I(-3) : I(3), R = {min:0, 
 const estNum = (no, a, b) => { const e = plus(a,b); return {type:'num', no, lab:`Lesson #${no - 10}`, skill:isNeg(a) === isNeg(b) ? 3 : 4, title:'Estimate, then add', prompt:`Estimate, then find the sum. ${EX([a,b],['+'])}`,
   blanks:[{label:'Estimate', answer:qv(e.q), tol:1.5, show:`about ${N(near(a) + near(b))}`}, {label:'Sum', answer:qv(e.q), show:showAns(e)}], why:`Estimate: ${N(near(a))} + ${near(b) < 0 ? '(' + N(near(b)) + ')' : N(near(b))} = ${N(near(a) + near(b))}. Any estimate within 1½ counts. ` + whyAdd(a,b)}; };
 const SHAWN = `<div class="work" style="font-size:15px"><div><b>Shawn’s way:</b> ${EX([D(109,10), D(-685,100)],['+']).replace('class="ex"','class="exs"')}</div><div>The addends have opposite signs.</div><div>10.9 − 6.85 = 10 + 0.9 − 6 − 0.85</div><div style="padding-left:58px">= 10 − 6 + 0.9 − 0.85</div><div style="padding-left:58px">= 4 + 0.05 = 4.05</div><div>The positive addend has the greater absolute value, so the sum is 4.05.</div></div>`;
-const GUIDE = [
+const GUIDE_C = [
   MC({no:1, lab:'Quiz #1', skill:6, title:'Subtract', prompt:`Evaluate the expression ${EX([I(3),I(11)],['−'])}`, choices:['A. −14','B. −8','C. 8','D. 14'], answer:1, layout:'g2', why:'3 − 11 = 3 + (−11). Opposite signs: 11 − 3 = 8. −11 has the bigger size, so the answer is <b>−8</b>.'}),
   {type:'multi', all:true, no:2, lab:'Quiz #2 · Part A', skill:8, title:'Choose all', ctx:tempCtx, prompt:'Which expressions represent the <b>initial</b> temperature? Choose <b>all</b> that apply.', choices:['A. 7 + 12','B. 7 − 12','C. −7 + 12','D. −7 − 12','E. −7 − (−12)'], correct:[2,4], pick:1, why:'Some number minus 12 equals −7, so the start is −7 + 12. <b>C</b> is that. <b>E</b> is too: subtracting −12 is the same as adding 12.'},
   {type:'num', no:3, lab:'Quiz #2 · Part B', skill:8, title:'Work backward', ctx:tempCtx, prompt:'What was the initial temperature?', blanks:[{answer:5, show:'5', post:'°C'}], why:'−7 + 12 = <b>5°C</b>. Check: 5 − 12 = −7 ✓'},
@@ -168,4 +168,4 @@ const GUIDE = [
   estNum(22, Fm(-8,2,5), Fm(8,2,3)),
   estNum(23, D(721,100), D(-352,100))
 ];
-const PARTS = [['Q','Practice Quiz B',1,10,'Quiz #1–6'],['L','Lesson 6 · #1–5',11,15,'Number line, Shawn’s way, temperature'],['E','Lesson 6 · #6–13',16,23,'Estimate, then add']];
+const PARTS_C = [['Q','Practice Quiz B',1,10,'Quiz #1–6'],['L','Lesson 6 · #1–5',11,15,'Number line, Shawn’s way, temperature'],['E','Lesson 6 · #6–13',16,23,'Estimate, then add']];

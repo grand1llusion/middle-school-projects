@@ -45,7 +45,7 @@ WRAP_HEAD = '''<!doctype html>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="{app_name}">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{light_theme}" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="{dark_theme}" media="(prefers-color-scheme: dark)">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -127,6 +127,7 @@ def main():
     ap.add_argument('--description', default='')
     ap.add_argument('--color', default='#0A8273', help='icon background color')
     ap.add_argument('--bg', default='#EDF2EE', help='page background for the splash screen')
+    ap.add_argument('--light-theme', default='#FFFFFF', help='browser bar color in light mode (match the page background for a calm theme)')
     ap.add_argument('--dark-theme', default='#15241C')
     ap.add_argument('--label', default='', help='1-3 characters drawn on a generated icon')
     ap.add_argument('--new-icon', action='store_true', help='regenerate icons even if the folder already has them')
@@ -141,10 +142,10 @@ def main():
         if '</style>' not in src: sys.exit('No </style> found in the page.')
         i = src.index('</style>') + len('</style>')
         out_dir = os.path.join(ROOT, a.dest); os.makedirs(out_dir, exist_ok=True)
-        page = WRAP_HEAD.format(description=esc(a.description or a.subtitle), app_name=esc(a.app_name), dark_theme=a.dark_theme) + src[:i] + WRAP_EXTRA + src[i:] + WRAP_TAIL
+        page = WRAP_HEAD.format(description=esc(a.description or a.subtitle), app_name=esc(a.app_name), light_theme=a.light_theme, dark_theme=a.dark_theme) + src[:i] + WRAP_EXTRA + src[i:] + WRAP_TAIL
         open(os.path.join(out_dir, 'index.html'), 'w', encoding='utf-8').write(page)
         json.dump({'name': a.app_name, 'short_name': a.app_name, 'description': a.description or a.subtitle, 'start_url': './', 'scope': './', 'display': 'standalone', 'orientation': 'portrait',
-                   'background_color': a.bg, 'theme_color': '#FFFFFF', 'icons': [{'src': 'icon-192.png', 'sizes': '192x192', 'type': 'image/png'}, {'src': 'icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any maskable'}]},
+                   'background_color': a.bg, 'theme_color': a.light_theme, 'icons': [{'src': 'icon-192.png', 'sizes': '192x192', 'type': 'image/png'}, {'src': 'icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any maskable'}]},
                   open(os.path.join(out_dir, 'manifest.webmanifest'), 'w'), indent=2, ensure_ascii=False)
         have = all(os.path.exists(os.path.join(out_dir, f)) for f in ('apple-touch-icon.png', 'icon-192.png', 'icon-512.png'))
         if a.new_icon or not have:

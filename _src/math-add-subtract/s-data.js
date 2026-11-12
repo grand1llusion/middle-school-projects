@@ -53,7 +53,8 @@ function whyAdd(a, b){
 const whySub = (a, b) => `Keep · change · change: ${fmt(a)} + ${par(neg(b))}. ` + whyAdd(a, neg(b));
 
 /* ---------- LAB SETTINGS (the views read these) ---------- */
-const LAB = {
+const LAB_C = {
+  h1:'Plus &amp; Minus Lab', kick:'<b>Grade 7</b> · Module 2',
   learn:{title:'8 skills for the quiz', sub:'Open one, play with it, then practice 5.', emoji:'➕'},
   guide:{title:'Your quiz and lesson', sub:'All 23 problems from Practice Quiz B and Lesson 6.', emoji:'📋'},
   boss:{name:'Count Negula', blurb:'15 new problems from every skill. Answers come at the end.', btn:'Fight Count Negula', foot:'90% or better defeats the Count. New problems every try.',
@@ -61,16 +62,16 @@ const LAB = {
   matchSkill:6, stepSkill:6,
   keypad:'Negative: − · Fraction: 3/4 · Mixed: 3 ␣ 1/4'
 };
-const READY = ['I can add on a number line: right for positive, left for negative.','I can find the distance between two points. It is never negative.','Same signs: I add the sizes and keep the sign.','Opposite signs: I subtract the sizes and use the bigger one’s sign.','I estimate first, then check my answer is close.','I can rewrite subtraction as adding the opposite.','I can subtract decimals, fractions, and mixed numbers.','I can solve temperature problems, even backward ones.'];
+const READY_C = ['I can add on a number line: right for positive, left for negative.','I can find the distance between two points. It is never negative.','Same signs: I add the sizes and keep the sign.','Opposite signs: I subtract the sizes and use the bigger one’s sign.','I estimate first, then check my answer is close.','I can rewrite subtraction as adding the opposite.','I can subtract decimals, fractions, and mixed numbers.','I can solve temperature problems, even backward ones.'];
 
 /* word match: [word, short meaning] */
-const SHORT = {
+const SHORT_C = {
   'Absolute value':'Distance from 0. Never negative', 'Opposite':'Same distance from 0, other side', 'Sum':'The answer to an addition', 'Difference':'The answer to a subtraction',
   'Distance':'Space between two points', 'Integer':'A whole number or its opposite', 'Rational number':'Can be written as a fraction', 'Zero pair':'A number plus its opposite = 0',
   'Same signs':'Add the sizes. Keep the sign', 'Opposite signs':'Subtract the sizes. Bigger one’s sign', 'Keep · change · change':'Turns − into + the opposite', 'Estimate':'A close answer from rounded numbers'
 };
 /* step sorter: how to work any a − b */
-const STEPS = [
+const STEPS_C = [
   ['Keep the first number','It stays the same.'],
   ['Change − to +','Subtracting becomes adding.'],
   ['Change the second number to its opposite','5 becomes −5. −9 becomes 9.'],

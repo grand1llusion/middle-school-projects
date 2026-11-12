@@ -1,5 +1,5 @@
 /* ---------- FLASH CARDS ---------- */
-const CARDS = [
+const CARDS_C = [
   [1,'Add a positive','Hop <b>right</b> ➡️ on the number line.'],
   [1,'Add a negative','Hop <b>left</b> ⬅️ on the number line.'],
   [1,'8 − 3 vs 8 + (−3)','Same hop! Both land on <b>5</b>.'],
@@ -29,7 +29,7 @@ function cardsGame(box, exit){
   const build = () => { deck = shuffle(CARDS.filter(c => unit === 'all' || SK[c[0]].u === unit)); i = 0; flip = false; draw(); };
   function next(good){ const c = deck[i]; if (good){ bump(c[0], 4); xp(1); } else deck.splice(Math.min(deck.length, i + 4), 0, c); i++; flip = false; draw(); }
   function draw(){
-    wrap.replaceChildren(h('div',{class:'row',style:'gap:6px'}, [['all','All'],['w','Number lines'],['x','Adding'],['d','Subtracting']].map(([k,l]) => h('button',{class:'chip' + (unit === k ? ' sel' : ''),style:'min-height:34px',onclick:() => { unit = k; S.cu = k; save(); build(); }}, l))));
+    wrap.replaceChildren(h('div',{class:'row',style:'gap:6px'}, [['all','All'], ...Object.entries(UNITS)].map(([k,l]) => h('button',{class:'chip' + (unit === k ? ' sel' : ''),style:'min-height:34px',onclick:() => { unit = k; S.cu = k; save(); build(); }}, l))));
     if (i >= deck.length){ wrap.append(h('div',{class:'card pad col c'}, h('h2',{style:'font-size:28px'},'Deck done! 🎉'), h('button',{class:'btn hlb',onclick:build},'Shuffle again'))); return; }
     const c = deck[i], t = SK[c[0]], toggle = () => { flip = !flip; card.classList.toggle('flip', flip); };
     const card = h('div',{class:'fc u-' + t.u + (flip ? ' flip' : ''),role:'button',tabindex:'0','aria-label':'Flashcard. Tap to flip.'},
@@ -67,7 +67,7 @@ function gmThermo(){
   const story = back ? `It ${up ? 'rose' : 'dropped'} ${C}° and now it is <b>${N(T)}°</b>. What was the starting temperature?` : `It is <b>${N(T)}°</b>. Then it ${up ? 'rises' : 'drops'} <b>${C}°</b>. What is the temperature now?`;
   return {prompt:'🌡️ ' + story, choices:all, answer:all.indexOf(N(e) + '°'), cols:2, why:back ? `Undo it: ${N(T)} ${up ? '−' : '+'} ${C} = ${N(e)}°.` : `${N(T)} + ${up ? C : '(−' + C + ')'} = ${N(e)}°.`, val:e};
 }
-const GAMES = [
+const GAMES_C = [
   {id:'sign', e:'⚡', name:'Sign Rush', d:'+ or −? 45 seconds', u:'x', skill:4, time:45, par:15, gen:gmSign, how:'Is the answer positive or negative? You don’t have to solve it all the way. Go fast!'},
   {id:'match', e:'🧩', name:'Word Match', d:'Match math words', u:'w', custom:matchGame},
   {id:'steps', e:'🪜', name:'Step Sorter', d:'Order the subtract steps', u:'d', custom:stepGame},
@@ -132,7 +132,7 @@ function matchGame(box, exit){
     shuffle(words).forEach(w => { const b = h('button',{class:'tile',style:'min-height:60px;font-size:13px',onclick:() => {
       if (b.disabled || !sel) return;
       const lb = [...left.children].find(x => x.textContent === sel);
-      if (sel === w){ [lb, b].forEach(x => { x.classList.remove('sel'); x.classList.add('good'); x.disabled = true; }); sel = null; if (--left4 === 0){ r++; if (r * 4 >= rounds.length){ const s = sw.stop(); cleanup = null; bump(LAB.matchSkill, 10); timeResult(box, 'match', 'Word Match', s, exit, () => matchGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } else setTimeout(deal, 350); } }
+      if (sel === w){ [lb, b].forEach(x => { x.classList.remove('sel'); x.classList.add('good'); x.disabled = true; }); sel = null; if (--left4 === 0){ r++; if (r * 4 >= rounds.length){ const s = sw.stop(); cleanup = null; bump(LAB.matchSkill, 10); timeResult(box, GAMES.find(g => g.custom === matchGame).id, 'Word Match', s, exit, () => matchGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } else setTimeout(deal, 350); } }
       else { miss++; sw.add(2); [lb, b].forEach(x => x.classList.add('bad','shake')); setTimeout(() => [lb, b].forEach(x => x.classList.remove('bad','shake')), 450); toast('+2 seconds'); }
     }}, SHORT[w]); right.append(b); });
     area.replaceChildren(h('div',{class:'lbl'}, `Round ${r + 1} of ${Math.ceil(rounds.length / 4)}`), h('div',{class:'grid2'}, left, right));
@@ -143,7 +143,7 @@ function stepGame(box, exit){
   const clock = h('b',{}), slots = h('div',{class:'ord'}), pk = h('div',{class:'pick'}); let nxt = 0, miss = 0; const sw = stopwatch(clock); cleanup = sw.kill;
   const paint = () => slots.replaceChildren(...STEPS.map((s,k) => h('div',{class:'slot' + (k < nxt ? ' good' : '')}, h('i',{}, k + 1), k < nxt ? s[0] : '')));
   shuffle(STEPS.map((s,i) => i)).forEach(i => { const b = h('button',{style:'min-height:48px',onclick:() => {
-    if (i === nxt){ b.remove(); nxt++; paint(); if (nxt === STEPS.length){ const s = sw.stop(); cleanup = null; bump(LAB.stepSkill, 8); timeResult(box, 'steps', 'Step Sorter', s, exit, () => stepGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } }
+    if (i === nxt){ b.remove(); nxt++; paint(); if (nxt === STEPS.length){ const s = sw.stop(); cleanup = null; bump(LAB.stepSkill, 8); timeResult(box, GAMES.find(g => g.custom === stepGame).id, 'Step Sorter', s, exit, () => stepGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } }
     else { miss++; sw.add(2); b.classList.add('bad','shake'); setTimeout(() => b.classList.remove('bad','shake'), 450); toast('+2 seconds'); }
   }}, STEPS[i][0]); pk.append(b); });
   box.replaceChildren(backBtn('Games', () => { sw.kill(); cleanup = null; exit(); }), h('div',{class:'row sp'}, h('span',{class:'hint'},`Tap the ${STEPS.length} steps in order. Wrong tap = +2s.`), clock), slots, pk);

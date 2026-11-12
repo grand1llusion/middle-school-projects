@@ -1,13 +1,13 @@
 {
   "name": "Plus & Minus",
   "short_name": "Plus & Minus",
-  "description": "Grade 7 Module 2 study lab: adding and subtracting positive and negative numbers.",
+  "description": "Grade 7 Module 2 study lab: adding, subtracting, multiplying and dividing rational numbers.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#EEF1F7",
-  "theme_color": "#FFFFFF",
+  "background_color": "#E7EFE2",
+  "theme_color": "#E7EFE2",
   "icons": [
     {
       "src": "icon-192.png",

@@ -135,7 +135,7 @@ function runSet(box, items, o){
     stopKd();
     items.forEach((p,k) => { if (!res[k]) res[k] = grade(p, resp[k]); });
     const got = res.reduce((s,r) => s + r.got, 0), pct = Math.round(100 * got / total);
-    if (boss){ items.forEach((p,k) => bump(p.skill, res[k].got === res[k].max ? 8 : -3)); xp(got * 8); S.bossRuns++; if (pct > S.best) S.best = pct; save(); }
+    if (boss){ items.forEach((p,k) => bump(p.skill, res[k].got === res[k].max ? 8 : -3)); xp(got * 8); const bs = bossStat(); bs.runs++; if (pct > bs.best) bs.best = pct; save(); }
     if (o.onDone) o.onDone(got, total);
     const verdict = boss ? (pct >= 90 ? LAB.boss.win : pct >= 70 ? LAB.boss.hurt : LAB.boss.lose) : (pct === 100 ? 'Perfect! 🎉' : pct >= 70 ? 'Solid work' : 'Keep going');
     const card = h('div',{class:'card pad col'}, h('div',{class:'score'}, `${got}/${total}`), h('div',{class:'big-out',style:'color:var(--ink)'}, verdict));

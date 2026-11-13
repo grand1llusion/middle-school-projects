@@ -7,6 +7,7 @@ https://grand1llusion.github.io/middle-school-projects/
 | --- | --- | --- |
 | Science Lab · 6th grade Scientific Method | Science | [`science/`](science/) |
 | Plus & Minus Lab · 7th grade add, subtract, multiply & divide (Classic + Mult · Div modes) | Math | [`math/add-subtract/`](math/add-subtract/) |
+| Fraction Lab · 5th grade adding & subtracting fractions (Module 2) | Math | [`math/grade5-fractions/`](math/grade5-fractions/) |
 
 ## How it is organized
 

@@ -1,0 +1,1607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Grade 5 Module 2 study lab: fractions as division, like units, adding and subtracting fractions and mixed numbers.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Fraction Lab">
+<meta name="theme-color" content="#EEE8F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16111F" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Fraction Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Layout: a soft lavender study room. Light purple ground with two blurred bubbles behind the page, a rounded header with the level ring, one column sized for a 375x667 phone, thumb-height tab bar. Fraction pieces: lavender for the first number, pink for the second, teal for new pieces; lemon highlighter marks every answer. */
+:root{
+  --bg:#EEE8F8; --hill1:#E3D8F5; --hill2:#D9CBF1; --surf:#FCFAFF; --chrome:#E4D9F6; --soft:#E9DFF8; --ink:#2A2140; --mut:#6A5E85; --line:#DCD0EE; --on:#FFFFFF;
+  --w:#7550C4; --wt:#ECE3FA; --x:#B24E8C; --xt:#F7E2EF; --d:#2C7A88; --dt:#DCEFF2;
+  --pa:#B39AEC; --pb:#F2A9CD; --pc:#86CDD8; --chz:#F8D77A; --crust:#D9973E; --brw:#9C6B4E; --brwk:#6E4632;
+  --hl:#FFE47A; --hlk:#21183A; --cta:#B79CEB; --ctak:#21183A;
+  --ok:#2E7D4F; --okt:#DCF1E3; --no:#B8434E; --not:#F8DFE2; --shadow:rgba(42,33,64,.08);
+  --fd:'Baloo 2',ui-rounded,system-ui,sans-serif; --fb:'Nunito',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#16111F; --hill1:#1D1629; --hill2:#241B33; --surf:#1E1729; --chrome:#251C33; --soft:#2C2240; --ink:#EEE8F8; --mut:#AA9EC2; --line:#352A47; --on:#16111F;
+  --w:#B79CF0; --wt:#2D2346; --x:#EE9CCB; --xt:#3E2236; --d:#7CCAD7; --dt:#173439;
+  --pa:#9C7FE0; --pb:#E48BB8; --pc:#5FB4C1; --chz:#E8C25E; --crust:#B9772C; --brw:#8A5D43; --brwk:#C9A27F;
+  --hl:#F2D86A; --hlk:#21183A; --cta:#A588E2; --ctak:#16111F;
+  --ok:#6CCB8E; --okt:#173A26; --no:#F08C8C; --not:#45201F; --shadow:rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#16111F; --hill1:#1D1629; --hill2:#241B33; --surf:#1E1729; --chrome:#251C33; --soft:#2C2240; --ink:#EEE8F8; --mut:#AA9EC2; --line:#352A47; --on:#16111F;
+  --w:#B79CF0; --wt:#2D2346; --x:#EE9CCB; --xt:#3E2236; --d:#7CCAD7; --dt:#173439;
+  --pa:#9C7FE0; --pb:#E48BB8; --pc:#5FB4C1; --chz:#E8C25E; --crust:#B9772C; --brw:#8A5D43; --brwk:#C9A27F;
+  --hl:#F2D86A; --hlk:#21183A; --cta:#A588E2; --ctak:#16111F;
+  --ok:#6CCB8E; --okt:#173A26; --no:#F08C8C; --not:#45201F; --shadow:rgba(0,0,0,.3); color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding-inline:16px;padding-block:0 84px;background-color:var(--bg);background-image:radial-gradient(140% 60% at 112% 4%,var(--hill2) 0 30%,transparent 62%),radial-gradient(120% 55% at -18% 96%,var(--hill1) 0 34%,transparent 66%);background-attachment:fixed;color:var(--ink);font:16px/1.4 var(--fb);touch-action:manipulation;overflow-x:hidden;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+h1,h2,h3{font-family:var(--fd);font-weight:700;margin:0;text-wrap:balance}
+.wrap{max-width:560px;margin-inline:auto}
+.u-w{--ac:var(--w);--at:var(--wt)}.u-x{--ac:var(--x);--at:var(--xt)}.u-d{--ac:var(--d);--at:var(--dt)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;margin-inline:-16px;padding:8px 16px 8px;display:flex;flex-direction:column;gap:6px;background:var(--chrome);border-bottom:1px solid var(--line);border-radius:0 0 20px 20px;box-shadow:0 2px 10px var(--shadow)}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kick{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.kick b{color:var(--w)}
+.top h1{font-size:26px;line-height:1;font-weight:800;color:var(--w)}
+.lv{font-size:11px;font-weight:700;color:var(--mut);text-align:right;line-height:1.25;white-space:nowrap}
+.ring{position:relative;width:42px;height:42px;flex:none}
+.ring svg{width:42px;height:42px;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 11px var(--fb)}
+main{padding-block:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:18px;min-width:0;box-shadow:0 1px 2px var(--shadow)}
+.pad{padding:12px}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sp{justify-content:space-between}
+.mut{color:var(--mut)}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.hint{font-size:13px;color:var(--mut)}
+.c{text-align:center}
+.big-out{font:600 21px/1.2 var(--fd);color:var(--ac,var(--ink));text-align:center;min-height:26px}
+.hl{background:var(--hl);color:var(--hlk);border-radius:6px;padding:0 6px;font-weight:700}
+.fx{display:block;width:100%;height:auto}
+svg text{font-family:var(--fb)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+
+.chip{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:6px 12px;border-radius:20px;border:2px solid transparent;background:var(--at,var(--bg));color:var(--ink);font-weight:700;line-height:1.2}
+.chip.sel,button.chip.on{border-color:var(--ac,var(--ink))}
+.btn{min-height:48px;padding:0 16px;border:0;border-radius:14px;background:var(--ac,var(--ink));color:var(--on);font-weight:700;font-size:16px}
+.btn.ghost{background:var(--at,var(--surf));color:var(--ink);border:1px solid var(--line)}
+.btn.hlb{background:var(--cta);color:var(--ctak)}
+.btn:disabled{opacity:.4}
+.back{min-height:38px;align-self:flex-start;padding:0 14px}
+.seg{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.seg button{flex:1 1 0;min-height:38px;padding:0 6px;border:0;border-radius:10px;background:transparent;font-weight:700;color:var(--mut);font-size:14px}
+.seg button.on{background:var(--surf);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);background:var(--chrome);border-radius:20px 20px 0 0;border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px))}
+nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:50px;border:0;background:none;border-radius:12px;font-size:11px;font-weight:700;color:var(--mut)}
+nav button svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--ink);background:var(--surf)}
+nav button.on svg{stroke:var(--w)}
+
+/* Learn */
+.unit h2{font-size:15px;color:var(--ac);display:flex;align-items:center;gap:8px;padding-top:4px}
+.unit h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.tp{overflow:hidden;scroll-margin-top:64px}
+.tp>button{width:100%;display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 12px;border:0;background:none;text-align:left;font-weight:700;font-size:16px}
+.ico{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--at);font-size:19px}
+.tp .dot{margin-left:auto;width:12px;height:12px;border-radius:50%;border:2px solid var(--line);flex:none}
+.tp .dot.m{background:var(--ok);border-color:var(--ok)}
+.tp .dot.h{border-color:var(--ac);background:linear-gradient(90deg,var(--ac) 50%,transparent 50%)}
+.tp .body{padding:0 12px 14px;display:flex;flex-direction:column;gap:10px}
+.stage{border-radius:14px;background:var(--at);overflow:hidden}
+.rule{padding:9px 12px;border-radius:14px;background:var(--soft);color:var(--ink);font-weight:700;text-align:center;font-size:15px;border:1px solid var(--line)}
+input[type=range]{width:100%;height:34px;accent-color:var(--ac,var(--x))}
+.tile{min-height:52px;padding:6px 8px;border-radius:14px;border:2px solid var(--line);background:var(--surf);font-weight:700;line-height:1.2;text-align:center;display:grid;place-items:center;font-size:15px}
+.tile.sel{border-color:var(--ac,var(--ink));background:var(--at,var(--bg))}
+.tile.good{border-color:var(--ok);background:var(--okt)}.tile.bad{border-color:var(--no);background:var(--not)}
+.tile.dim{opacity:.35}
+.def{padding:12px;border-radius:14px;background:var(--at);display:flex;flex-direction:column;gap:4px;min-height:92px}
+.def b{font:600 20px var(--fd);color:var(--ac)}
+.num-t{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.num-t span{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--surf);border:2px solid var(--line);font:600 20px var(--fd);transition:transform .25s}
+.num-t span.mid{background:var(--hl);border-color:var(--hlk);color:var(--hlk)}
+.num-t span.mo{border-color:var(--ac);background:var(--at)}
+
+/* Cards */
+.fc{perspective:1000px;height:260px;position:relative;touch-action:pan-y}
+.fc .in{position:absolute;inset:0;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;text-align:center;border-radius:20px;border:2px solid var(--ac);background:var(--surf);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.back{transform:rotateY(180deg);background:var(--at)}
+.face .q{font:600 30px/1.1 var(--fd)}
+.face .a{font:700 19px/1.3 var(--fb)}
+.face .tapn{position:absolute;bottom:10px;font-size:12px;color:var(--mut)}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ac,var(--x));border-radius:99px;transition:width .3s}
+
+/* Practice engine */
+.dots{display:flex;gap:3px}
+.dots i{flex:1;height:7px;border-radius:99px;background:var(--line)}
+.dots i.g{background:var(--ok)}.dots i.b{background:var(--no)}.dots i.c{background:var(--ink)}.dots i.m{background:var(--x)}
+.ctx{padding:10px 12px;border-radius:14px;background:var(--at);display:flex;flex-direction:column;gap:6px;font-size:15px}
+.pq{font:600 19px/1.22 var(--fd)}
+.opt{display:block;width:100%;min-height:48px;padding:8px 14px;text-align:left;border:2px solid var(--line);background:var(--surf);border-radius:14px;font-weight:700;font-size:16px;line-height:1.25}
+.opt.sel{border-color:var(--ink);background:var(--bg)}
+.opt.good{border-color:var(--ok);background:var(--okt)}
+.opt.bad{border-color:var(--no);background:var(--not)}
+.opts{display:grid;gap:8px}
+.opts.g2{grid-template-columns:1fr 1fr}.opts.g2 .opt{text-align:center;padding:8px 6px;font-size:15px}
+.opts.big .opt{min-height:72px;font-size:18px;text-align:center}
+.ord{display:flex;flex-direction:column;gap:5px}
+.ord .slot{display:flex;align-items:center;gap:10px;min-height:38px;padding:4px 10px;border-radius:12px;border:2px dashed var(--line);font-weight:700}
+.ord .slot i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--at,var(--bg));font-size:13px;flex:none}
+.ord .slot.full{border-style:solid;border-color:var(--ac,var(--ink));background:var(--surf)}
+.ord .slot.good{border-color:var(--ok);background:var(--okt)}.ord .slot.bad{border-color:var(--no);background:var(--not)}
+.pick{display:flex;flex-wrap:wrap;gap:6px}
+.pick button{min-height:42px;padding:4px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surf);font-weight:700;font-size:15px}
+.pick button.sel{border-color:var(--ink);background:var(--hl);color:var(--hlk)}
+.pick button.good{border-color:var(--ok);background:var(--okt)}.pick button.bad{border-color:var(--no);background:var(--not)}
+.pick button:disabled{opacity:.35}
+.blank{min-width:64px;min-height:42px;padding:4px 12px;border-radius:12px;border:2px dashed var(--mut);background:var(--surf);font:600 19px var(--fd);color:var(--ink);vertical-align:middle}
+.blank.on{border:2px solid var(--w);box-shadow:0 0 0 3px var(--wt)}
+.blank.good{border:2px solid var(--ok);background:var(--okt)}.blank.bad{border:2px solid var(--no);background:var(--not)}
+.blank:empty::before{content:"?";color:var(--mut)}
+.fld{display:flex;align-items:center;gap:8px;font-weight:700}
+.fld .lab{min-width:62px}.fld .post{font-weight:700}
+.flds3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.flds3 .fld{flex-direction:column;align-items:stretch;gap:3px}.flds3 .fld .lab{min-width:0;font-size:13px;text-align:center;color:var(--mut)}.flds3 .blank{width:100%;min-width:0}
+.pick.g2{display:grid;grid-template-columns:1fr 1fr}.pick.g2 button{font-size:14px;line-height:1.2}
+.pad4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pad4 button{min-height:40px;border-radius:12px;background:var(--surf);border:2px solid var(--line);font:600 20px var(--fd)}
+.pad4 button:active{background:var(--cta);color:var(--ctak)}
+.pad4 .sm{font-size:15px}
+.padhint{font-size:12px;color:var(--mut);text-align:center}
+.fb{padding:10px 12px;border-radius:14px;font-weight:700}
+.fb.good{background:var(--okt);border:2px solid var(--ok)}
+.fb.bad{background:var(--not);border:2px solid var(--no)}
+table.tb{border-collapse:collapse;font-weight:700;margin:2px auto}
+.tb th,.tb td{border:1px solid var(--mut);padding:4px 9px;text-align:center;min-width:40px}
+.tb th{background:var(--bg);font-family:var(--fd);font-weight:600}
+.hpbar{height:14px;border-radius:99px;background:var(--line);overflow:hidden;border:2px solid var(--ink)}
+.hpbar i{display:block;height:100%;background:var(--no);transition:width .5s}
+.score{font:700 58px/1 var(--fd);text-align:center}
+.mrow{display:grid;grid-template-columns:34px 1fr 40px;gap:10px;align-items:center;padding:8px 12px}
+.mrow .nm{font-weight:700;font-size:15px;line-height:1.2}
+.pct{font-size:13px;font-weight:700;text-align:right;color:var(--mut)}
+.chk{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:6px 12px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;font-weight:700;font-size:15px}
+.chk:last-child{border-bottom:0}
+.chk i{flex:none;width:24px;height:24px;border-radius:7px;border:2px solid var(--mut);display:grid;place-items:center;font-style:normal;font-size:15px}
+.chk.on i{background:var(--ok);border-color:var(--ok);color:var(--on)}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.05;font-size:.78em;margin-inline:1px}
+.fr i{font-style:normal;padding:0 2px}.fr i:first-child{border-bottom:2px solid currentColor}
+.ex{font:700 26px/1.25 var(--fd);white-space:nowrap}
+.exs{font:700 20px/1.3 var(--fd)}
+.pos{color:var(--pos)}.neg{color:var(--neg)}
+.opts.viz .opt{padding:4px 6px}
+.work{font:600 17px/1.5 var(--fd);display:flex;flex-direction:column;gap:2px}
+.work .on{background:var(--hl);color:var(--hlk);border-radius:6px;padding:0 4px}
+.kcc{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+.kcc span{min-width:58px;min-height:58px;padding:4px 10px;border-radius:14px;display:grid;place-items:center;border:2px solid var(--line);background:var(--surf);font:800 26px var(--fd);transition:all .25s}
+.kcc span.k{border-color:var(--ok);background:var(--okt)}.kcc span.c{border-color:var(--hlk);background:var(--hl);color:var(--hlk)}
+.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pop{animation:pp .35s}@keyframes pp{50%{transform:scale(1.06)}}
+.toast{position:fixed;left:50%;bottom:calc(70px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;padding:9px 16px;border-radius:99px;background:var(--ink);color:var(--bg);font-weight:700;font-size:14px;max-width:90vw}
+.wl{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:nowrap}
+.wl .hint{font-family:var(--fb);text-align:right;font-size:12.5px}
+.work .on{background:var(--hl);color:var(--hlk);border-radius:6px;padding:0 4px}
+.fb4{display:flex;align-items:center;justify-content:center;gap:10px;font:800 26px var(--fd)}
+.fbx{display:flex;flex-direction:column;align-items:center;gap:4px}
+.fbx i{display:block;width:58px;height:3px;border-radius:2px;background:var(--ink)}
+.bx{width:54px;height:46px;border-radius:12px;border:2px dashed var(--mut);background:var(--surf);font:800 24px var(--fd);color:var(--ink)}
+.bx.on{border:2px solid var(--w);box-shadow:0 0 0 3px var(--wt)}
+.bx.good{border:2px solid var(--ok);background:var(--okt)}.bx.bad{border:2px solid var(--no);background:var(--not)}
+.tiles6{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tiles6 button{min-height:46px;border-radius:12px;border:2px solid var(--line);background:var(--surf);font:800 22px var(--fd)}
+.tiles6 button:active{background:var(--cta)}
+.tiles6 .sm{font:700 15px var(--fb);grid-column:span 2}
+.pad4 .zero{grid-column:span 2}
+.pad4 .zero + .sm:last-child{grid-column:span 2}
+.blank .fr{font-size:.82em}
+.grid3 .tile{min-height:60px}
+.ctx.blk{display:block;line-height:1.5}
+.opt .fr{font-size:.95em}
+.chip .fr{font-size:.85em}
+:focus-visible{outline:3px solid var(--w);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+/* hosted, full-screen app extras */
+html{background:var(--bg)}
+button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.a2hs{position:fixed;left:12px;right:12px;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:15;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.35;box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:536px;margin-inline:auto}
+.a2hs svg{width:16px;height:16px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.a2hs button{flex:none;width:32px;height:32px;border:0;border-radius:50%;background:rgba(127,127,127,.3);color:inherit;font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="toprow">
+      <div><div class="kick" id="kick">Grade 5 · Module 2</div><h1 id="h1">Fraction Lab</h1></div>
+      <div class="row" style="flex-wrap:nowrap;gap:8px"><div class="lv" id="lv"></div><div class="ring" id="ring"></div></div>
+    </div>
+  </header>
+  <main id="view"></main>
+</div>
+<nav id="nav" aria-label="Sections"></nav>
+<div class="toast" id="toast" hidden></div>
+<script>
+(()=>{'use strict';
+/* ---------- CORE ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+function h(tag, a, ...kids){
+  const e = document.createElement(tag);
+  if (a) for (const k in a){
+    const v = a[k];
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k.slice(0,2) === 'on') e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat(9)) if (c != null && c !== false) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+}
+const shuffle = arr => { const a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const N = x => String(Math.round(x*1000)/1000).replace('-','−');
+
+/* state */
+const KEY = 'fraction-lab-g5-v1';
+let S = { m:{}, tab:'learn', xp:0, best:0, bossRuns:0, hs:{}, chk:{} };
+try { const r = localStorage.getItem(KEY); if (r) S = Object.assign(S, JSON.parse(r)); } catch(e){}
+S.hs = S.hs || {}; S.chk = S.chk || {}; S.m = S.m || {};
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+const mast = id => S.m[id] || 0;
+
+/* one topic. MODES keeps the shared shell (built for labs with a topic switch) working unchanged. */
+const MODES = {};
+let MODE = 'c', UNITS, SKILLS, GUIDE, PARTS, LAB, CARDS, GAMES, SHORT, STEPS, READY, buildBoss;
+const UNITS_C = { w:'Fractions & Like Units', x:'Mixed Numbers', d:'Think & Solve' };
+const SKILLS_C = [
+  [1,'w','Fair Shares','🍕'],[2,'w','Like Units','🧩'],[3,'w','Add Fractions','🧪'],[4,'w','Subtract Fractions','✂️'],
+  [5,'x','Add Mixed Numbers','🐸'],[6,'x','Subtract Mixed Numbers','🔁'],
+  [7,'d','Estimate & Compare','🎯'],[8,'d','Story Problems','📖'],[9,'d','Mistake Detective','🕵️']
+].map(([id,u,n,e]) => ({id,u,n,e}));
+const SK = {};
+const addSkills = list => list.forEach(t => SK[t.id] = t);
+addSkills(SKILLS_C);
+
+/* no test date in the materials: the kicker names the unit instead */
+const TEST_DATE = null; /* e.g. new Date(2026, 10, 6) */
+function testLine(){
+  if (!TEST_DATE) return LAB.kick;
+  const now = new Date(), d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((TEST_DATE - d0) / 864e5);
+  const lab = TEST_DATE.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+  if (days < 0) return LAB.kick;
+  if (days === 0) return '<b>Quiz today!</b> You got this';
+  return days === 1 ? `<b>Quiz tomorrow</b> · ${lab}` : `<b>Quiz in ${days} days</b> · ${lab}`;
+}
+
+const lvl = () => Math.floor(S.xp / 100) + 1;
+const overall = () => Math.round(SKILLS.reduce((s,t) => s + mast(t.id), 0) / SKILLS.length);
+function drawRing(){
+  const p = overall(), C = 2*Math.PI*17;
+  $('#ring').innerHTML = `<svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="17" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="var(--w)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p/100)}"/></svg><b>${p}%</b>`;
+  $('#ring').setAttribute('role','img'); $('#ring').setAttribute('aria-label','Overall mastery ' + p + ' percent');
+  $('#lv').innerHTML = `Level ${lvl()}<br>${S.xp} XP`;
+  $('#kick').innerHTML = testLine();
+  $('#h1').innerHTML = LAB.h1;
+}
+const bossStat = () => { S.boss = S.boss || {c:{best:S.best || 0, runs:S.bossRuns || 0}, m:{best:0, runs:0}}; return S.boss[MODE]; };
+const chk = () => MODE === 'c' ? (S.chk = S.chk || {}) : (S.chkM = S.chkM || {});
+const gpKey = k => MODE === 'c' ? k : 'm:' + k;
+function setMode(m){
+  const M = MODES[m] ? m : 'c', X = MODES[M]; MODE = M; S.mode = M;
+  ({units:UNITS, skills:SKILLS, guide:GUIDE, parts:PARTS, lab:LAB, cards:CARDS, games:GAMES, short:SHORT, steps:STEPS, ready:READY, boss:buildBoss} = X);
+  document.documentElement.dataset.mode = M;
+  document.querySelectorAll('#modebar button').forEach(b => { const on = b.dataset.m === M; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+}
+function buildModebar(){
+  const bar = $('#modebar'); if (!bar || Object.keys(MODES).length < 2) return;
+  [['c','<b>±</b> Classic'],['m','<b>×÷</b> Mult · Div']].forEach(([k, lab]) => bar.append(h('button',{'data-m':k,html:lab,onclick:() => { if (k === MODE) return; if (cleanup){ cleanup(); cleanup = null; } setMode(k); save(); drawRing(); go(VIEWS[S.tab] ? S.tab : 'learn'); toast(k === 'c' ? 'Classic: add & subtract' : 'Mult · Div: multiply & divide'); }})));
+}
+function bump(id, d){ S.m[id] = Math.max(0, Math.min(100, mast(id) + d)); save(); drawRing(); }
+function xp(n){ const was = lvl(); S.xp += n; save(); drawRing(); if (lvl() > was) toast('Level up! Level ' + lvl()); }
+let tt;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 1600); }
+
+const ICONS = {
+  learn:'<path d="M12 3v9M7.5 7.5h9M7.5 18h9"/>',
+  guide:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  boss:'<path d="M6 3v18M6 4h11l-2 4 2 4H6"/>',
+  games:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/>',
+  me:'<path d="M5 19V11M12 19V5M19 19v-5"/>'
+};
+const TABS = [['learn','Learn'],['guide','Study Guide'],['boss','Boss Quiz'],['games','Games'],['me','Progress']];
+const VIEWS = {};
+let cleanup = null;
+function go(tab){
+  if (cleanup){ cleanup(); cleanup = null; }
+  S.tab = tab; save();
+  document.querySelectorAll('#nav button').forEach(b => { const on = b.dataset.t === tab; b.classList.toggle('on', on); on ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'); });
+  const v = $('#view'); v.replaceChildren(); VIEWS[tab](v);
+  window.scrollTo(0,0);
+}
+function buildNav(){
+  const n = $('#nav');
+  TABS.forEach(([k,l]) => n.append(h('button',{'data-t':k,onclick:()=>go(k)}, h('span',{html:`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`}), l)));
+}
+function seg(items, cur, fn){
+  const el = h('div',{class:'seg'});
+  items.forEach(([k,l]) => el.append(h('button',{class:k===cur?'on':'',onclick:ev => { el.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === ev.currentTarget)); fn(k); }}, l)));
+  return el;
+}
+const backBtn = (label, fn) => h('button',{class:'btn ghost back',onclick:fn}, '← ' + label);
+const tbl = rows => `<table class="tb">${rows.map(r => `<tr><th>${r[0]}</th>${r.slice(1).map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+
+/* number line. o: {min, max, tick, lab, pts:[{x, t, c}], arr:[{a, b, c, t}], w}
+   arrows stack above the line in the order given; data-* attributes let the tests read the picture */
+const fmtTick = v => (v < 0 ? '−' : '') + String(Math.round(Math.abs(v) * 1000) / 1000);
+function nline(o){
+  const W = o.w || 320, P = 18, arr = o.arr || [], top = 10 + arr.length * 24, y0 = top + 14, H = y0 + 30;
+  const X = v => P + (v - o.min) / (o.max - o.min) * (W - 2 * P);
+  const n = Math.round((o.max - o.min) / o.tick), labEvery = Math.max(1, Math.round(o.lab / o.tick));
+  let s = `<rect width="${W}" height="${H}" rx="10" fill="var(--surf)"/>`;
+  s += `<line x1="6" x2="${W - 6}" y1="${y0}" y2="${y0}" stroke="var(--ink)" stroke-width="2"/><path d="M4 ${y0}l7-5v10zM${W - 4} ${y0}l-7-5v10z" fill="var(--ink)"/>`;
+  for (let k = 0; k <= n; k++){
+    const v = o.min + k * o.tick, big = k % labEvery === 0, x = X(v).toFixed(1);
+    s += `<line x1="${x}" x2="${x}" y1="${y0 - (big ? 7 : 4)}" y2="${y0 + (big ? 7 : 4)}" stroke="var(--ink)" stroke-width="${Math.abs(v) < 1e-9 ? 2.4 : 1.4}"/>`;
+    if (big) s += `<text x="${x}" y="${y0 + 21}" font-size="${o.fs || 10.5}" text-anchor="middle" fill="var(--ink)" font-weight="${Math.abs(v) < 1e-9 ? 700 : 400}">${fmtTick(v)}</text>`;
+  }
+  arr.forEach((a, r) => {
+    const y = 12 + r * 24, x1 = X(a.a), x2 = X(a.b), dir = x2 >= x1 ? 1 : -1, c = a.c || 'var(--ink)';
+    if (Math.abs(x2 - x1) > 1) s += `<line x1="${x1.toFixed(1)}" x2="${(x2 - dir * 7).toFixed(1)}" y1="${y}" y2="${y}" stroke="${c}" stroke-width="3" stroke-linecap="round"/><path d="M${x2.toFixed(1)} ${y}l${-dir * 9} -6v12z" fill="${c}"/>`;
+    s += `<circle cx="${x1.toFixed(1)}" cy="${y}" r="3.5" fill="${c}"/><line x1="${x2.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y + 4}" y2="${y0 - 2}" stroke="${c}" stroke-dasharray="2 3" opacity=".55"/>`;
+    if (a.t) s += `<text x="${((x1 + x2) / 2).toFixed(1)}" y="${y - 5}" font-size="11" font-weight="700" text-anchor="middle" fill="${c}">${a.t}</text>`;
+  });
+  (o.pts || []).forEach(p => { const x = X(p.x).toFixed(1); s += `<circle cx="${x}" cy="${y0}" r="5.5" fill="${p.c || 'var(--ink)'}" stroke="var(--surf)" stroke-width="1.5"/>`; if (p.t) s += `<text x="${x}" y="${y0 - 10}" font-size="13" font-weight="800" text-anchor="middle" fill="${p.c || 'var(--ink)'}">${p.t}</text>`; });
+  const data = arr.map(a => `${a.a}>${a.b}`).join(',');
+  return `<svg class="fx" viewBox="0 0 ${W} ${H}" role="img" aria-label="Number line" data-arr="${data}" data-pts="${(o.pts || []).map(p => (p.t || '') + '=' + p.x).join(',')}">${s}</svg>`;
+}
+/* pick a friendly range and tick for a set of values */
+function autoLine(vals, extra){
+  let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals); const span = hi - lo || 1;
+  const tick = span <= 6 ? .5 : span <= 14 ? 1 : span <= 30 ? 2 : 5, lab = span <= 6 ? 1 : span <= 14 ? 2 : span <= 30 ? 4 : 10;
+  lo = Math.floor(lo / lab) * lab - (lo % lab === 0 ? lab : 0); hi = Math.ceil(hi / lab) * lab + (hi % lab === 0 ? lab : 0);
+  return Object.assign({min:lo, max:hi, tick, lab}, extra || {});
+}
+
+/* ---------- EXACT FRACTIONS: every value is a fraction {n, d}, so answers never round wrong ---------- */
+const gcd = (a,b) => { a = Math.abs(a); b = Math.abs(b); while (b) [a,b] = [b, a % b]; return a || 1; };
+const lcm = (a,b) => a / gcd(a,b) * b;
+const Q = (n, d=1) => { if (d < 0){ n = -n; d = -d; } const g = gcd(n, d); return {n:n/g, d:d/g}; };
+const qadd = (a,b) => Q(a.n*b.d + b.n*a.d, a.d*b.d), qsub = (a,b) => Q(a.n*b.d - b.n*a.d, a.d*b.d);
+const qv = a => a.n / a.d, qcmp = (a,b) => a.n*b.d - b.n*a.d, qeq = (a,b) => qcmp(a,b) === 0;
+const M = (w, n, d) => Q(w * d + n, d);              /* the mixed number w n/d */
+const whole = q => Math.floor(q.n / q.d);
+const part = q => Q(q.n - whole(q) * q.d, q.d);     /* the fraction part of a mixed number */
+const up = (q, L) => q.n * L / q.d;                  /* numerator after renaming q in L-ths */
+
+/* how numbers look */
+const fr = (n,d) => `<span class="fr"><i>${n}</i><i>${d}</i></span>`;
+const MX = q => { const w = whole(q), r = q.n - w * q.d; return r ? (w ? w + fr(r, q.d) : fr(r, q.d)) : String(w); };
+const MXt = q => { const w = whole(q), r = q.n - w * q.d; return r ? (w ? `${w} ${r}/${q.d}` : `${r}/${q.d}`) : String(w); };
+const FR = q => q.d === 1 ? String(q.n) : fr(q.n, q.d);           /* simplest fraction, improper allowed */
+const MXL = (w, p, L) => (w ? String(w) : '') + (p ? fr(p, L) : (w ? '' : '0'));   /* w and p/L, not simplified */
+const EX = (...p) => `<span class="ex">${p.join(' ')}</span>`;
+const EXs = (...p) => `<span class="exs">${p.join(' ')}</span>`;
+const half = d => d % 2 ? `${(d - 1) / 2}½` : String(d / 2);
+
+/* unit names: thirds, twenty-fourths… */
+const ORD = ['','whole','half','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth','eleventh','twelfth','thirteenth','fourteenth','fifteenth','sixteenth','seventeenth','eighteenth','nineteenth','twentieth'];
+const TENS = {2:'twenty',3:'thirty',4:'forty',5:'fifty',6:'sixty',7:'seventy',8:'eighty',9:'ninety'};
+const ordinal = n => n <= 20 ? ORD[n] : n > 99 ? n + 'th' : n % 10 ? TENS[Math.floor(n / 10)] + '-' + ORD[n % 10] : TENS[n / 10].slice(0, -1) + 'ieth';
+const unitName = d => d === 2 ? 'halves' : d === 1 ? 'wholes' : ordinal(d) + 's';
+
+/* random fractions */
+const DEN = [2,3,4,5,6,8,10,12];
+function rfrac(dens){ for (;;){ const d = pick(dens), n = rnd(1, d - 1); if (gcd(n, d) === 1) return Q(n, d); } }
+function unlike(dens, maxL){ for (let t = 0; t < 900; t++){ const a = rfrac(dens), b = rfrac(dens); if (a.d !== b.d && lcm(a.d, b.d) <= (maxL || 24)) return [a, b]; } return [Q(1,2), Q(1,3)]; }
+const rmixed = (dens, w0, w1) => qadd(Q(rnd(w0, w1)), rfrac(dens));
+
+/* teacher-style reasons */
+function whyAdd(a, b){
+  const L = lcm(a.d, b.d), A = up(a, L), B = up(b, L), s = qadd(a, b);
+  return `Make like units (${unitName(L)}): ${FR(a)} = ${fr(A, L)} and ${FR(b)} = ${fr(B, L)}. Add the tops, keep the bottom: ${fr(A, L)} + ${fr(B, L)} = ${fr(A + B, L)}` + (A + B === s.n && L === s.d && s.n < s.d ? '.' : ` = <b>${MX(s)}</b>.`);
+}
+function whySub(a, b){
+  const L = lcm(a.d, b.d), A = up(a, L), B = up(b, L), s = qsub(a, b);
+  return `Make like units (${unitName(L)}): ${fr(A, L)} − ${fr(B, L)} = ${fr(A - B, L)}` + (A - B === s.n && L === s.d ? '.' : ` = <b>${MX(s)}</b>.`);
+}
+function whyAddMixed(xs){
+  const L = xs.reduce((l, x) => lcm(l, x.d), 1), ws = xs.map(whole), W = ws.reduce((s, w) => s + w, 0);
+  const ps = xs.map(x => up(part(x), L)).filter(p => p), P = ps.reduce((s, p) => s + p, 0), tot = xs.reduce(qadd, Q(0));
+  let s = `Wholes: ${ws.filter(w => w).join(' + ') || 0} = ${W}. Fractions in ${unitName(L)}: ${ps.map(p => fr(p, L)).join(' + ')} = ${fr(P, L)}. `;
+  if (P >= L) s += `That is more than 1 whole: ${fr(P, L)} = ${MX(Q(P, L))}, so regroup. `;
+  return s + `Together: <b>${MX(tot)}</b>.`;
+}
+function whySubMixed(a, b){
+  const L = lcm(a.d, b.d), wa = whole(a), wb = whole(b), pa = up(part(a), L), pb = up(part(b), L), r = qsub(a, b);
+  let s = `Like units: ${MXL(wa, pa, L)} − ${MXL(wb, pb, L)}. `;
+  if (pa < pb){
+    s += (pa ? `${fr(pa, L)} is less than ${fr(pb, L)}` : `${wa} has no fraction part`) + `, so rename 1 whole as ${fr(L, L)}: ${MXL(wa, pa, L)} = ${MXL(wa - 1, pa + L, L)}. `;
+    s += `Fractions: ${fr(pa + L, L)} − ${fr(pb, L)} = ${fr(pa + L - pb, L)}. Wholes: ${wa - 1} − ${wb} = ${wa - 1 - wb}. `;
+  } else s += `Fractions: ${fr(pa, L)} − ${fr(pb, L)} = ${fr(pa - pb, L)}. Wholes: ${wa} − ${wb} = ${wa - wb}. `;
+  return s + `Answer: <b>${MX(r)}</b>.`;
+}
+const whyShare = (a, b) => { const q = Q(a, b); let s = `${a} ÷ ${b} = ${fr(a, b)}`; if (q.d !== b) s += ` = ${FR(q)}`; if (a > b) s += ` = <b>${MX(q)}</b>`; return s + (a > b ? '. More to share than sharers, so each gets more than 1 whole.' : '. Less to share than sharers, so each gets less than 1 whole.'); };
+
+/* ---------- LAB SETTINGS (the views read these) ---------- */
+const LAB_C = {
+  h1:'Fraction Lab', kick:'<b>Grade 5</b> · Module 2',
+  learn:{title:'9 fraction skills', sub:'Open one, play with it, then practice 5.', emoji:'🧪'},
+  guide:{title:'Your practice test', sub:'All 10 test questions, then a twin problem for each one.', emoji:'📋'},
+  boss:{name:'The Denominator Dragon', blurb:'15 new problems from every skill. Answers come at the end.', btn:'Battle the Dragon', foot:'90% or better tames the Dragon. New problems every try.',
+    win:'The Dragon is tamed! 🎉', hurt:'The Dragon is wobbling. Fix the misses.', lose:'The Dragon wins this round. Review and retry.'},
+  matchSkill:2, stepSkill:6,
+  keypad:'Fraction: 3 / 4 · Mixed number: 6 ␣ 20 / 21'
+};
+const READY_C = [
+  `I can write 8 ÷ 6 as ${fr(8,6)}, ${fr(4,3)}, or 1${fr(1,3)}.`,
+  'I make like units (the same denominator) before I add or subtract.',
+  'I never add the denominators.',
+  'I keep the whole numbers when I add mixed numbers.',
+  'If the top fraction is too small, I rename a whole before I subtract.',
+  'I can compare with ½ and 1 without adding.',
+  'In story problems, I find every step, not just the last one.',
+  'I check that the letter I circle matches my work.'
+];
+
+/* word match: [word, short meaning] */
+const SHORT_C = {
+  'Numerator':'Top number: how many parts', 'Denominator':'Bottom number: the size of the parts', 'Like units':'Parts that are the same size', 'Equivalent fractions':'Same amount, different names',
+  'Mixed number':'A whole number and a fraction', 'Improper fraction':'Top number is bigger than the bottom', 'Benchmark':'An easy number to compare to, like ½', 'Fraction bar':'The line that means divide',
+  'Sum':'The answer to an addition', 'Difference':'The answer to a subtraction', 'Rename':'Trade 1 whole for same-size parts', 'Quotient':'The answer to a division'
+};
+/* step sorter: subtracting mixed numbers */
+const STEPS_C = [
+  ['Make like units','Same denominator for both fractions.'],
+  ['Check the top fraction','Is it big enough to take away from?'],
+  ['Rename 1 whole if needed','7 9/24 → 6 33/24'],
+  ['Subtract the fractions','33/24 − 16/24 = 17/24'],
+  ['Subtract the whole numbers','6 − 6 = 0'],
+  ['Check: does it make sense?','About 7 − 7 = 0, so 17/24 is close.']
+];
+
+/* ---------- PICTURES: fraction bars, pizzas, number lines, tape diagrams (all SVG strings) ---------- */
+const PA = 'var(--pa)', PB = 'var(--pb)', PC = 'var(--pc)';
+const r2 = v => (Math.round(v * 100) / 100).toString();
+
+/* a stacked fraction and a mixed number drawn inside an SVG, centered on (x, y) = the fraction bar */
+function sFr(x, y, n, d, c, z){
+  z = z || 12; c = c || 'var(--ink)'; const hw = Math.max(String(n).length, String(d).length) * z * .32 + 3;
+  return `<text x="${r2(x)}" y="${r2(y - 3)}" font-size="${z}" font-weight="800" text-anchor="middle" fill="${c}">${n}</text><line x1="${r2(x - hw)}" x2="${r2(x + hw)}" y1="${r2(y)}" y2="${r2(y)}" stroke="${c}" stroke-width="1.5"/><text x="${r2(x)}" y="${r2(y + z - 1)}" font-size="${z}" font-weight="800" text-anchor="middle" fill="${c}">${d}</text>`;
+}
+function sMx(x, y, q, c, z){
+  z = z || 12; c = c || 'var(--ink)'; const w = whole(q), r = q.n - w * q.d;
+  if (!r) return `<text x="${r2(x)}" y="${r2(y + z * .45)}" font-size="${r2(z * 1.3)}" font-weight="800" text-anchor="middle" fill="${c}">${w}</text>`;
+  if (!w) return sFr(x, y, r, q.d, c, z);
+  const ww = String(w).length * z * .74, hw = Math.max(String(r).length, String(q.d).length) * z * .32 + 3, left = x - (ww + 2 + 2 * hw) / 2;
+  return `<text x="${r2(left + ww)}" y="${r2(y + z * .45)}" font-size="${r2(z * 1.3)}" font-weight="800" text-anchor="end" fill="${c}">${w}</text>` + sFr(left + ww + 2 + hw, y, r, q.d, c, z);
+}
+
+/* fraction bars. rows: [{parts, on (count, or a list of piece numbers), col, cut (sub-cuts per original piece), cross:[from, to), lab:{n,d} or q, tag}] */
+function bars(rows, o){
+  o = o || {};
+  const W = o.w || 320, LW = o.lw == null ? 50 : o.lw, BH = o.bh || 26, G = o.gap || 12, H = rows.length * (BH + G) - G + 8, x0 = LW + 2, x1 = W - (o.rw || 0) - 3, bw = x1 - x0;
+  let s = '';
+  rows.forEach((r, i) => {
+    const y = 4 + i * (BH + G), n = r.parts, pw = bw / n, cut = r.cut || 1;
+    for (let k = 0; k < n; k++){
+      const on = typeof r.on === 'number' ? k < r.on : (r.on || []).includes(k), fill = r.fills ? r.fills[k] : on ? (r.col || PA) : 'var(--surf)';
+      s += `<rect x="${r2(x0 + k * pw)}" y="${y}" width="${r2(pw + .4)}" height="${BH}" fill="${fill}"/>`;
+    }
+    for (let k = 1; k < n; k++){ const x = r2(x0 + k * pw), sub = k % cut !== 0; s += `<line x1="${x}" x2="${x}" y1="${y}" y2="${y + BH}" stroke="var(--ink)" stroke-width="${sub ? .8 : 1.4}"${sub ? ' stroke-dasharray="3 2"' : ''}/>`; }
+    if (r.cross) for (let k = r.cross[0]; k < r.cross[1]; k++){ const x = x0 + k * pw, m = Math.min(5, pw * .25); s += `<path d="M${r2(x + m)} ${y + 5}L${r2(x + pw - m)} ${y + BH - 5}M${r2(x + pw - m)} ${y + 5}L${r2(x + m)} ${y + BH - 5}" stroke="var(--no)" stroke-width="2.2" stroke-linecap="round"/>`; }
+    s += `<rect x="${x0}" y="${y}" width="${r2(bw)}" height="${BH}" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>`;
+    if (r.lab) s += r.lab.d === 1 || r.lab.n >= r.lab.d ? sMx(LW / 2, y + BH / 2, r.lab, r.col || 'var(--ink)', 12) : sFr(LW / 2, y + BH / 2, r.lab.n, r.lab.d, r.col || 'var(--ink)', 12);
+    if (r.tag) s += `<text x="${r2(x1 + 6)}" y="${y + BH / 2 + 5}" font-size="13" font-weight="800" fill="var(--ink)">${r.tag}</text>`;
+  });
+  return `<svg class="fx" viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.label || 'Fraction bars'}" data-bars="${rows.map(r => r.parts + ':' + (typeof r.on === 'number' ? r.on : (r.on || []).length)).join(',')}">${s}</svg>`;
+}
+
+/* n pizzas (or brownies), each cut into k equal pieces. Friend 1's piece of each one is colored. */
+function pies(n, k, sq){
+  const W = 320, per = n <= 5 ? n : Math.ceil(n / 2), rows = Math.ceil(n / per), cell = Math.min(62, (W - 8) / per), R = cell / 2 - 5, H = rows * cell + 6;
+  let s = '';
+  for (let i = 0; i < n; i++){
+    const r = Math.floor(i / per), c = i % per, inRow = r === rows - 1 ? n - per * (rows - 1) : per, cx = (W - inRow * cell) / 2 + c * cell + cell / 2, cy = 3 + r * cell + cell / 2;
+    if (sq){
+      const x = cx - R, y = cy - R, sw = 2 * R / k;
+      s += `<rect x="${r2(x)}" y="${r2(y)}" width="${r2(2 * R)}" height="${r2(2 * R)}" rx="5" fill="var(--brw)"/><rect x="${r2(x)}" y="${r2(y)}" width="${r2(sw)}" height="${r2(2 * R)}" rx="3" fill="var(--x)"/>`;
+      for (let j = 1; j < k; j++) s += `<line x1="${r2(x + j * sw)}" x2="${r2(x + j * sw)}" y1="${r2(y)}" y2="${r2(y + 2 * R)}" stroke="var(--surf)" stroke-width="1.6"/>`;
+      s += `<rect x="${r2(x)}" y="${r2(y)}" width="${r2(2 * R)}" height="${r2(2 * R)}" rx="5" fill="none" stroke="var(--brwk)" stroke-width="2"/>`;
+    } else {
+      const P = a => [cx + R * Math.cos(a), cy + R * Math.sin(a)], a0 = -Math.PI / 2, a1 = a0 + 2 * Math.PI / k, [x0, y0] = P(a0), [x1, y1] = P(a1);
+      s += `<circle cx="${r2(cx)}" cy="${r2(cy)}" r="${r2(R)}" fill="var(--chz)" stroke="var(--crust)" stroke-width="3"/>`;
+      s += `<path d="M${r2(cx)} ${r2(cy)}L${r2(x0)} ${r2(y0)}A${r2(R)} ${r2(R)} 0 ${k < 2 ? 1 : 0} 1 ${r2(x1)} ${r2(y1)}Z" fill="var(--x)"/>`;
+      for (let j = 0; j < k; j++){ const [x, y] = P(a0 + j * 2 * Math.PI / k); s += `<line x1="${r2(cx)}" y1="${r2(cy)}" x2="${r2(x)}" y2="${r2(y)}" stroke="var(--crust)" stroke-width="1.6"/>`; }
+    }
+  }
+  return `<svg class="fx" viewBox="0 0 ${W} ${H}" role="img" aria-label="${n} ${sq ? 'brownies' : 'pizzas'}, each cut into ${k} equal pieces" data-share="${n}/${k}">${s}</svg>`;
+}
+
+/* number line with fraction ticks. o: {min, max, den, w, arr:[{a, b, c, t}], pts:[{x, t, c}]} (a, b, x are fractions {n,d}) */
+function nlF(o){
+  const W = o.w || 320, P = 14, hasArc = (o.arr || []).length, y0 = hasArc ? (o.arcLab === false ? 52 : 76) : 30, H = y0 + 30;
+  const X = v => P + (v - o.min) / (o.max - o.min) * (W - 2 * P), n = Math.round((o.max - o.min) * o.den);
+  let s = `<rect width="${W}" height="${H}" rx="10" fill="var(--surf)"/><line x1="5" x2="${W - 5}" y1="${y0}" y2="${y0}" stroke="var(--ink)" stroke-width="2"/><path d="M3 ${y0}l7-5v10zM${W - 3} ${y0}l-7-5v10z" fill="var(--ink)"/>`;
+  for (let k = 0; k <= n; k++){
+    const v = o.min + k / o.den, big = k % o.den === 0, x = r2(X(v));
+    s += `<line x1="${x}" x2="${x}" y1="${y0 - (big ? 8 : 5)}" y2="${y0 + (big ? 8 : 5)}" stroke="var(--ink)" stroke-width="${big ? 1.8 : 1.1}"/>`;
+    if (big) s += `<text x="${x}" y="${y0 + 23}" font-size="12" font-weight="700" text-anchor="middle" fill="var(--ink)">${Math.round(v)}</text>`;
+  }
+  (o.arr || []).forEach(a => {
+    const x1 = X(qv(a.a)), x2 = X(qv(a.b)), mx = (x1 + x2) / 2, cy = y0 - 46, c = a.c || 'var(--x)';
+    const ex = x2 - 1, ey = y0 - 4, dx = ex - mx, dy = ey - cy, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+    s += `<path d="M${r2(x1)} ${y0 - 3}Q${r2(mx)} ${cy} ${r2(ex - ux * 7)} ${r2(ey - uy * 7)}" fill="none" stroke="${c}" stroke-width="2.6" stroke-linecap="round"/>`;
+    s += `<path d="M${r2(ex)} ${r2(ey)}L${r2(ex - ux * 10 - uy * 5)} ${r2(ey - uy * 10 + ux * 5)}L${r2(ex - ux * 10 + uy * 5)} ${r2(ey - uy * 10 - ux * 5)}Z" fill="${c}"/>`;
+    if (a.t && o.arcLab !== false) s += sMx(mx, y0 - 58, a.t, c, 11);
+  });
+  (o.pts || []).forEach(p => { const x = X(qv(p.x)); s += `<circle cx="${r2(x)}" cy="${y0}" r="5.5" fill="${p.c || 'var(--ink)'}" stroke="var(--surf)" stroke-width="1.5"/>`; if (p.t) s += `<text x="${r2(x)}" y="${y0 - 11}" font-size="12" font-weight="800" text-anchor="middle" fill="${p.c || 'var(--ink)'}">${p.t}</text>`; });
+  return `<svg class="fx" viewBox="0 0 ${W} ${H}" role="img" aria-label="Number line from ${o.min} to ${o.max} in ${unitName(o.den)}" data-arr="${(o.arr || []).map(a => MXt(a.a) + '>' + MXt(a.b)).join(',')}">${s}</svg>`;
+}
+/* a number line that fits these values, or null when the ticks would be too crowded */
+function fitLine(vals, den, extra){
+  const max = Math.max(1, Math.ceil(Math.max(...vals.map(qv)) - 1e-9));
+  return max * den <= 48 ? nlF(Object.assign({min:0, max, den}, extra || {})) : null;
+}
+
+/* tape diagram. rows: [{lab, segs:[{v, t, c, dash}]}], all drawn to one scale */
+function tape(rows, o){
+  o = o || {};
+  const W = o.w || 320, LW = o.lw || 74, BH = 30, G = 10, max = o.max || Math.max(...rows.map(r => r.segs.reduce((s, g) => s + qv(g.v), 0))), sc = (W - LW - 6) / max, H = rows.length * (BH + G) - G + 6;
+  let s = '';
+  rows.forEach((r, i) => {
+    const y = 3 + i * (BH + G); let x = LW;
+    s += `<text x="${LW - 6}" y="${y + BH / 2 + 4}" font-size="11.5" font-weight="700" text-anchor="end" fill="var(--ink)">${r.lab}</text>`;
+    r.segs.forEach(g => {
+      const w = qv(g.v) * sc;
+      s += `<rect x="${r2(x)}" y="${y}" width="${r2(w)}" height="${BH}" rx="5" fill="${g.dash ? 'var(--surf)' : g.c || 'var(--wt)'}" stroke="var(--ink)" stroke-width="1.6"${g.dash ? ' stroke-dasharray="5 3"' : ''}/>`;
+      if (g.t) s += `<text x="${r2(x + w / 2)}" y="${y + BH / 2 + 5}" font-size="12.5" font-weight="800" text-anchor="middle" fill="${g.dash ? 'var(--ink)' : 'var(--hlk)'}">${g.t}</text>`;
+      x += w;
+    });
+  });
+  return `<svg class="fx" viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.label || 'Tape diagram'}">${s}</svg>`;
+}
+
+/* ---------- QUESTIONS ---------- */
+const MC = o => Object.assign({type:'mc'}, o);
+const shufMC = (o, correct, wrongs) => { const all = shuffle([correct, ...wrongs]); return MC(Object.assign(o, {choices:all, answer:all.indexOf(correct)})); };
+const NUM = (o, q, extra) => Object.assign({type:'num', blanks:[Object.assign({answer:qv(q), show:MX(q)}, extra || {})]}, o);
+/* wrong answers that are real, positive, and all different from the right one and each other */
+const uniqVals = (right, list, n) => { const seen = [right], out = []; for (const w of list){ if (w && w.n > 0 && w.d > 0 && !seen.some(s => qeq(s, w))){ seen.push(w); out.push(w); } if (out.length === (n || 3)) break; } return out; };
+const cap = s => s[0].toUpperCase() + s.slice(1);
+const WHO = [['Miss Song','she'],['Mr. Diaz','he'],['Coach Lee','she'],['Grandpa Joe','he'],['Aunt Rosa','she'],['Mr. Patel','he']];
+
+/* 1 · fair shares: a ÷ b = a/b */
+const SHARE = [
+  {k:'pizza', t:(a,b) => `🍕 <b>${a}</b> pizza${a > 1 ? 's are' : ' is'} shared equally by <b>${b}</b> friends.`, q:'How much pizza does each friend get?', post:'pizza', fig:true},
+  {k:'juice', t:(a,b) => `🥤 A pitcher holds <b>${a}</b> cups of juice. It is poured equally into <b>${b}</b> glasses.`, q:'How many cups are in each glass?', post:'cups'},
+  {k:'rope', t:(a,b) => `🪢 A rope <b>${a}</b> feet long is cut into <b>${b}</b> equal pieces.`, q:'How long is each piece?', post:'feet'},
+  {k:'clay', t:(a,b) => `🏺 <b>${a}</b> pounds of clay are split equally into <b>${b}</b> lumps.`, q:'How much does each lump weigh?', post:'pounds'}
+];
+function g1(){
+  const r = Math.random(); let a, b; do { a = rnd(1, 12); b = rnd(2, 9); } while (a % b === 0);
+  if (r < .28) return NUM({skill:1, title:'Divide → fraction', prompt:`${EX(`${a} ÷ ${b}`)} = ?`, why:whyShare(a, b), kind:'num', chk:{e:`${a} ÷ ${b}`}}, Q(a, b));
+  if (r < .55){
+    const T = pick(SHARE); if (T.fig){ do { a = rnd(1, 8); b = rnd(2, 6); } while (a % b === 0); }
+    return NUM({skill:1, title:'Share it', ctx:T.t(a, b), fig:T.fig ? pies(a, b) : null, prompt:T.q, why:whyShare(a, b), kind:'num', chk:{e:`${a} ÷ ${b}`}}, Q(a, b), {post:T.post});
+  }
+  if (r < .82){
+    const s = Q(a, b), opts = [], add = (h, ok) => { if (!opts.some(o => o.h === h)) opts.push({h, ok}); };
+    add(fr(a, b), true); add(`${a} ÷ ${b}`, true); add(fr(b, a), false); add(`${b} ÷ ${a}`, false);
+    if (s.d !== b){ add(fr(s.n, s.d), true); add(fr(s.d, s.n), false); } else { add(fr(a * 2, b * 2), true); add(fr(b * 2, a * 2), false); }
+    if (a > b) add(MX(s), true);
+    const T = pick(SHARE.slice(1)), order = shuffle(opts.map((_, i) => i));
+    return {type:'multi', all:true, pick:1, skill:1, title:'Choose all', ctx:T.t(a, b), prompt:`Which show the answer? ${T.q.replace('?', '')}. Choose <b>all</b> that apply.`, choices:order.map(i => opts[i].h), correct:order.map((i, j) => opts[i].ok ? j : -1).filter(j => j >= 0),
+      why:whyShare(a, b) + ` Watch out: ${b} ÷ ${a} and ${fr(b, a)} flip it around.`, kind:'all', chk:{e:`${a} ÷ ${b}`}};
+  }
+  return Object.assign(shufMC({skill:1, title:'Fraction bar', prompt:`The fraction ${EX(fr(a, b))} means…`, layout:'g2', why:`The fraction bar means divide: ${fr(a, b)} = ${a} ÷ ${b}. The top is what you share. The bottom is how many share it.`}, `${a} ÷ ${b}`, [`${b} ÷ ${a}`, `${a} × ${b}`, `${a} + ${b}`]), {kind:'mcval', chk:{e:`${a} ÷ ${b}`}});
+}
+
+/* 2 · like units */
+function g2(){
+  const r = Math.random(), [a, b] = unlike(DEN, 40), L = lcm(a.d, b.d), A = up(a, L), B = up(b, L);
+  if (r < .3){
+    const k = rnd(2, 5), D = a.d * k;
+    return {type:'num', skill:2, title:'Equivalent', prompt:`${EX(FR(a), '=', fr('?', D))}`, blanks:[{answer:a.n * k, show:String(a.n * k)}], why:`${a.d} × ${k} = ${D}, so multiply the top by ${k} too: ${a.n} × ${k} = ${a.n * k}. ${FR(a)} = <b>${fr(a.n * k, D)}</b>.`, kind:'eqv', chk:{n:a.n, d:a.d, D}};
+  }
+  const why = `${cap(unitName(a.d))} and ${unitName(b.d)} can both be cut into ${unitName(L)}: ${FR(a)} = ${fr(A, L)} and ${FR(b)} = ${fr(B, L)}.`;
+  if (r < .55){
+    const S = a.d + b.d, right = `${fr(A, L)} and ${fr(B, L)}`;
+    const wrongs = [`${fr(a.n, S)} and ${fr(b.n, S)}`, `${fr(a.n, L)} and ${fr(b.n, L)}`, `${fr(a.n * L / b.d, L)} and ${fr(b.n * L / a.d, L)}`].filter((w, i, arr) => w !== right && arr.indexOf(w) === i);
+    const pairs = [[A, L, B, L], [a.n, S, b.n, S], [a.n, L, b.n, L], [a.n * L / b.d, L, b.n * L / a.d, L]];
+    return Object.assign(shufMC({skill:2, title:'Like units', prompt:`Rename ${EX(FR(a))} and ${EX(FR(b))} with like units. Which pair is right?`, why}, right, wrongs), {kind:'pairs', chk:{a:[a.n, a.d], b:[b.n, b.d], pairs}});
+  }
+  if (r < .8){
+    const mkB = (p1, o1, p2, o2) => bars([{parts:p1, on:o1, col:PA}, {parts:p2, on:o2, col:PB}], {lw:0, bh:20, gap:8, w:300});
+    return Object.assign(shufMC({skill:2, title:'Models', prompt:`Which model shows ${EXs(FR(a))} and ${EXs(FR(b))} cut into like units?`, layout:'viz', why: why + bars([{parts:L, on:A, col:PA, lab:a, cut:L / a.d}, {parts:L, on:B, col:PB, lab:b, cut:L / b.d}])},
+      mkB(L, A, L, B), [mkB(a.d + b.d, a.n, a.d + b.d, b.n), mkB(a.d, a.n, b.d, b.n), mkB(L, a.n, L, b.n)]), {kind:'bars', chk:{a:[a.n, a.d], b:[b.n, b.d]}});
+  }
+  const cands = shuffle([a.d + b.d, Math.max(a.d, b.d) + 1, L + 1, 2 * L - 1, a.d * b.d - 1, L + a.d]).filter((x, i, arr) => x > 2 && x < 100 && (x % a.d || x % b.d) && arr.indexOf(x) === i).slice(0, 3);
+  const vals = shuffle([L, ...cands]);
+  return MC({skill:2, title:'Pick a unit', prompt:`${cap(unitName(a.d))} and ${unitName(b.d)}: which unit can <b>both</b> be cut into?`, choices:vals.map(unitName), answer:vals.indexOf(L), layout:'g2', why:`${L} is a multiple of both: ${a.d} × ${L / a.d} = ${L} and ${b.d} × ${L / b.d} = ${L}. The others are not.`, kind:'unit', chk:{d1:a.d, d2:b.d, vals}});
+}
+
+/* 3 · add fractions */
+function g3(){
+  const r = Math.random();
+  if (r < .38){ const [a, b] = unlike(DEN, 24); return NUM({skill:3, title:'Add', prompt:`${EX(FR(a), '+', FR(b))} = ?`, why:whyAdd(a, b), kind:'num', chk:{e:`${MXt(a)} + ${MXt(b)}`}}, qadd(a, b)); }
+  if (r < .56){
+    const [a, b] = unlike([2,3,4,5,6,7,8,9,10], 60), s = qadd(a, b);
+    const wrongs = uniqVals(s, [Q(a.n + b.n, a.d + b.d), Q(s.d, s.n), Q(s.n, a.d + b.d), Q(a.n * b.n, a.d * b.d), Q(s.n + 1, s.d)]).map(FR);
+    return Object.assign(shufMC({skill:3, title:'Evaluate', prompt:`Evaluate. ${EX(`(${a.n} ÷ ${a.d})`, '+', `(${b.n} ÷ ${b.d})`)}`, layout:'g2', why:`${a.n} ÷ ${a.d} = ${fr(a.n, a.d)} and ${b.n} ÷ ${b.d} = ${fr(b.n, b.d)}. ` + whyAdd(a, b)}, FR(s), wrongs), {kind:'mcval', chk:{e:`(${a.n} ÷ ${a.d}) + (${b.n} ÷ ${b.d})`}});
+  }
+  if (r < .8){
+    const [a, b] = unlike([2,3,4,5,6], 30), T = qadd(a, b), L = lcm(a.d, b.d);
+    return {type:'boxes', skill:3, title:'Build it', prompt:`Put one number in each box to make the sum.`, target:T, tiles:[1,2,3,4,5,6], sol:[a.n, a.d, b.n, b.d], show:`${fr(a.n, a.d)} + ${fr(b.n, b.d)}`,
+      why:`One way: ${fr(a.n, a.d)} + ${fr(b.n, b.d)} = ${fr(up(a, L), L)} + ${fr(up(b, L), L)} = ${FR(T)}. Other pairs can work too.`, kind:'boxes', chk:{t:[T.n, T.d]}};
+  }
+  const [a, b] = unlike(DEN, 24), s = qadd(a, b), L = lcm(a.d, b.d);
+  const wrongs = uniqVals(s, [Q(a.n + b.n, a.d + b.d), Q(up(a, L) + up(b, L), 2 * L), qadd(s, Q(1, L)), Q(a.n + b.n, L)]).map(MX);
+  return Object.assign(shufMC({skill:3, title:'Add', prompt:`${EX(FR(a), '+', FR(b))} = ?`, layout:'g2', why:whyAdd(a, b) + ` (Adding the bottoms would give ${fr(a.n + b.n, a.d + b.d)}. That is a trap!)`}, MX(s), wrongs), {kind:'mcval', chk:{e:`${MXt(a)} + ${MXt(b)}`}});
+}
+
+/* 4 · subtract fractions */
+function g4(){
+  const r = Math.random(), maxL = r >= .5 && r < .78 ? 12 : 24; let a, b;
+  do { [a, b] = unlike(DEN, maxL); if (qcmp(a, b) < 0) [a, b] = [b, a]; } while (!qcmp(a, b));
+  const L = lcm(a.d, b.d), A = up(a, L), B = up(b, L), dif = qsub(a, b), chk = {e:`${MXt(a)} − ${MXt(b)}`};
+  if (r < .5) return NUM({skill:4, title:'Subtract', prompt:`${EX(FR(a), '−', FR(b))} = ?`, why:whySub(a, b), kind:'num', chk}, dif);
+  if (r < .78) return NUM({skill:4, title:'Use the model', prompt:`Use the model to find ${EX(FR(a), '−', FR(b))}`, fig:bars([{parts:L, on:A, col:PA, lab:a, cut:L / a.d}, {parts:L, on:B, col:PB, lab:b, cut:L / b.d}]), why:whySub(a, b) + bars([{parts:L, on:A, col:PA, lab:a, cross:[A - B, A]}]), kind:'num', chk}, dif);
+  const wrongs = uniqVals(dif, [Q(Math.abs(a.n - b.n), Math.abs(a.d - b.d)), Q(A + B, L), Q(A - B, 2 * L), qadd(dif, Q(1, L))]).map(MX);
+  return Object.assign(shufMC({skill:4, title:'Subtract', prompt:`${EX(FR(a), '−', FR(b))} = ?`, layout:'g2', why:whySub(a, b)}, MX(dif), wrongs), {kind:'mcval', chk});
+}
+
+/* 5 · add mixed numbers */
+function g5(){
+  const r = Math.random();
+  if (r < .58){
+    const want = Math.random() < .5; let a, b;
+    for (let t = 0; t < 300; t++){ const [f1, f2] = unlike(DEN, 24), L = lcm(f1.d, f2.d); a = qadd(Q(rnd(1, 6)), f1); b = qadd(Q(rnd(1, 6)), f2); if ((up(f1, L) + up(f2, L) >= L) === want) break; }
+    return NUM({skill:5, title:'Add mixed numbers', prompt:`${EX(MX(a), '+', MX(b))} = ?`, why:whyAddMixed([a, b]), kind:'num', chk:{e:`${MXt(a)} + ${MXt(b)}`}}, qadd(a, b));
+  }
+  if (r < .85){
+    const fam = pick([[2,3,6],[2,4,8],[2,4],[3,6],[2,5,10],[2,3]]), den = fam.reduce(lcm, 1); let xs, tot, fig;
+    for (let t = 0; t < 300; t++){ xs = [0,1,2].map(() => rmixed(fam, 0, 2)); tot = xs.reduce(qadd, Q(0)); fig = fitLine([tot], den, {pts:[{x:xs[0], t:'start', c:'var(--w)'}], arr:[{a:xs[0], b:qadd(xs[0], xs[1]), t:xs[1]}, {a:qadd(xs[0], xs[1]), b:tot, t:xs[2]}]}); if (fig) break; }
+    return NUM({skill:5, title:'Jump along', prompt:`${EX(MX(xs[0]), '+', MX(xs[1]), '+', MX(xs[2]))} = ?`, fig, why:whyAddMixed(xs), kind:'num', chk:{e:xs.map(MXt).join(' + ')}}, tot);
+  }
+  const [f1, f2] = unlike(DEN, 24), a = qadd(Q(rnd(1, 5)), f1), b = qadd(Q(rnd(1, 5)), f2), s = qadd(a, b), L = lcm(f1.d, f2.d), P = up(f1, L) + up(f2, L), W = whole(a) + whole(b);
+  const wrongs = uniqVals(s, [Q(P, L), P >= L ? Q(W * L + P - L, L) : qadd(Q(W), Q(f1.n + f2.n, f1.d + f2.d)), qadd(s, Q(1)), qsub(s, Q(1, L))]).map(MX);
+  return Object.assign(shufMC({skill:5, title:'Add mixed numbers', prompt:`${EX(MX(a), '+', MX(b))} = ?`, layout:'g2', why:whyAddMixed([a, b])}, MX(s), wrongs), {kind:'mcval', chk:{e:`${MXt(a)} + ${MXt(b)}`}});
+}
+
+/* 6 · subtract mixed numbers (rename a whole) */
+function g6(){
+  const r = Math.random();
+  const pickSub = want => { let a, b; for (let t = 0; t < 400; t++){ const [f1, f2] = unlike(DEN, 24), L = lcm(f1.d, f2.d); a = qadd(Q(rnd(3, 9)), f1); b = qadd(Q(rnd(1, whole(a) - 1)), f2); if ((up(f1, L) < up(f2, L)) === want) break; } return [a, b]; };
+  if (r < .55){ const [a, b] = pickSub(Math.random() < .75); return NUM({skill:6, title:'Subtract mixed numbers', prompt:`${EX(MX(a), '−', MX(b))} = ?`, why:whySubMixed(a, b), kind:'num', chk:{e:`${MXt(a)} − ${MXt(b)}`}}, qsub(a, b)); }
+  if (r < .72){ const W = rnd(3, 10), b = rmixed(DEN, 1, W - 1); return NUM({skill:6, title:'Whole minus mixed', prompt:`${EX(W, '−', MX(b))} = ?`, why:whySubMixed(Q(W), b), kind:'num', chk:{e:`${W} − ${MXt(b)}`}}, qsub(Q(W), b)); }
+  if (r < .88){
+    let a, b, c, L;
+    for (let t = 0; t < 400; t++){ a = rmixed([2,3,4,5,6], 3, 8); b = qadd(Q(1), rfrac([2,3,4,5,6,8,10])); c = rmixed([2,3,4,5,6,10], 1, 6); L = [a, b, c].reduce((l, x) => lcm(l, x.d), 1); if (L <= 60 && qcmp(a, b) > 0) break; }
+    const v1 = qsub(a, b), tot = qadd(v1, c);
+    return NUM({skill:6, title:'Parentheses first', prompt:`${EX(`(${MX(a)} − ${fr(b.n, b.d)})`, '+', MX(c))} = ?`, why:`Parentheses first. ${fr(b.n, b.d)} = ${MX(b)}. ` + whySubMixed(a, b).replace('Answer:', 'That makes') + ` Then add ${MX(c)}: ` + whyAddMixed([v1, c]), kind:'num', chk:{e:`(${MXt(a)} − ${b.n}/${b.d}) + ${MXt(c)}`}}, tot);
+  }
+  const [a, b] = pickSub(true), L = lcm(a.d, b.d), wa = whole(a), wb = whole(b), pa = up(part(a), L), pb = up(part(b), L);
+  const right = Q((wa - 1) * L + pa + L, L), opts = [[wa - 1, pa + L], [wa, pa + L], [wa - 1, pa], [wa - 1, pa + (L === 10 ? 1 : 10)]];
+  const choices = opts.map(([w, p]) => MXL(w, p, L)), order = shuffle([0,1,2,3]);
+  return MC({skill:6, title:'Rename a whole', ctx:`Like units: ${EXs(MXL(wa, pa, L), '−', MXL(wb, pb, L))}`, prompt:`There are not enough ${unitName(L)} to take away ${pb}. Rename ${EXs(MXL(wa, pa, L))} as…`, choices:order.map(i => choices[i]), answer:order.indexOf(0), layout:'g2',
+    why:`Trade 1 whole for ${fr(L, L)}: ${wa} − 1 = ${wa - 1} wholes, and ${pa} + ${L} = ${pa + L} ${unitName(L)}. So ${MXL(wa, pa, L)} = <b>${MXL(wa - 1, pa + L, L)}</b>.`, kind:'rename', chk:{a:[a.n, a.d], vals:order.map(i => [opts[i][0] * L + opts[i][1], L])}});
+}
+
+/* 7 · estimate and compare */
+const HALF = Q(1, 2), BENCH = ['Close to 0','Close to ½','Close to 1'], DS = [3,4,5,6,8,10,12];
+const lessHalf = () => { let f; do f = rfrac(DS); while (qcmp(f, HALF) >= 0); return f; };
+const moreHalf = () => { let f; do f = rfrac(DS); while (qcmp(f, HALF) <= 0); return f; };
+const ITEMS = [['the gold chain','the silver chain','in.'],['the red ribbon','the blue ribbon','in.'],['Mia’s rope','Leo’s rope','ft'],['the purple yarn','the green yarn','yd']];
+function g7(){
+  const r = Math.random();
+  if (r < .3){
+    let f, near; for (;;){ f = rfrac([3,4,5,6,7,8,9,10,12]); const v = qv(f), ds = [v, Math.abs(v - .5), 1 - v]; near = ds.indexOf(Math.min(...ds)); const s = ds.slice().sort((x, y) => x - y); if (s[1] - s[0] >= 1 / 12 - 1e-9) break; }
+    const why = near === 0 ? `${f.n} is much less than half of ${f.d} (${half(f.d)}), so ${FR(f)} is close to 0.` : near === 1 ? `${f.n} is close to half of ${f.d} (${half(f.d)}), so ${FR(f)} is close to ½.` : `${f.n} is almost all of ${f.d}, so ${FR(f)} is close to 1.`;
+    return MC({skill:7, title:'Benchmark', prompt:`Is ${EX(FR(f))} closest to 0, ½, or 1?`, choices:BENCH, answer:near, why:why + nlF({min:0, max:1, den:f.d, pts:[{x:f, c:'var(--x)'}]}), kind:'bench', chk:{f:[f.n, f.d]}});
+  }
+  if (r < .56){
+    const [n1, n2, unit] = pick(ITEMS), W = rnd(2, 5), lowFirst = Math.random() < .5;
+    const mk = (fn) => { const wa = rnd(0, W); return [qadd(Q(wa), fn()), qadd(Q(W - wa), fn())]; };
+    const low = mk(lessHalf), high = mk(moreHalf), sets = lowFirst ? [low, high] : [high, low], win = lowFirst ? 1 : 0, names = [n1, n2], wn = names[win], ln = names[1 - win];
+    const list = s => s.map(x => `<b>${MX(x)}</b> ${unit}`).join(' and ');
+    const right = `${cap(wn)} is longer. Both have ${W} wholes, but the fractions in ${wn} are each more than ½, so together they make more than 1. The fractions in ${ln} are each less than ½.`;
+    const wrongs = [`${cap(ln)} is longer. Its fractions have bigger bottom numbers, so they are bigger pieces.`, `They are the same, because both have ${W} wholes.`, `You can’t tell without adding them all.`];
+    return Object.assign(shufMC({skill:7, title:'Compare', ctx:`⛓️ ${cap(n1)}: ${list(sets[0])}<br>⛓️ ${cap(n2)}: ${list(sets[1])}`, prompt:'Without finding the actual sums, which is longer in all?', why:right}, right, wrongs), {kind:'cmp', chk:{sets:sets.map(s => s.map(x => [x.n, x.d])), names, win}});
+  }
+  if (r < .78){
+    const less = Math.random() < .5; let a, b; do { a = less ? lessHalf() : moreHalf(); b = less ? lessHalf() : moreHalf(); } while (a.d === b.d);
+    return MC({skill:7, title:'More or less than 1?', prompt:`Without adding: is ${EX(FR(a), '+', FR(b))} more or less than 1?`, choices:['Less than 1','More than 1'], answer:less ? 0 : 1, layout:'g2', why:`${FR(a)} and ${FR(b)} are both ${less ? 'less' : 'more'} than ½, so the sum is ${less ? 'less' : 'more'} than ½ + ½ = 1. (It is ${MX(qadd(a, b))}.)`, kind:'vs1', chk:{a:[a.n, a.d], b:[b.n, b.d]}});
+  }
+  const near = () => { let f; do f = rfrac([4,5,6,8,10,12]); while (qcmp(f, Q(1, 4)) > 0 && qcmp(f, Q(3, 4)) < 0); return f; };
+  let a, b, est; for (;;){ a = qadd(Q(rnd(1, 7)), near()); b = qadd(Q(rnd(1, 7)), near()); est = Math.round(qv(a)) + Math.round(qv(b)); if (Math.abs(qv(qadd(a, b)) - est) < .5 - 1e-9) break; }
+  const vals = shuffle([est, est + 1, est - 1, est + 2]);
+  return MC({skill:7, title:'Estimate', prompt:`${EX(MX(a), '+', MX(b))} is about…`, choices:vals.map(v => 'about ' + v), answer:vals.indexOf(est), layout:'g2', why:`${MX(a)} is close to ${Math.round(qv(a))} and ${MX(b)} is close to ${Math.round(qv(b))}. ${Math.round(qv(a))} + ${Math.round(qv(b))} = <b>${est}</b>. (Exact: ${MX(qadd(a, b))}.)`, kind:'est', chk:{a:[a.n, a.d], b:[b.n, b.d], vals}});
+}
+
+/* 8 · story problems */
+function g8(){
+  const t = pick(['board','chili','cheese','left','share','more']), [who, pr] = pick(WHO);
+  if (t === 'board'){
+    let L, k; do { L = rnd(7, 20); k = rnd(2, 5); } while (L % k === 0);
+    const [item, unit] = pick([['board','feet'],['rope','feet'],['pipe','feet'],['ribbon','yards']]), x = rmixed([2,3,4,6], 0, 1), each = Q(L, k), ans = qadd(each, x);
+    return NUM({skill:8, title:'Cut and add', tpl:t, ctx:`${who} cuts a ${item} that is <b>${L} ${unit}</b> long into <b>${k}</b> equal pieces. Then ${pr} realizes each piece needs to be <b>${MX(x)} ${unit}</b> longer.`, prompt:'How long does each piece need to be?',
+      why:`Step 1: each piece is ${L} ÷ ${k} = ${fr(L, k)} = ${MX(each)} ${unit}. Step 2: add ${MX(x)}. ` + whyAddMixed([each, x]), kind:'story', chk:{e:`${L} ÷ ${k} + ${MXt(x)}`}}, ans, {post:unit});
+  }
+  if (t === 'chili'){
+    const [n, dish, ing, unit] = pick([['Lacy','chili','beans','pounds'],['Omar','soup','carrots','cups'],['Priya','muffins','flour','cups'],['Ben','trail mix','nuts','cups'],['Ava','salsa','tomatoes','pounds']]);
+    let A, x, H, tot; do { A = rmixed([2,4,8], 1, 4); x = rfrac([2,4,8]); tot = qadd(A, qadd(A, x)); H = rmixed([2,4,8], 1, 3); } while (qcmp(H, qsub(tot, HALF)) >= 0);
+    const second = qadd(A, x), need = qsub(tot, H);
+    return NUM({skill:8, title:'Two steps', tpl:t, ctx:`${n} makes two kinds of ${dish}.<br>• The first kind uses <b>${MX(A)}</b> ${unit} of ${ing}.<br>• The second kind uses <b>${MX(x)}</b> ${unit} more ${ing} than the first kind.<br>• ${n} has <b>${MX(H)}</b> ${unit} of ${ing}.`, prompt:`How many more ${unit} of ${ing} does ${n} need?`,
+      why:`Step 1: second kind = ${MX(A)} + ${MX(x)} = ${MX(second)}. Step 2: both kinds = ${MX(A)} + ${MX(second)} = ${MX(tot)}. Step 3: ${MX(tot)} − ${MX(H)} = <b>${MX(need)}</b> ${unit} more.`, kind:'story', chk:{e:`${MXt(A)} + ${MXt(A)} + ${MXt(x)} − ${MXt(H)}`}}, need, {post:unit});
+  }
+  if (t === 'cheese'){
+    const fam = pick([[2,3,6],[2,4,8],[2,4],[3,6],[2,5,10]]), den = fam.reduce(lcm, 1), [p1, p2, p3] = shuffle(['Kelly','Riley','Lisa','Sam','Noor','Eli']), what = pick(['cheese','grapes','apples','popcorn']);
+    let xs, tot, fig; for (let k = 0; k < 300; k++){ xs = [0,1,2].map(() => rmixed(fam, 1, 2)); tot = xs.reduce(qadd, Q(0)); fig = fitLine([tot], den, {arcLab:false, pts:[{x:xs[0], c:'var(--w)'}], arr:[{a:xs[0], b:qadd(xs[0], xs[1])}, {a:qadd(xs[0], xs[1]), b:tot}]}); if (fig) break; }
+    return NUM({skill:8, title:'Altogether', tpl:t, ctx:`Three friends bring ${what} to a party. ${p1} brings <b>${MX(xs[0])}</b> pounds, ${p2} brings <b>${MX(xs[1])}</b> pounds, and ${p3} brings <b>${MX(xs[2])}</b> pounds.`, fig, prompt:'How many pounds do they bring altogether?', why:whyAddMixed(xs), kind:'story', chk:{e:xs.map(MXt).join(' + ')}}, tot, {post:'pounds'});
+  }
+  if (t === 'left'){
+    let R, u1, u2; do { R = rmixed([2,3,4,6,8], 4, 8); u1 = rmixed([2,3,4,6,8], 1, 2); u2 = rfrac([2,3,4,6,8]); } while (qcmp(qadd(u1, u2), qsub(R, Q(1))) >= 0 || lcm(lcm(R.d, u1.d), u2.d) > 24);
+    const left = qsub(qsub(R, u1), u2);
+    return NUM({skill:8, title:'How much is left?', tpl:t, ctx:`${who} has <b>${MX(R)}</b> yards of ribbon. ${cap(pr)} uses <b>${MX(u1)}</b> yards for a bow and <b>${MX(u2)}</b> yard for a gift tag.`, prompt:'How much ribbon is left?', why:`Take away both: ${MX(R)} − ${MX(u1)} = ${MX(qsub(R, u1))}. Then ${MX(qsub(R, u1))} − ${MX(u2)} = <b>${MX(left)}</b> yards.`, kind:'story', chk:{e:`${MXt(R)} − ${MXt(u1)} − ${MXt(u2)}`}}, left, {post:'yards'});
+  }
+  if (t === 'share'){
+    let N0, k; do { N0 = rnd(3, 10); k = rnd(2, 6); } while (N0 % k === 0);
+    const x = rfrac([2,3,4,6,8]), each = Q(N0, k), ans = qadd(each, x);
+    return NUM({skill:8, title:'Share, then add', tpl:t, ctx:`<b>${N0}</b> cups of lemonade are poured equally into <b>${k}</b> glasses. Then ${who} adds <b>${MX(x)}</b> cup of water to each glass.`, prompt:'How many cups are in each glass now?', why:`Step 1: ${whyShare(N0, k)} Step 2: ${MX(each)} + ${MX(x)}. ` + whyAddMixed([each, x]), kind:'story', chk:{e:`${N0} ÷ ${k} + ${MXt(x)}`}}, ans, {post:'cups'});
+  }
+  let a, b; do { a = rmixed([2,3,4,5,6,8,10], 1, 5); b = rmixed([2,3,4,5,6,8,10], 1, 5); } while (!qcmp(a, b) || a.d === b.d || lcm(a.d, b.d) > 24);
+  const big = qcmp(a, b) > 0 ? a : b, small = big === a ? b : a, day = big === a ? 'Monday' : 'Tuesday';
+  return NUM({skill:8, title:'How much farther?', tpl:t, ctx:`${who} runs <b>${MX(a)}</b> miles on Monday and <b>${MX(b)}</b> miles on Tuesday.`, prompt:`How much farther does ${pr} run on ${day}?`, why:`Farther means subtract: ${MX(big)} − ${MX(small)}. ` + whySubMixed(big, small), kind:'story', chk:{e:`${MXt(big)} − ${MXt(small)}`}}, qsub(big, small), {post:'miles'});
+}
+
+/* 9 · mistake detective */
+const DET = ['Added the denominators','Forgot the whole numbers','Didn’t rename a whole first','Flipped the division','Nothing! The work is right'];
+const DETK = ['den','whole','rename','flip','ok'];
+function detCase(type){
+  const [who] = pick(WHO), ok = type === 'ok', base = ok ? pick(['den','whole','rename','flip']) : type;
+  if (base === 'den'){
+    const [a, b] = unlike(DEN, 24), L = lcm(a.d, b.d), A = up(a, L), B = up(b, L), s = qadd(a, b);
+    return {who, lines:[`${FR(a)} + ${FR(b)}`, `= ${fr(A, L)} + ${fr(B, L)}`, ok ? `= ${fr(A + B, L)}` : `= ${fr(A + B, 2 * L)}`], fin:ok ? Q(A + B, L) : Q(A + B, 2 * L), right:s, e:`${MXt(a)} + ${MXt(b)}`,
+      why:ok ? `Every line checks out: ${fr(A, L)} + ${fr(B, L)} = ${fr(A + B, L)}.` : `Line 3 added the denominators. ${cap(unitName(L))} plus ${unitName(L)} are still ${unitName(L)}: ${fr(A, L)} + ${fr(B, L)} = <b>${MX(s)}</b>.`};
+  }
+  if (base === 'whole'){
+    let a, b, L, P; do { const [f1, f2] = unlike(DEN, 24); L = lcm(f1.d, f2.d); a = qadd(Q(rnd(1, 6)), f1); b = qadd(Q(rnd(1, 6)), f2); P = up(f1, L) + up(f2, L); } while (P >= L);
+    const s = qadd(a, b), W = whole(a) + whole(b);
+    return {who, lines:[`${MX(a)} + ${MX(b)}`, `= ${MXL(whole(a), up(part(a), L), L)} + ${MXL(whole(b), up(part(b), L), L)}`, ok ? `= ${MXL(W, P, L)}` : `= ${fr(P, L)}`], fin:ok ? s : Q(P, L), right:s, e:`${MXt(a)} + ${MXt(b)}`,
+      why:ok ? `Wholes ${whole(a)} + ${whole(b)} = ${W}, fractions ${fr(P, L)}. Right!` : `The fractions are right, but the wholes ${whole(a)} + ${whole(b)} = ${W} went missing. The answer is <b>${MX(s)}</b>.`};
+  }
+  if (base === 'rename'){
+    let a, b, L, pa, pb; do { const [f1, f2] = unlike(DEN, 24); L = lcm(f1.d, f2.d); a = qadd(Q(rnd(3, 9)), f1); b = qadd(Q(rnd(1, whole(a) - 1)), f2); pa = up(f1, L); pb = up(f2, L); } while (pa >= pb);
+    const wa = whole(a), wb = whole(b), s = qsub(a, b);
+    return {who, lines:[`${MX(a)} − ${MX(b)}`, `= ${MXL(wa, pa, L)} − ${MXL(wb, pb, L)}`, ok ? `= ${MXL(wa - 1, pa + L, L)} − ${MXL(wb, pb, L)}` : `= ${MXL(wa - wb, pb - pa, L)}`].concat(ok ? [`= ${MXL(wa - 1 - wb, pa + L - pb, L)}`] : []), fin:ok ? s : Q((wa - wb) * L + pb - pa, L), right:s, e:`${MXt(a)} − ${MXt(b)}`,
+      why:ok ? `${fr(pa, L)} is too small, so 1 whole was renamed. Every line checks out.` : `${fr(pa, L)} is less than ${fr(pb, L)}, so the last line took ${pa} from ${pb} instead. Rename first: ${MXL(wa, pa, L)} = ${MXL(wa - 1, pa + L, L)}. The answer is <b>${MX(s)}</b>.`};
+  }
+  let N0, k; do { N0 = rnd(3, 12); k = rnd(2, 8); } while (N0 === k || N0 % k === 0 || k % N0 === 0);
+  return {who, ctx:`<b>${N0}</b> cups of water are poured equally into <b>${k}</b> glasses. How much is in each glass?`, lines:ok ? [`${N0} ÷ ${k}`, `= ${fr(N0, k)}`] : [`${k} ÷ ${N0}`, `= ${fr(k, N0)}`], fin:ok ? Q(N0, k) : Q(k, N0), right:Q(N0, k), e:`${N0} ÷ ${k}`,
+    why:ok ? `${N0} cups shared by ${k} glasses is ${N0} ÷ ${k} = ${fr(N0, k)}. Right!` : `It should be cups ÷ glasses: ${N0} ÷ ${k} = <b>${MX(Q(N0, k))}</b>. ${N0 > k ? 'More cups than glasses, so each glass gets more than 1 cup.' : 'Fewer cups than glasses, so each glass gets less than 1 cup.'}`};
+}
+function g9(){
+  const type = pick(['den','den','whole','rename','rename','flip','ok']), c = detCase(type);
+  const work = `${c.ctx ? `<div>${c.ctx}</div>` : ''}<div class="work" style="font-size:16px"><div class="hint">🕵️ ${c.who}’s work</div>${c.lines.map((l, i) => `<div>Line ${i + 1}: ${l}</div>`).join('')}</div>`;
+  if (type !== 'ok' && Math.random() < .3) return NUM({skill:9, title:'Fix it', ctx:work, prompt:'Something is wrong. What is the right answer?', why:c.why, kind:'num', chk:{e:c.e}}, c.right);
+  return MC({skill:9, title:'What went wrong?', ctx:work, prompt:'What went wrong?', choices:DET, answer:DETK.indexOf(type), why:c.why, kind:'det', chk:{type, e:c.e, fin:[c.fin.n, c.fin.d]}});
+}
+
+const GENS = {1:g1, 2:g2, 3:g3, 4:g4, 5:g5, 6:g6, 7:g7, 8:g8, 9:g9};
+const buildBossC = () => [g1(), g1(), g2(), g3(), g3(), g4(), g4(), g5(), g5(), g6(), g6(), g7(), g8(), g8(), g9()];
+
+/* ---------- THE PRACTICE TEST (Module 2 Assessment), question by question, then one twin for each ---------- */
+const BAR6 = (o1, o2) => bars([{parts:6, on:o1, col:PA, cut:3}, {parts:6, on:o2, col:PB, cut:2}], {lw:0, bh:20, gap:8, w:300});
+const LACY = `Lacy makes two different kinds of chili.<br>• The first kind uses <b>3${fr(5,8)}</b> pounds of beans.<br>• The second kind uses <b>${fr(3,4)}</b> pounds more beans than the first kind.<br>• Lacy has <b>2${fr(3,8)}</b> pounds of beans.`;
+const KAYLA = `Kayla needs to know whether she has more gold chain or more silver chain.<br>• She has 2 lengths of gold chain that measure <b>2${fr(1,4)}</b> in. and <b>${fr(3,8)}</b> in.<br>• She has 2 lengths of silver chain that measure <b>1${fr(5,8)}</b> in. and <b>1${fr(3,4)}</b> in.`;
+const ADESH = `Adesh evaluates ${EXs(fr(1,4), '+', fr(2,5))}. His work is shown.<div class="work" style="font-size:16px"><div>Line 1: ${fr(1,4)} + ${fr(2,5)} = ${fr(5,20)} + ${fr(8,20)}</div><div>Line 2: ${fr(5,20)} + ${fr(8,20)} = ${fr(13,40)}</div></div>`;
+const CHEESE = `Three friends bring different kinds of cheese to a party. Kelly brings <b>1${fr(5,6)}</b> pounds of cheddar. Riley brings <b>1${fr(1,3)}</b> pounds of mozzarella. Lisa brings <b>2${fr(1,2)}</b> pounds of swiss.`;
+const CHEESE_LINE = nlF({min:0, max:6, den:6, arcLab:false, arr:[{a:M(1,5,6), b:M(3,1,6)}, {a:M(3,1,6), b:M(5,2,3)}]});
+const MAYA = `Maya evaluates ${EXs(fr(2,3), '+', fr(1,6))}. Her work is shown.<div class="work" style="font-size:16px"><div>Line 1: ${fr(2,3)} + ${fr(1,6)} = ${fr(4,6)} + ${fr(1,6)}</div><div>Line 2: ${fr(4,6)} + ${fr(1,6)} = ${fr(5,12)}</div></div>`;
+const tiles6 = '<span class="hint">Answer choices: 1, 2, 3, 4, 5, 6. You can use a number more than once.</span>';
+
+const GUIDE_C = [
+  MC({no:1, lab:'Test #1', skill:3, title:'Evaluate', prompt:`Evaluate. ${EX('(1 ÷ 5)', '+', '(3 ÷ 8)')}`, choices:[`A. ${fr(23,3)}`, `B. ${fr(13,4)}`, `C. ${fr(23,40)}`, `D. ${fr(4,13)}`], answer:2, layout:'g2',
+    why:`1 ÷ 5 = ${fr(1,5)} and 3 ÷ 8 = ${fr(3,8)}. Like units (fortieths): ${fr(8,40)} + ${fr(15,40)} = <b>${fr(23,40)}</b>. That is <b>C</b>. Always check that the letter you pick matches your work!`}),
+  {type:'num', no:2, lab:'Test #2', skill:3, title:'Add', prompt:`Evaluate. ${EX(fr(5,9), '+', fr(2,3))}`, blanks:[{answer:11/9, show:`1${fr(2,9)} (or ${fr(11,9)})`}], why:`Like units (ninths): ${fr(2,3)} = ${fr(6,9)}. ${fr(5,9)} + ${fr(6,9)} = ${fr(11,9)} = <b>1${fr(2,9)}</b>.`},
+  {type:'num', no:3, lab:'Test #2', skill:5, title:'Add mixed numbers', prompt:`Evaluate. ${EX(`1${fr(2,3)}`, '+', `5${fr(2,7)}`)}`, blanks:[{answer:146/21, show:`6${fr(20,21)}`}], why:whyAddMixed([M(1,2,3), M(5,2,7)]) + ' Don’t drop the 6 wholes!'},
+  {type:'num', no:4, lab:'Test #2', skill:6, title:'Subtract mixed numbers', prompt:`Evaluate. ${EX(`7${fr(3,8)}`, '−', `6${fr(2,3)}`)}`, blanks:[{answer:17/24, show:fr(17,24)}], why:whySubMixed(M(7,3,8), M(6,2,3))},
+  {type:'num', no:5, lab:'Test #2', skill:6, title:'Parentheses first', prompt:`Evaluate. ${EX(`(6${fr(2,3)} − ${fr(8,5)})`, '+', `6${fr(3,10)}`)}`, blanks:[{answer:341/30, show:`11${fr(11,30)}`}],
+    why:`Parentheses first. ${fr(8,5)} = 1${fr(3,5)}. Like units (fifteenths): 6${fr(10,15)} − 1${fr(9,15)} = 5${fr(1,15)}. Then 5${fr(1,15)} + 6${fr(3,10)} in thirtieths: 5${fr(2,30)} + 6${fr(9,30)} = <b>11${fr(11,30)}</b>.`},
+  {type:'num', no:6, lab:'Test #3', skill:8, title:'Cut and add', ctx:`Miss Song cuts a board that is <b>16 feet</b> long into <b>3</b> equal pieces. Then she realizes that the pieces she cut each need to be <b>1${fr(1,4)} feet</b> longer.`, fig:tape([{lab:'16 ft board', segs:[0,1,2].map(() => ({v:Q(16,3), t:'?', c:PA}))}]),
+    prompt:'How long does each piece of board need to be?', blanks:[{answer:79/12, show:`6${fr(7,12)}`, post:'feet'}], why:`Step 1: each piece now is 16 ÷ 3 = ${fr(16,3)} = 5${fr(1,3)} feet. Step 2: it needs 1${fr(1,4)} feet more: 5${fr(4,12)} + 1${fr(3,12)} = <b>6${fr(7,12)} feet</b>.`},
+  {type:'multi', all:true, pick:1, no:7, lab:'Test #4', skill:1, title:'Choose all', ctx:'A pitcher holds <b>8 cups</b> of water. The water is poured equally into <b>6 glasses</b>.<div style="font-size:22px;letter-spacing:2px">🫗 → 🥛🥛🥛🥛🥛🥛</div>',
+    prompt:'Which expressions represent how much water is in each glass? Choose <b>all</b> expressions that apply.', choices:[`A. ${fr(3,4)}`, `B. ${fr(6,8)}`, `C. ${fr(4,3)}`, `D. ${fr(8,6)}`, 'E. 6 ÷ 8', 'F. 8 ÷ 6'], correct:[2,3,5],
+    why:`8 cups ÷ 6 glasses = 8 ÷ 6 (<b>F</b>) = ${fr(8,6)} (<b>D</b>). ${fr(8,6)} simplifies to ${fr(4,3)} (<b>C</b>), which is 1${fr(1,3)} cups. More water than glasses, so each glass gets more than 1 cup. ${fr(3,4)}, ${fr(6,8)}, and 6 ÷ 8 are all less than 1.`},
+  MC({no:8, lab:'Test #5', skill:7, title:'Compare', ctx:KAYLA, prompt:'Without finding the actual sum, does Kayla have more gold chain or more silver chain?', choices:['More gold chain','More silver chain','The same amount'], answer:1,
+    why:`Both have 2 wholes (2 + 0 and 1 + 1). Gold’s fractions, ${fr(1,4)} and ${fr(3,8)}, are each less than ½, so they add to less than 1. Silver’s, ${fr(5,8)} and ${fr(3,4)}, are each more than ½, so they add to more than 1. <b>Silver</b> is longer.`}),
+  MC({no:9, lab:'Test #5 · Explain', skill:7, title:'Explain', ctx:KAYLA, prompt:'Which explanation is best?', answer:2,
+    choices:[`Gold, because 2${fr(1,4)} in. is the longest single piece.`, 'Silver, because 8 is bigger than 4.', `Silver. Both colors have 2 whole inches. Gold’s fractions (${fr(1,4)} and ${fr(3,8)}) are each less than ½, so they make less than 1 more inch. Silver’s (${fr(5,8)} and ${fr(3,4)}) are each more than ½, so they make more than 1.`, 'They are the same, because both colors have 2 pieces.'],
+    why:'Compare the wholes first (2 and 2), then use ½ as a benchmark for the fractions. No adding needed!'}),
+  MC({no:10, lab:'Test #6 · Part A', skill:9, title:'Check the work', ctx:ADESH, prompt:'Is the work shown in Line 1 correct? Why?', answer:1,
+    choices:[`No. He should add 1 + 2 and 4 + 5 to get ${fr(3,9)}.`, 'Yes. Fourths and fifths are different-size pieces. He renamed both as twentieths (like units) so he can add them.', 'Yes. You always multiply the bottoms and add the tops.', `No. ${fr(1,4)} is not the same amount as ${fr(5,20)}.`],
+    why:`${fr(1,4)} = ${fr(5,20)} and ${fr(2,5)} = ${fr(8,20)}, so Line 1 is right. You can only add pieces that are the same size, so this step is needed.`}),
+  MC({no:11, lab:'Test #6 · Part B', skill:9, title:'Check the work', ctx:ADESH, prompt:'Is the sum shown in Line 2 correct? Why?', answer:0,
+    choices:[`No. He added the denominators. Twentieths plus twentieths are still twentieths, so the sum is ${fr(13,20)}.`, 'Yes. 5 + 8 = 13 and 20 + 20 = 40.', `No. The sum should be ${fr(13,9)}.`, `Yes. ${fr(13,40)} is the same as ${fr(13,20)}.`],
+    why:`5 twentieths + 8 twentieths = 13 twentieths = <b>${fr(13,20)}</b>. The unit (the denominator) stays the same, just like 5 apples + 8 apples = 13 apples.`}),
+  MC({no:12, lab:'Test #7 · Part A', skill:2, title:'Make like units', ctx:`Consider ${EXs(fr(1,2), '−', fr(1,3))}` + bars([{parts:2, on:1, col:PA, lab:Q(1,2)}, {parts:3, on:1, col:PB, lab:Q(1,3)}]), prompt:'Use the fraction models to make like units. Which model is right?', layout:'viz', answer:2,
+    choices:[bars([{parts:5, on:1, col:PA}, {parts:5, on:1, col:PB}], {lw:0, bh:20, gap:8, w:300}), BAR6(1, 1), BAR6(3, 2), bars([{parts:4, on:2, col:PA, cut:2}, {parts:3, on:1, col:PB}], {lw:0, bh:20, gap:8, w:300})],
+    why:`Cut each half into 3 pieces and each third into 2 pieces. Now both bars show sixths: ${fr(1,2)} = ${fr(3,6)} and ${fr(1,3)} = ${fr(2,6)}.`}),
+  {type:'num', no:13, lab:'Test #7 · Part B', skill:4, title:'Use the model', prompt:`Use the model from Part A to find the difference. ${EX(fr(1,2), '−', fr(1,3))}`, fig:bars([{parts:6, on:3, col:PA, cut:3, lab:Q(1,2)}, {parts:6, on:2, col:PB, cut:2, lab:Q(1,3)}]), blanks:[{answer:1/6, show:fr(1,6)}],
+    why:`${fr(3,6)} − ${fr(2,6)} = <b>${fr(1,6)}</b>.` + bars([{parts:6, on:3, col:PA, cross:[1, 3], lab:Q(1,2)}])},
+  {type:'num', no:14, lab:'Test #8', skill:8, title:'Two steps', ctx:LACY, prompt:'How many more pounds of beans does Lacy need?', blanks:[{answer:45/8, show:`5${fr(5,8)}`, post:'pounds'}],
+    why:`Step 1: second kind = 3${fr(5,8)} + ${fr(6,8)} = 4${fr(3,8)} pounds. Step 2: both kinds = 3${fr(5,8)} + 4${fr(3,8)} = 8 pounds. Step 3: she has 2${fr(3,8)}, so she needs 8 − 2${fr(3,8)} = <b>5${fr(5,8)} pounds</b> more.` +
+      tape([{lab:'1st kind', segs:[{v:M(3,5,8), t:'3 5/8', c:PA}]}, {lab:'2nd kind', segs:[{v:M(3,5,8), t:'3 5/8', c:PA}, {v:Q(3,4), t:'3/4', c:PB}]}, {lab:'Needs 8', segs:[{v:M(2,3,8), t:'has 2 3/8', c:PC}, {v:M(5,5,8), t:'? 5 5/8', dash:true}]}])},
+  {type:'boxes', no:15, lab:'Test #9', skill:3, title:'Build it', ctx:tiles6, prompt:'Complete the equation to show the sum of two fractions. Write one number in each box.', target:Q(11,12), tiles:[1,2,3,4,5,6], sol:[2,3,1,4], show:`${fr(2,3)} + ${fr(1,4)} (or ${fr(3,4)} + ${fr(1,6)})`,
+    why:`${fr(2,3)} + ${fr(1,4)} = ${fr(8,12)} + ${fr(3,12)} = ${fr(11,12)} ✓. ${fr(3,4)} + ${fr(1,6)} = ${fr(9,12)} + ${fr(2,12)} works too. Twelfths are made from thirds and fourths, or fourths and sixths.`},
+  {type:'num', no:16, lab:'Test #10', skill:5, title:'Altogether', ctx:CHEESE, fig:CHEESE_LINE, prompt:'How many pounds of cheese do they bring altogether?', blanks:[{answer:17/3, show:`5${fr(2,3)}`, post:'pounds'}], why:whyAddMixed([M(1,5,6), M(1,1,3), M(2,1,2)])},
+  {type:'rows', no:17, lab:'Test #10 · Explain', skill:5, title:'Read the model', ctx:CHEESE + CHEESE_LINE, prompt:'Explain how the model shows the problem. Tap the right answer in each row.',
+    rows:[{h:'Each tick mark is…', opts:[fr(1,6), fr(1,3), fr(1,2), '1'], a:0},
+      {h:'The model starts at…', opts:[`1${fr(5,6)} Kelly`, `1${fr(1,3)} Riley`, `2${fr(1,2)} Lisa`, '0'], a:0},
+      {h:'The first jump is…', opts:[`1${fr(5,6)} Kelly`, `1${fr(1,3)} Riley`, `2${fr(1,2)} Lisa`], a:1},
+      {h:'The second jump is…', opts:[`1${fr(5,6)} Kelly`, `1${fr(1,3)} Riley`, `2${fr(1,2)} Lisa`], a:2},
+      {h:'It lands on the total…', opts:[`4${fr(5,6)}`, `5${fr(1,2)}`, `5${fr(2,3)}`, '6'], a:2}],
+    why:`Sixths are like units for halves, thirds, and sixths. Start at Kelly’s 1${fr(5,6)}. Jump 1${fr(1,3)} (8 ticks) for Riley to 3${fr(1,6)}. Jump 2${fr(1,2)} (15 ticks) for Lisa to <b>5${fr(2,3)}</b> pounds.`},
+
+  /* twins: new problems, one like each test question */
+  MC({no:18, lab:'Twin of #1', skill:3, title:'Evaluate', prompt:`Evaluate. ${EX('(2 ÷ 3)', '+', '(1 ÷ 4)')}`, choices:[`A. ${fr(3,7)}`, `B. ${fr(11,12)}`, `C. ${fr(3,12)}`, `D. ${fr(12,11)}`], answer:1, layout:'g2', why:`${fr(2,3)} + ${fr(1,4)} = ${fr(8,12)} + ${fr(3,12)} = <b>${fr(11,12)}</b>. That is <b>B</b>.`}),
+  {type:'num', no:19, lab:'Twin of #2', skill:3, title:'Add', prompt:`Evaluate. ${EX(fr(3,4), '+', fr(5,8))}`, blanks:[{answer:11/8, show:`1${fr(3,8)}`}], why:whyAdd(Q(3,4), Q(5,8))},
+  {type:'num', no:20, lab:'Twin of #2', skill:5, title:'Add mixed numbers', prompt:`Evaluate. ${EX(`2${fr(3,5)}`, '+', `4${fr(1,2)}`)}`, blanks:[{answer:71/10, show:`7${fr(1,10)}`}], why:whyAddMixed([M(2,3,5), M(4,1,2)])},
+  {type:'num', no:21, lab:'Twin of #2', skill:6, title:'Subtract mixed numbers', prompt:`Evaluate. ${EX(`5${fr(1,4)}`, '−', `2${fr(5,6)}`)}`, blanks:[{answer:29/12, show:`2${fr(5,12)}`}], why:whySubMixed(M(5,1,4), M(2,5,6))},
+  {type:'num', no:22, lab:'Twin of #2', skill:6, title:'Parentheses first', prompt:`Evaluate. ${EX(`(4${fr(1,2)} − ${fr(7,4)})`, '+', `2${fr(1,3)}`)}`, blanks:[{answer:61/12, show:`5${fr(1,12)}`}],
+    why:`Parentheses first. ${fr(7,4)} = 1${fr(3,4)}. 4${fr(2,4)} − 1${fr(3,4)}: rename, 3${fr(6,4)} − 1${fr(3,4)} = 2${fr(3,4)}. Then 2${fr(3,4)} + 2${fr(1,3)} = 2${fr(9,12)} + 2${fr(4,12)} = 4${fr(13,12)} = <b>5${fr(1,12)}</b>.`},
+  {type:'num', no:23, lab:'Twin of #3', skill:8, title:'Cut and add', ctx:`Mr. Ruiz cuts a rope that is <b>14 feet</b> long into <b>4</b> equal pieces. Then he realizes each piece needs to be <b>${fr(2,3)} foot</b> longer.`, prompt:'How long does each piece need to be?', blanks:[{answer:25/6, show:`4${fr(1,6)}`, post:'feet'}],
+    why:`Step 1: 14 ÷ 4 = ${fr(14,4)} = 3${fr(1,2)} feet. Step 2: 3${fr(1,2)} + ${fr(2,3)} = 3${fr(3,6)} + ${fr(4,6)} = 3${fr(7,6)} = <b>4${fr(1,6)} feet</b>.`},
+  {type:'multi', all:true, pick:1, no:24, lab:'Twin of #4', skill:1, title:'Choose all', ctx:'<b>9 pounds</b> of rice are shared equally among <b>4 jars</b>.', prompt:'Which expressions show how much rice is in each jar? Choose <b>all</b> that apply.', choices:[`A. ${fr(4,9)}`, `B. ${fr(9,4)}`, `C. 2${fr(1,4)}`, 'D. 4 ÷ 9', 'E. 9 ÷ 4', `F. ${fr(18,8)}`], correct:[1,2,4,5],
+    why:`9 ÷ 4 (<b>E</b>) = ${fr(9,4)} (<b>B</b>) = 2${fr(1,4)} (<b>C</b>). ${fr(18,8)} (<b>F</b>) is the same amount, just cut into eighths. ${fr(4,9)} and 4 ÷ 9 flip it.`},
+  MC({no:25, lab:'Twin of #5', skill:7, title:'Compare', ctx:`Leo has a red ribbon in 2 pieces: <b>2${fr(1,3)}</b> in. and <b>${fr(1,4)}</b> in. He has a blue ribbon in 2 pieces: <b>1${fr(7,8)}</b> in. and <b>1${fr(5,6)}</b> in.`, prompt:'Without finding the actual sums, which color is longer in all?', answer:3,
+    choices:['Red, because 2 is the biggest whole number.', `Red, because ${fr(1,3)} and ${fr(1,4)} have smaller bottoms.`, 'They are the same, because both have 2 pieces.', `Blue. Both have 2 wholes, but blue’s fractions (${fr(7,8)} and ${fr(5,6)}) are each more than ½, so they add to more than 1. Red’s are each less than ½.`],
+    why:`Wholes: red 2 + 0 = 2, blue 1 + 1 = 2. Then benchmark with ½: ${fr(1,3)} and ${fr(1,4)} are small; ${fr(7,8)} and ${fr(5,6)} are almost 1 each. Blue wins.`}),
+  MC({no:26, lab:'Twin of #6', skill:9, title:'Check the work', ctx:MAYA, prompt:'Which line has the mistake? What is the right sum?', answer:0,
+    choices:[`Line 2. She added the denominators. Sixths plus sixths are still sixths: ${fr(5,6)}.`, `Line 1. ${fr(2,3)} is not equal to ${fr(4,6)}.`, `Line 2. The sum is ${fr(5,18)}.`, `No mistake. ${fr(5,12)} is right.`], why:`${fr(2,3)} = ${fr(4,6)}, so Line 1 is fine. Then 4 sixths + 1 sixth = <b>${fr(5,6)}</b>.`}),
+  {type:'num', no:27, lab:'Twin of #7', skill:4, title:'Use a model', prompt:`Make like units, then subtract. ${EX(fr(3,4), '−', fr(1,3))}`, fig:bars([{parts:4, on:3, col:PA, lab:Q(3,4)}, {parts:3, on:1, col:PB, lab:Q(1,3)}]), blanks:[{answer:5/12, show:fr(5,12)}],
+    why:`Cut fourths into 3 and thirds into 4: twelfths. ${fr(9,12)} − ${fr(4,12)} = <b>${fr(5,12)}</b>.` + bars([{parts:12, on:9, col:PA, cut:3, lab:Q(3,4)}, {parts:12, on:4, col:PB, cut:4, lab:Q(1,3)}])},
+  {type:'num', no:28, lab:'Twin of #8', skill:8, title:'Two steps', ctx:`Ben makes two batches of trail mix.<br>• The first batch uses <b>2${fr(3,4)}</b> cups of nuts.<br>• The second batch uses <b>${fr(1,2)}</b> cup more nuts than the first.<br>• Ben has <b>4${fr(1,8)}</b> cups of nuts.`, prompt:'How many more cups of nuts does Ben need?', blanks:[{answer:15/8, show:`1${fr(7,8)}`, post:'cups'}],
+    why:`Step 1: second batch = 2${fr(3,4)} + ${fr(1,2)} = 3${fr(1,4)}. Step 2: both = 2${fr(3,4)} + 3${fr(1,4)} = 6 cups. Step 3: 6 − 4${fr(1,8)} = <b>1${fr(7,8)} cups</b>.`},
+  {type:'boxes', no:29, lab:'Twin of #9', skill:3, title:'Build it', ctx:tiles6, prompt:'Write one number in each box to make the sum.', target:Q(7,12), tiles:[1,2,3,4,5,6], sol:[1,3,1,4], show:`${fr(1,3)} + ${fr(1,4)}`,
+    why:`${fr(1,3)} + ${fr(1,4)} = ${fr(4,12)} + ${fr(3,12)} = ${fr(7,12)} ✓. (${fr(2,6)} + ${fr(1,4)} works too.)`},
+  {type:'num', no:30, lab:'Twin of #10', skill:5, title:'Altogether', ctx:`Ana picks <b>1${fr(1,2)}</b> pounds of grapes, Ben picks <b>2${fr(1,4)}</b> pounds, and Cal picks <b>1${fr(3,4)}</b> pounds.`, fig:nlF({min:0, max:6, den:4, arcLab:false, arr:[{a:M(1,1,2), b:M(3,3,4)}, {a:M(3,3,4), b:M(5,1,2)}]}), prompt:'How many pounds do they pick altogether?', blanks:[{answer:11/2, show:`5${fr(1,2)}`, post:'pounds'}], why:whyAddMixed([M(1,1,2), M(2,1,4), M(1,3,4)])}
+];
+const PARTS_C = [['1','Test · page 1',1,5,'#1 and #2'],['2','Test · pages 2–3',6,11,'#3 to #6'],['3','Test · pages 4–5',12,17,'#7 to #10'],['T','Twin problems',18,30,'New ones, like each test question']];
+
+/* ---------- PRACTICE ENGINE ---------- */
+const partMax = p => p.type === 'boxes' ? 1 : p.type === 'rows' ? p.rows.length : p.type === 'num' ? p.blanks.length : p.type === 'multi' && !p.all ? p.pick : 1;
+/* what a student types: 4, −3.5, 3/4, −3 1/3 */
+function parseNum(t){
+  let s = String(t == null ? '' : t).replace(/−/g,'-').trim(); if (!s) return NaN;
+  let sg = 1; if (s[0] === '-'){ sg = -1; s = s.slice(1).trim(); }
+  let m = s.match(/^(\d+)\s+(\d+)\/(\d+)$/); if (m) return +m[3] ? sg * (+m[1] + m[2] / m[3]) : NaN;
+  m = s.match(/^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/); if (m) return +m[2] ? sg * m[1] / m[2] : NaN;
+  return /^\d*\.?\d+$|^\d+\.$/.test(s) ? sg * Number(s) : NaN;
+}
+/* boxes: r = [top1, bottom1, top2, bottom2]; any pair that makes the target counts */
+const boxesRight = (p, r) => !!r && r.length === 4 && r.every(v => v > 0) && (r[0] * r[3] + r[2] * r[1]) * p.target.d === p.target.n * r[1] * r[3];
+const isRight = (typed, b) => { const u = parseNum(typed); return isFinite(u) && Math.abs(u - b.answer) <= (b.tol || 1e-6); };
+function grade(p, r){
+  const max = partMax(p);
+  if (p.type === 'mc') return {got: r === p.answer ? 1 : 0, max};
+  if (p.type === 'boxes') return {got: boxesRight(p, r) ? 1 : 0, max};
+  if (p.type === 'rows') return {got: p.rows.filter((row,i) => r && r[i] === row.a).length, max};
+  if (p.type === 'num') return {got: p.blanks.filter((b,i) => r && isRight(r[i], b)).length, max};
+  if (p.type === 'order') return {got: r && r.length === p.items.length && r.every((v,i) => v === i) ? 1 : 0, max};
+  if (p.all) return {got: r && r.length === p.correct.length && r.every(i => p.correct.includes(i)) ? 1 : 0, max};
+  return {got: Math.min(p.pick, (r || []).filter(i => p.correct.includes(i)).length), max};
+}
+const showVal = v => String(v == null ? '' : v).replace(/-/g,'−');
+const pretty = v => { const t = String(v == null ? '' : v); let m = t.match(/^(\d+) (\d+)\/(\d+)$/); if (m) return m[1] + fr(m[2], m[3]); m = t.match(/^(\d+)\/(\d+)$/); if (m) return fr(m[1], m[2]); return t.replace(/ /g, '&nbsp;'); };
+function answerText(p){
+  if (p.type === 'mc') return p.choices[p.answer];
+  if (p.type === 'boxes') return p.show;
+  if (p.type === 'rows') return p.rows.map(r => `${r.h} ${r.opts[r.a]}`).join(' · ');
+  if (p.type === 'num') return p.blanks.map(b => `${b.label ? b.label + ' ' : ''}${b.pre || ''}${b.show || N(b.answer)}${b.post ? ' ' + b.post : ''}`).join(' · ');
+  if (p.type === 'order') return p.items.join(' → ');
+  return (!p.all && p.correct.length > p.pick ? `Any ${p.pick}: ` : '') + p.correct.map(i => p.choices[i]).join(' and ');
+}
+function userText(p, r){
+  if (r == null || (Array.isArray(r) && !r.length)) return '(no answer)';
+  if (p.type === 'mc') return p.choices[r];
+  if (p.type === 'boxes') return r.every(v => v != null) ? `${fr(r[0], r[1])} + ${fr(r[2], r[3])}` : '(not finished)';
+  if (p.type === 'rows') return p.rows.map((row,i) => `${row.h} ${r[i] != null ? row.opts[r[i]] : '–'}`).join(' · ');
+  if (p.type === 'num') return p.blanks.map((b,i) => `${b.label ? b.label + ' ' : ''}${pretty(r[i]) || '–'}`).join(' · ');
+  if (p.type === 'order') return r.map(i => p.items[i]).join(' → ');
+  return r.map(i => p.choices[i]).join(', ');
+}
+/* the order puzzle shows items shuffled; keep one shuffle per question */
+const orderView = p => p._sh || (p._sh = shuffle(p.items.map((_,i) => i)));
+
+function runSet(box, items, o){
+  const boss = o.mode === 'boss';
+  const resp = items.map(() => null), res = items.map(() => null), total = items.reduce((s,p) => s + partMax(p), 0);
+  let idx = 0, kd = null;
+  const stopKd = () => { if (kd){ document.removeEventListener('keydown', kd); kd = null; } };
+  cleanup = stopKd;
+
+  function render(){
+    stopKd();
+    if (idx >= items.length) return finish();
+    const p = items[idx], done = !boss && res[idx] !== null, last = idx === items.length - 1;
+    const wrap = h('div',{class:'col u-' + SK[p.skill].u});
+    wrap.append(h('div',{class:'dots'}, items.map((it,k) => h('i',{class: boss ? (k < idx ? 'm' : k === idx ? 'c' : '') : (res[k] ? (res[k].got === res[k].max ? 'g' : 'b') : k === idx ? 'c' : '')}))));
+    wrap.append(h('div',{class:'row sp'}, h('span',{class:'lbl'}, p.lab || (p.no ? `#${p.no}${p.part ? ' · Part ' + p.part : ''}` : `${idx + 1} of ${items.length}`)), h('span',{class:'chip',style:'min-height:26px;font-size:12px;padding:2px 10px'}, SK[p.skill].e + ' ' + p.title)));
+    if (p.ctx || p.fig) wrap.append(h('div',{class:'ctx'}, p.ctx ? h('div',{html:p.ctx}) : null, p.fig ? h('div',{html:p.fig,style:'overflow-x:auto'}) : null));
+    wrap.append(h('div',{class:'pq',html:p.prompt}));
+    let primary; const canCheck = () => primary && (primary.disabled = !ready());
+    const ready = () => { const r = resp[idx]; if (p.type === 'mc') return r != null; if (p.type === 'boxes') return r && r.length === 4 && r.every(v => v != null); if (p.type === 'rows') return r && p.rows.every((_,i) => r[i] != null); if (p.type === 'num') return r && r.every(v => isFinite(parseNum(v))); if (p.type === 'order') return r && r.length === p.items.length; return r && (p.all ? r.length > 0 : r.length === p.pick); };
+
+    if (p.type === 'mc'){
+      const list = h('div',{class:'opts' + (p.layout ? ' ' + p.layout : '')});
+      p.choices.forEach((c,k) => {
+        const b = h('button',{class:'opt' + (resp[idx] === k ? ' sel' : ''),html:c,onclick:() => { if (done) return; resp[idx] = k; if (boss){ list.querySelectorAll('.opt').forEach((x,j) => x.classList.toggle('sel', j === k)); canCheck(); } else check(); }});
+        if (done){ b.classList.remove('sel'); if (k === p.answer) b.classList.add('good'); else if (k === resp[idx]) b.classList.add('bad'); }
+        list.append(b);
+      });
+      wrap.append(list);
+    }
+    if (p.type === 'rows'){
+      const R = resp[idx] || (resp[idx] = []);
+      p.rows.forEach((row,k) => {
+        const pk = h('div',{class:'pick'}, row.opts.map((t,j) => { const b = h('button',{class:R[k] === j ? 'sel' : '',html:t,onclick:() => { if (done) return; R[k] = j; pk.querySelectorAll('button').forEach((x,y) => x.classList.toggle('sel', y === j)); canCheck(); }});
+          if (done){ b.classList.remove('sel'); if (j === R[k]) b.classList.add(j === row.a ? 'good' : 'bad'); else if (j === row.a) b.classList.add('good'); } return b; }));
+        wrap.append(h('div',{class:'col',style:'gap:6px'}, h('b',{}, row.h), pk));
+      });
+    }
+    if (p.type === 'multi'){
+      const R = resp[idx] || (resp[idx] = []), cnt = h('div',{class:'hint'});
+      const pk = h('div',{class:'pick g2'});
+      const paint = () => { pk.querySelectorAll('button').forEach((b,j) => { b.classList.toggle('sel', !done && R.includes(j)); b.disabled = !done && !p.all && !R.includes(j) && R.length >= p.pick; }); cnt.textContent = p.all ? `${R.length} picked · choose all that are right` : `${R.length} of ${p.pick} picked`; };
+      p.choices.forEach((c,j) => { const b = h('button',{html:c,onclick:() => { if (done) return; const at = R.indexOf(j); if (at >= 0) R.splice(at,1); else if (p.all || R.length < p.pick) R.push(j); paint(); canCheck(); }});
+        if (done && R.includes(j)) b.classList.add(p.correct.includes(j) ? 'good' : 'bad'); else if (done && p.all && p.correct.includes(j)) b.style.borderColor = 'var(--ok)'; pk.append(b); });
+      wrap.append(pk); if (!done){ wrap.append(cnt); paint(); }
+    }
+    if (p.type === 'boxes'){
+      const R = resp[idx] || (resp[idx] = [null, null, null, null]); let act = Math.max(0, R.indexOf(null));
+      const bx = [0,1,2,3].map(k => h('button',{class:'bx','aria-label':['first top','first bottom','second top','second bottom'][k] + ' box',onclick:() => { if (!done){ act = k; paint(); } }}));
+      const ok = done && boxesRight(p, R);
+      const paint = () => bx.forEach((b,k) => { b.textContent = R[k] == null ? '' : R[k]; b.classList.toggle('on', !done && k === act); if (done) b.classList.add(ok ? 'good' : 'bad'); });
+      wrap.append(h('div',{class:'fb4'}, h('div',{class:'fbx'}, bx[0], h('i'), bx[1]), h('b',{},'+'), h('div',{class:'fbx'}, bx[2], h('i'), bx[3]), h('b',{},'='), h('span',{class:'ex',html:FR(p.target)})));
+      paint();
+      if (!done){
+        wrap.append(h('div',{class:'tiles6'}, p.tiles.map(v => h('button',{onclick:() => { R[act] = v; const nx = R.indexOf(null); act = nx >= 0 ? nx : (act + 1) % 4; paint(); canCheck(); }}, String(v))), h('button',{class:'sm',onclick:() => { R.fill(null); act = 0; paint(); canCheck(); }},'Clear')));
+      }
+    }
+    if (p.type === 'order'){
+      const R = resp[idx] || (resp[idx] = []), ord = h('div',{class:'ord'}), pk = h('div',{class:'pick'});
+      const paint = () => {
+        ord.replaceChildren(...p.items.map((_,k) => { const v = R[k]; const s = h('button',{class:'slot' + (v != null ? ' full' : '') + (done && v != null ? (v === k ? ' good' : ' bad') : ''),style:'background:none;text-align:left;width:100%',onclick:() => { if (done || v == null) return; R.splice(k,1); paint(); canCheck(); }}, h('i',{}, k + 1), v != null ? p.items[v] : h('span',{class:'mut',style:'font-weight:400'},'tap a step below')); return s; }));
+        pk.replaceChildren(...orderView(p).filter(i => !R.includes(i)).map(i => h('button',{onclick:() => { if (done) return; R.push(i); paint(); canCheck(); }}, p.items[i])));
+      };
+      paint(); wrap.append(ord); if (!done) wrap.append(pk);
+    }
+    if (p.type === 'num'){
+      const R = resp[idx] || (resp[idx] = p.blanks.map(() => ''));
+      let act = Math.max(0, R.findIndex(v => !v));
+      const bl = p.blanks.map((b,k) => h('button',{class:'blank','aria-label':(b.label || 'Answer') + ' box',onclick:() => { if (!done){ act = k; paint(); } }}));
+      const paint = () => bl.forEach((b,k) => { b.innerHTML = pretty(R[k]); b.classList.toggle('on', !done && k === act); if (done) b.classList.add(isRight(R[k], p.blanks[k]) ? 'good' : 'bad'); });
+      wrap.append(h('div',{class:p.blanks.length === 3 ? 'flds3' : 'col',style:'gap:6px'}, p.blanks.map((b,k) => h('div',{class:'fld'}, b.label ? h('span',{class:'lab'}, b.label) : null, b.pre ? h('span',{class:'post'}, b.pre) : null, bl[k], b.post ? h('span',{class:'post'}, b.post) : null))));
+      paint();
+      if (!done){
+        const key = c => { let s = R[act];
+          if (c === '⌫') s = s.slice(0,-1);
+          else if (c === '−') s = s[0] === '-' ? s.slice(1) : '-' + s;
+          else if (c === ' '){ if (/\d$/.test(s) && !/[ ./]/.test(s)) s += ' '; }
+          else if (c === 'C') s = '';
+          else if (s.length < 10) s += c;
+          R[act] = s; paint(); canCheck(); };
+        const nextBox = () => { act = (act + 1) % R.length; paint(); };
+        const pad = h('div',{class:'pad4'});
+        [['1'],['2'],['3'],['⌫','Backspace'],['4'],['5'],['6'],['/','Fraction bar'],['7'],['8'],['9'],['␣','Space between the whole number and the fraction',' ']].forEach(([c, lab, v]) => pad.append(h('button',{onclick:() => key(v || c),'aria-label':lab || c}, c)));
+        pad.append(h('button',{class:'zero',onclick:() => key('0')},'0'), h('button',{class:'sm',onclick:() => key('C')},'Clear'));
+        if (R.length > 1) pad.append(h('button',{class:'sm',onclick:nextBox},'Next →'));
+        wrap.append(pad, h('div',{class:'padhint'}, LAB.keypad));
+        kd = e => { if (e.metaKey || e.ctrlKey || e.altKey) return; if (/^[0-9/]$/.test(e.key)) key(e.key); else if (e.key === ' '){ e.preventDefault(); key(' '); } else if (e.key === 'Backspace') key('⌫'); else if (e.key === 'Tab'){ e.preventDefault(); nextBox(); } else if (e.key === 'Enter'){ e.preventDefault(); if (!primary.disabled) primary.click(); } };
+        document.addEventListener('keydown', kd);
+      }
+    }
+
+    if (done){
+      const r = res[idx], ok = r.got === r.max;
+      const fb = h('div',{class:'fb ' + (ok ? 'good' : 'bad')}, ok ? pick(['Nice!','Got it!','Correct!','Yes!']) + ` +${r.got * 10} XP` : [(r.max > 1 ? `${r.got} of ${r.max} right. ` : 'Not quite. '), 'Answer: ', h('span',{html:answerText(p)})]);
+      wrap.append(fb, h('div',{class:'hint',style:'font-size:14px;color:var(--ink)',html:'💡 ' + p.why}));
+      setTimeout(() => fb.scrollIntoView({block:'nearest',behavior:'smooth'}), 30);
+    }
+    primary = h('button',{class:'btn' + (done || boss ? '' : ' hlb'),onclick:() => { if (done || boss){ idx++; render(); window.scrollTo(0,0); } else check(); }}, done || boss ? (last ? 'Finish' : 'Next') : 'Check');
+    if (!done) canCheck();
+    if (!(p.type === 'mc' && !boss && !done)) wrap.append(primary);
+    box.replaceChildren(wrap);
+  }
+
+  function check(){
+    const p = items[idx]; res[idx] = grade(p, resp[idx]);
+    const ok = res[idx].got === res[idx].max; xp(res[idx].got * 10); bump(p.skill, ok ? 6 : -2); render();
+  }
+
+  function finish(){
+    stopKd();
+    items.forEach((p,k) => { if (!res[k]) res[k] = grade(p, resp[k]); });
+    const got = res.reduce((s,r) => s + r.got, 0), pct = Math.round(100 * got / total);
+    if (boss){ items.forEach((p,k) => bump(p.skill, res[k].got === res[k].max ? 8 : -3)); xp(got * 8); const bs = bossStat(); bs.runs++; if (pct > bs.best) bs.best = pct; save(); }
+    if (o.onDone) o.onDone(got, total);
+    const verdict = boss ? (pct >= 90 ? LAB.boss.win : pct >= 70 ? LAB.boss.hurt : LAB.boss.lose) : (pct === 100 ? 'Perfect! 🎉' : pct >= 70 ? 'Solid work' : 'Keep going');
+    const card = h('div',{class:'card pad col'}, h('div',{class:'score'}, `${got}/${total}`), h('div',{class:'big-out',style:'color:var(--ink)'}, verdict));
+    if (boss) card.append(h('div',{class:'hpbar','aria-label':'Boss health'}, h('i',{style:`width:${100 - pct}%`})));
+    const list = h('div',{class:'col'}, h('div',{class:'lbl'},'Review'));
+    items.forEach((p,k) => {
+      const r = res[k], ok = r.got === r.max;
+      list.append(h('details',{class:'card pad',style:'padding:6px 12px'},
+        h('summary',{style:'font-weight:700;min-height:40px;display:flex;align-items:center;gap:8px;cursor:pointer'}, h('span',{style:`color:var(--${ok ? 'ok' : 'no'})`}, ok ? '✓' : '✗'), p.lab ? `${p.lab} · ${p.title}` : p.no ? `#${p.no} · ${p.title}` : `${k + 1}. ${p.title}`, h('span',{class:'mut',style:'margin-left:auto'}, `${r.got}/${r.max}`)),
+        h('div',{class:'col',style:'margin-top:6px;gap:6px'}, p.ctx ? h('div',{class:'hint',html:p.ctx}) : null, h('div',{html:p.prompt,style:'font-weight:700'}), h('div',{class:'hint'}, 'Your answer: ', h('span',{html:userText(p, resp[k])})), h('div',{class:'hint'}, 'Answer: ', h('span',{html:answerText(p)})), h('div',{class:'hint',style:'color:var(--ink)',html:'💡 ' + p.why}))));
+    });
+    box.replaceChildren(card, ...(o.actions ? o.actions() : []), list);
+    window.scrollTo(0,0);
+  }
+  render();
+}
+
+/* ---------- LEARN LABS ---------- */
+const L = {};
+const out = (t, sz) => h('div',{class:'big-out',style:'font-size:' + (sz || 19) + 'px',html:t || ''});
+const rule = t => h('div',{class:'rule',html:t});
+const chips = (list, fn) => h('div',{class:'row',style:'gap:6px'}, list.map(([lab, v]) => h('button',{class:'chip',style:'min-height:34px;font-size:14px',html:`<span>${lab}</span>`,onclick:() => fn(v)})));
+const slider = (lab, min, max, step, val, fn) => { const o = h('b',{}), i = h('input',{type:'range',min,max,step,value:val,'aria-label':lab}); const set = v => { i.value = v; o.textContent = N(+v); }; i.addEventListener('input', () => { o.textContent = N(+i.value); fn(+i.value); }); set(val); return {el:[h('div',{class:'row sp'}, h('span',{class:'lbl'}, lab), o), i], set}; };
+const stepper = (lab, min, max, val, fn) => { const o = h('b',{style:'min-width:30px;text-align:center;font:700 20px var(--fd)'}); let v = val;
+  const set = x => { v = Math.max(min, Math.min(max, x)); o.textContent = v; };
+  const b = (t, d) => h('button',{class:'chip',style:'min-width:44px','aria-label':(d > 0 ? 'More: ' : 'Fewer: ') + lab,onclick:() => { set(v + d); fn(v); }}, t);
+  set(val); return {el:h('div',{class:'row sp',style:'flex-wrap:nowrap'}, h('span',{class:'lbl',style:'line-height:1.25'}, lab), h('div',{class:'row',style:'gap:6px;flex-wrap:nowrap'}, b('−', -1), o, b('+', 1))), set}; };
+/* worked lines: [math, note]; the newest line is highlighted */
+const workLines = (el, st, n) => el.replaceChildren(...st.slice(0, n).map(([t, why], i) => h('div',{class:'wl'}, h('span',{class:i === n - 1 && i ? 'on' : '',html:t}), h('span',{class:'hint'}, why || ''))));
+/* a "Next step" button that walks a lab through its steps */
+const stepBtn = (getMax, get, set) => { const b = h('button',{class:'btn',onclick:() => { set(get() >= getMax() ? 0 : get() + 1); }}); const label = () => b.textContent = get() >= getMax() ? '↺ Start over' : get() === 0 ? 'Solve it ▶' : 'Next step ▶'; return {el:b, label}; };
+
+/* 1 · fair shares */
+L[1] = box => {
+  let n = 3, k = 4, sq = false;
+  const fig = h('div',{class:'stage',style:'padding:6px'}), eq = out('', 22), note = h('div',{class:'c',style:'font-size:14px'});
+  const paint = () => {
+    fig.innerHTML = pies(n, k, sq);
+    const q = Q(n, k); let t = `${n} ÷ ${k} = <span class="hl">${fr(n, k)}</span>`; if (q.d !== k) t += ` = ${FR(q)}`; if (n > k && q.d !== 1) t += ` = ${MX(q)}`;
+    eq.innerHTML = t;
+    note.innerHTML = `Friend 1 gets the <b style="color:var(--x)">pink piece</b> of every ${sq ? 'brownie' : 'pizza'}: ${n} piece${n > 1 ? 's' : ''} of ${fr(1, k)} = ${fr(n, k)}. ` + (n > k ? '<b>More</b> than 1 whole each!' : n === k ? 'Exactly 1 whole each.' : '<b>Less</b> than 1 whole each.');
+  };
+  const sa = slider('Things to share', 1, 10, 1, n, v => { n = v; paint(); }), sb = slider('Friends sharing', 2, 8, 1, k, v => { k = v; paint(); });
+  const sg = seg([['pie','🍕 Pizzas'],['sq','🍫 Brownies']], 'pie', v => { sq = v === 'sq'; paint(); });
+  const set = ([a, b, s]) => { n = a; k = b; sq = s; sa.set(a); sb.set(b); sg.querySelectorAll('button').forEach((x, i) => x.classList.toggle('on', i === (s ? 1 : 0))); paint(); };
+  box.append(rule(`The fraction bar <b>means divide</b>: <span style="white-space:nowrap">${fr('a', 'b')} = a ÷ b</span>`), chips([['Test #4: 8 cups, 6 glasses', [8, 6, true]], ['3 pizzas, 4 friends', [3, 4, false]], ['1 ÷ 5', [1, 5, false]], ['3 ÷ 8', [3, 8, true]]], set), sg, fig, eq, note, ...sa.el, ...sb.el);
+  paint();
+};
+
+/* 2 · like units */
+L[2] = box => {
+  let a = Q(1, 2), b = Q(1, 3), m1 = 1, m2 = 1;
+  const fig = h('div',{class:'stage',style:'padding:6px'}), msg = out('', 18), eqs = h('div',{class:'c',style:'font:700 21px var(--fd)'});
+  const s1 = stepper('Cut each top piece into', 1, 8, 1, v => { m1 = v; paint(); }), s2 = stepper('Cut each bottom piece into', 1, 8, 1, v => { m2 = v; paint(); });
+  const paint = () => {
+    const P1 = a.d * m1, P2 = b.d * m2, like = P1 === P2;
+    fig.innerHTML = bars([{parts:P1, on:a.n * m1, col:PA, cut:m1, lab:a}, {parts:P2, on:b.n * m2, col:PB, cut:m2, lab:b}]);
+    eqs.innerHTML = `${FR(a)} = ${fr(a.n * m1, P1)} &nbsp; ${FR(b)} = ${fr(b.n * m2, P2)}`;
+    msg.innerHTML = like ? `✨ Like units: ${unitName(P1)}!` : `Not the same size yet: ${unitName(P1)} and ${unitName(P2)}`;
+    msg.style.color = like ? 'var(--ok)' : 'var(--mut)';
+  };
+  const set = (x, y) => { a = x; b = y; m1 = m2 = 1; s1.set(1); s2.set(1); paint(); };
+  const magic = h('button',{class:'btn ghost',onclick:() => { const L0 = lcm(a.d, b.d); m1 = L0 / a.d; m2 = L0 / b.d; s1.set(m1); s2.set(m2); paint(); }}, '✨ Find like units for me');
+  box.append(rule('Like units = <b>same-size pieces</b>. Cut both bars until the pieces match.'),
+    chips([[`Test #7: ${fr(1,2)} and ${fr(1,3)}`, [Q(1,2), Q(1,3)]], [`Test #6: ${fr(1,4)} and ${fr(2,5)}`, [Q(1,4), Q(2,5)]], [`Test #1: ${fr(1,5)} and ${fr(3,8)}`, [Q(1,5), Q(3,8)]], [`Test #2: ${fr(5,9)} and ${fr(2,3)}`, [Q(5,9), Q(2,3)]], ['🎲 New pair', null]], v => v ? set(...v) : set(...unlike(DEN, 24))),
+    fig, s1.el, s2.el, msg, eqs, magic);
+  paint();
+};
+
+/* 3 · add fractions: the potion mixer */
+L[3] = box => {
+  let a = Q(1, 4), b = Q(2, 5), st = 0;
+  const fig = h('div',{class:'stage',style:'padding:6px'}), lines = h('div',{class:'work card pad'}), oops = h('div',{class:'col',hidden:true});
+  const info = () => { const L0 = lcm(a.d, b.d), A = up(a, L0), B = up(b, L0), T = A + B, s = qadd(a, b); return {L0, A, B, T, s, last:T === s.n && L0 === s.d && T < L0 ? 2 : 3}; };
+  const sb = stepBtn(() => info().last, () => st, v => { st = v; paint(); });
+  const paint = () => {
+    const {L0, A, B, T, s, last} = info();
+    const fill = from => Array.from({length:L0}, (_, k) => from + k < A ? PA : from + k < T ? PB : 'var(--surf)');
+    const rows = st === 0 ? [{parts:a.d, on:a.n, col:PA, lab:a}, {parts:b.d, on:b.n, col:PB, lab:b}]
+      : st === 1 ? [{parts:L0, on:A, col:PA, lab:a, cut:L0 / a.d}, {parts:L0, on:B, col:PB, lab:b, cut:L0 / b.d}]
+      : [{parts:L0, fills:fill(0), lab:st === last ? (T > L0 ? Q(1) : s) : null}].concat(T > L0 ? [{parts:L0, fills:fill(L0), lab:st === last ? part(s) : null}] : []);
+    fig.innerHTML = (st >= 2 ? '<div class="c" style="font-size:26px;line-height:1">🧪</div>' : '') + bars(rows);
+    const steps = [[`${FR(a)} + ${FR(b)}`, 'different-size pieces'], [`= ${fr(A, L0)} + ${fr(B, L0)}`, 'like units: ' + unitName(L0)], [`= ${fr(T, L0)}`, 'add the tops, keep the bottom']];
+    if (last === 3) steps.push([`= <span class="hl">${MX(s)}</span>`, T > L0 ? 'more than 1 whole' : 'simplify']); else steps[2][0] = `= <span class="hl">${fr(T, L0)}</span>`;
+    workLines(lines, steps, st + 1); sb.label();
+  };
+  const set = (x, y) => { a = x; b = y; st = 0; oops.hidden = true; paint(); };
+  const trap = h('button',{class:'btn ghost',onclick:() => {
+    const m = Q(a.n + b.n, a.d + b.d), big = qcmp(a, b) > 0 ? a : b;
+    oops.replaceChildren(h('div',{class:'fb bad',html:`🙈 ${fr(a.n, a.d)} + ${fr(b.n, b.d)} is <b>not</b> ${fr(a.n + b.n, a.d + b.d)}. That is even less than ${FR(big)} by itself! A sum can’t be smaller than one of its parts.`}),
+      h('div',{class:'stage',style:'padding:6px',html:bars([{parts:a.d + b.d, on:a.n + b.n, col:'var(--no)', lab:{n:a.n + b.n, d:a.d + b.d}}, {parts:big.d, on:big.n, col:big === a ? PA : PB, lab:big}])}));
+    oops.hidden = false; }}, '🙈 What if I add the bottoms?');
+  box.append(rule('Make <b>like units</b>, add the tops, <b>keep the bottom</b>.'),
+    chips([[`Test #6: ${fr(1,4)} + ${fr(2,5)}`, [Q(1,4), Q(2,5)]], [`Test #1: ${fr(1,5)} + ${fr(3,8)}`, [Q(1,5), Q(3,8)]], [`Test #2: ${fr(5,9)} + ${fr(2,3)}`, [Q(5,9), Q(2,3)]], [`${fr(3,4)} + ${fr(5,8)}`, [Q(3,4), Q(5,8)]], ['🎲 New', null]], v => v ? set(...v) : set(...unlike(DEN, 24))),
+    fig, lines, sb.el, trap, oops);
+  paint();
+};
+
+/* 4 · subtract fractions: cross out pieces */
+L[4] = box => {
+  let a = Q(1, 2), b = Q(1, 3), st = 0;
+  const fig = h('div',{class:'stage',style:'padding:6px'}), lines = h('div',{class:'work card pad'});
+  const info = () => { const L0 = lcm(a.d, b.d), A = up(a, L0), B = up(b, L0), s = qsub(a, b); return {L0, A, B, s, last:A - B === s.n && L0 === s.d ? 2 : 3}; };
+  const sb = stepBtn(() => info().last, () => st, v => { st = v; paint(); });
+  const paint = () => {
+    const {L0, A, B, s, last} = info();
+    const rows = st === 0 ? [{parts:a.d, on:a.n, col:PA, lab:a}, {parts:b.d, on:b.n, col:PB, lab:b}]
+      : st === 1 ? [{parts:L0, on:A, col:PA, lab:a, cut:L0 / a.d}, {parts:L0, on:B, col:PB, lab:b, cut:L0 / b.d}]
+      : [{parts:L0, on:A, col:PA, lab:st === last ? s : a, cross:[A - B, A]}];
+    fig.innerHTML = bars(rows);
+    const steps = [[`${FR(a)} − ${FR(b)}`, 'different-size pieces'], [`= ${fr(A, L0)} − ${fr(B, L0)}`, 'like units: ' + unitName(L0)], [`= ${fr(A - B, L0)}`, `cross out ${B} piece${B > 1 ? 's' : ''}`]];
+    if (last === 3) steps.push([`= <span class="hl">${MX(s)}</span>`, 'simplify']); else steps[2][0] = `= <span class="hl">${fr(A - B, L0)}</span>`;
+    workLines(lines, steps, st + 1); sb.label();
+  };
+  const set = (x, y) => { a = x; b = y; st = 0; paint(); };
+  box.append(rule('Like units first. Then <b>take away</b> the pieces.'),
+    chips([[`Test #7: ${fr(1,2)} − ${fr(1,3)}`, [Q(1,2), Q(1,3)]], [`${fr(3,4)} − ${fr(1,3)}`, [Q(3,4), Q(1,3)]], [`${fr(5,6)} − ${fr(1,4)}`, [Q(5,6), Q(1,4)]], [`${fr(7,8)} − ${fr(1,2)}`, [Q(7,8), Q(1,2)]], ['🎲 New', null]],
+      v => { if (v) return set(...v); let x, y; do { [x, y] = unlike(DEN, 24); } while (!qcmp(x, y)); set(...(qcmp(x, y) > 0 ? [x, y] : [y, x])); }),
+    fig, lines, sb.el);
+  paint();
+};
+
+/* 5 · add mixed numbers: wholes + fractions, and jumps on a number line */
+L[5] = box => {
+  let xs = [M(1,5,6), M(1,1,3), M(2,1,2)], st = 0;
+  const fig = h('div',{class:'stage',style:'padding:6px'}), lines = h('div',{class:'work card pad'});
+  const info = () => { const L0 = xs.reduce((l, x) => lcm(l, x.d), 1), ws = xs.map(whole), W = ws.reduce((s, w) => s + w, 0), ps = xs.map(x => up(part(x), L0)), P = ps.reduce((s, p) => s + p, 0), tot = xs.reduce(qadd, Q(0)); return {L0, ws, W, ps, P, tot, last:P >= L0 ? 4 : 3}; };
+  const sb = stepBtn(() => info().last, () => st, v => { st = v; paint(); });
+  const paint = () => {
+    const {L0, ws, W, ps, P, tot, last} = info(), arr = []; let at = xs[0];
+    xs.slice(1).forEach(x => { const to = qadd(at, x); arr.push({a:at, b:to, t:x}); at = to; });
+    const max = Math.max(1, Math.ceil(qv(tot) - 1e-9)), den = max * L0 <= 48 ? L0 : 1;
+    fig.innerHTML = nlF({min:0, max, den, arr, pts:[{x:xs[0], t:'start', c:'var(--w)'}].concat(st === last ? [{x:tot, t:'🐸', c:'var(--x)'}] : [])}) + (den === 1 ? `<div class="hint c">Too many tiny ${unitName(L0)} to draw, so ticks show wholes.</div>` : '');
+    const steps = [[xs.map(MX).join(' + '), ''], [`🧱 ${ws.join(' + ')} = ${W}`, 'add the wholes'], [`🍰 ${ps.map(p => fr(p, L0)).join(' + ')} = ${fr(P, L0)}`, 'add the fractions (' + unitName(L0) + ')']];
+    if (last === 4) steps.push([`${fr(P, L0)} = ${MX(Q(P, L0))}`, 'more than 1: regroup']);
+    steps.push([`= <span class="hl">${MX(tot)}</span>`, last === 4 ? `${W} + ${MX(Q(P, L0))}` : 'put them together']);
+    workLines(lines, steps, st + 1); sb.label();
+  };
+  const set = v => { xs = v; st = 0; paint(); };
+  box.append(rule('Add the <b>wholes</b>. Add the <b>fractions</b>. Don’t drop the wholes!'),
+    chips([['Test #10 🧀', [M(1,5,6), M(1,1,3), M(2,1,2)]], ['Test #2', [M(1,2,3), M(5,2,7)]], ['Test #3 🪵', [M(5,1,3), M(1,1,4)]], ['Twin', [M(2,3,5), M(4,1,2)]], ['🎲 New', null]],
+      v => { if (v) return set(v); const [f1, f2b] = unlike(DEN, 24); set([qadd(Q(rnd(1, 4)), f1), qadd(Q(rnd(1, 4)), f2b)]); }),
+    fig, lines, sb.el);
+  paint();
+};
+
+/* 6 · subtract mixed numbers: rename a whole */
+function wholesSVG(n, crossN, newCol){
+  const S = 24, G = 6, W = 320, H = S + 8; let s = '';
+  for (let i = 0; i < n; i++){ const x = 4 + i * (S + G); s += `<rect x="${x}" y="4" width="${S}" height="${S}" rx="5" fill="${PA}" stroke="var(--ink)" stroke-width="1.6"/>`; if (i >= n - crossN) s += `<path d="M${x + 5} 9L${x + S - 5} ${S - 1}M${x + S - 5} 9L${x + 5} ${S - 1}" stroke="var(--no)" stroke-width="2.4" stroke-linecap="round"/>`; }
+  if (!n) s += `<text x="6" y="22" font-size="13" font-weight="700" fill="var(--mut)">no wholes left</text>`;
+  return `<svg class="fx" viewBox="0 0 ${W} ${H}" role="img" aria-label="${n} whole${n === 1 ? '' : 's'}">${s}</svg>`;
+}
+L[6] = box => {
+  let a = M(7,3,8), b = M(6,2,3), st = 0;
+  const fig = h('div',{class:'stage col',style:'padding:8px;gap:4px'}), lines = h('div',{class:'work card pad'});
+  const info = () => { const L0 = lcm(a.d, b.d), wa = whole(a), wb = whole(b), pa = up(part(a), L0), pb = up(part(b), L0), ren = pa < pb; return {L0, wa, wb, pa, pb, ren, last:ren ? 4 : 2}; };
+  const sb = stepBtn(() => info().last, () => st, v => { st = v; paint(); });
+  const paint = () => {
+    const {L0, wa, wb, pa, pb, ren, last} = info(), r = qsub(a, b);
+    const renamed = ren && st >= 2, take = st >= (ren ? 3 : 1), W = renamed ? wa - 1 : wa;
+    let rows;
+    if (renamed){
+      const inLast = Math.min(pb, pa), rest = pb - inLast;
+      rows = [{parts:L0, on:L0, col:PC, cross:take && rest ? [L0 - rest, L0] : null, tag:'new'}].concat(pa ? [{parts:L0, on:pa, col:PA, cross:take ? [pa - inLast, pa] : null}] : []);
+    } else rows = [{parts:L0, on:pa, col:PA, cross:take ? [pa - pb, pa] : null}];
+    fig.replaceChildren(h('div',{class:'lbl'}, `Wholes: ${W}`), h('div',{html:wholesSVG(W, take ? wb : 0)}), h('div',{class:'lbl'}, `${cap(unitName(L0))}: ${renamed ? pa + L0 : pa}`), h('div',{html:bars(rows, {lw:4, rw:renamed ? 34 : 0})}));
+    const steps = [[`${MXL(wa, pa, L0)} − ${MXL(wb, pb, L0)}`, 'like units: ' + unitName(L0)]];
+    if (ren) steps.push([`${pa} < ${pb} 😬`, `not enough ${unitName(L0)}!`], [`= ${MXL(wa - 1, pa + L0, L0)} − ${MXL(wb, pb, L0)}`, `rename 1 whole = ${fr(L0, L0)}`]);
+    steps.push([`${fr(ren ? pa + L0 : pa, L0)} − ${fr(pb, L0)} = ${fr((ren ? pa + L0 : pa) - pb, L0)}, &nbsp;${ren ? wa - 1 : wa} − ${wb} = ${(ren ? wa - 1 : wa) - wb}`, 'take away'], [`= <span class="hl">${MX(r)}</span>`, '']);
+    workLines(lines, steps, st + 1); sb.label();
+  };
+  const set = (x, y) => { a = x; b = y; st = 0; paint(); };
+  box.append(rule('Top fraction too small? <b>Rename 1 whole</b> as more pieces.'),
+    chips([['Test #2', [M(7,3,8), M(6,2,3)]], ['Twin', [M(5,1,4), M(2,5,6)]], [`Test #8: 8 − 2${fr(3,8)}`, [Q(8), M(2,3,8)]], [`6${fr(2,3)} − 1${fr(3,5)}`, [M(6,2,3), M(1,3,5)]], ['🎲 New', null]],
+      v => { if (v) return set(...v); let x, y; for (;;){ const [f1, f2b] = unlike(DEN, 24), L0 = lcm(f1.d, f2b.d); x = qadd(Q(rnd(3, 8)), f1); y = qadd(Q(rnd(1, whole(x) - 1)), f2b); if (up(f1, L0) < up(f2b, L0)) break; } set(x, y); }),
+    fig, lines, sb.el);
+  paint();
+};
+
+/* 7 · estimate and compare with benchmarks */
+L[7] = box => {
+  const area = h('div',{class:'col'});
+  const bench = () => {
+    let f, streak = 0;
+    const show = h('div',{class:'c',style:'font:700 44px var(--fd);min-height:64px'}), fb = h('div',{}), btns = h('div',{class:'grid3'}), nx = h('button',{class:'btn hlb',hidden:true,onclick:() => deal()},'Next fraction ▶');
+    const deal = () => { for (;;){ f = rfrac([3,4,5,6,7,8,9,10,12]); const v = qv(f), s = [v, Math.abs(v - .5), 1 - v].sort((x, y) => x - y); if (s[1] - s[0] >= 1 / 12 - 1e-9) break; } show.innerHTML = FR(f); fb.replaceChildren(); nx.hidden = true; btns.querySelectorAll('button').forEach(b => { b.disabled = false; b.className = 'tile'; }); };
+    ['0','½','1'].forEach((t, i) => btns.append(h('button',{class:'tile',style:'font:700 24px var(--fd)',onclick:ev => {
+      const v = qv(f), ds = [v, Math.abs(v - .5), 1 - v], near = ds.indexOf(Math.min(...ds)), ok = i === near;
+      streak = ok ? streak + 1 : 0; btns.querySelectorAll('button').forEach((b, j) => { b.disabled = true; if (j === near) b.classList.add('good'); else if (j === i) b.classList.add('bad'); });
+      fb.replaceChildren(h('div',{class:'fb ' + (ok ? 'good' : 'bad'),html:(ok ? (streak > 2 ? `🔥 ${streak} in a row! ` : '✓ ') : '✗ ') + `${FR(f)} is closest to ${['0','½','1'][near]}. Half of ${f.d} is ${half(f.d)}.`}), h('div',{html:nlF({min:0, max:1, den:f.d, pts:[{x:f, t:'', c:'var(--x)'}]})}));
+      nx.hidden = false; if (ok) xp(1); }}, t)));
+    area.replaceChildren(h('div',{class:'hint c'},'Is it closest to 0, ½, or 1? Tip: compare the top to half of the bottom.'), show, btns, fb, nx); deal();
+  };
+  const chains = () => {
+    let sets, names, unit;
+    const card = h('div',{class:'ctx blk'}), btns = h('div',{class:'grid2'}), res = h('div',{class:'col'});
+    const deal = (preset) => {
+      if (preset){ sets = [[M(2,1,4), Q(3,8)], [M(1,5,8), M(1,3,4)]]; names = ['gold chain','silver chain']; unit = 'in.'; }
+      else { const q = g7c(); sets = q.sets; names = q.names; unit = q.unit; }
+      card.innerHTML = sets.map((s, i) => `⛓️ <b>${cap(names[i])}</b>: ${s.map(x => MX(x) + ' ' + unit).join(' and ')}`).join('<br>');
+      res.replaceChildren(); btns.replaceChildren(...names.map((nm, i) => h('button',{class:'btn ghost',onclick:() => reveal(i)}, cap(nm.replace(/^the /, '')) + ' is longer')));
+    };
+    const reveal = pickI => {
+      const tot = sets.map(s => s.reduce(qadd, Q(0))), win = qcmp(tot[0], tot[1]) > 0 ? 0 : 1, ok = pickI === win, mx = Math.max(...tot.map(qv));
+      const bench = x => { const p = part(x); return p.n ? `${FR(p)} ${qcmp(p, HALF) < 0 ? '< ½' : '> ½'}` : 'no fraction'; };
+      res.replaceChildren(h('div',{class:'fb ' + (ok ? 'good' : 'bad'),html:(ok ? '✓ Yes! ' : '✗ Not this time. ') + `Both have ${tot.map((_, i) => sets[i].map(whole).reduce((s, w) => s + w, 0))[0]} wholes. Look at the fractions:`}),
+        h('div',{class:'work card pad',html:sets.map((s, i) => `<div>${cap(names[i].replace(/^the /, ''))}: ${s.map(bench).join(', ')}</div>`).join('')}),
+        h('div',{class:'stage',style:'padding:6px',html:tape(sets.map((s, i) => ({lab:cap(names[i].replace(/^the /, '').split(' ')[0]), segs:s.map((x, j) => ({v:x, t:MXt(x), c:j ? PB : PA}))})), {max:Math.ceil(mx)})}),
+        h('div',{class:'hint c',html:`Exact: ${MX(tot[0])} vs ${MX(tot[1])}. You didn’t need to add!`}));
+      if (ok) xp(2);
+    };
+    area.replaceChildren(h('div',{class:'hint c'},'Without adding: which is longer in all?'), card, btns, res, chips([['Test #5 (Kayla)', true], ['🎲 New chains', false]], deal)); deal(true);
+  };
+  box.append(rule('Benchmarks: <b>0, ½, 1</b>. Compare without adding!'), seg([['b','🎯 0, ½, or 1?'],['c','⛓️ Chain race']], 'b', k => k === 'b' ? bench() : chains()), area);
+  bench();
+};
+/* two chain sets for the race: same wholes, one set's fractions all below ½, the other's above */
+function g7c(){ const [n1, n2, unit] = pick(ITEMS), W = rnd(2, 5), mk = fn => { const wa = rnd(0, W); return [qadd(Q(wa), fn()), qadd(Q(W - wa), fn())]; }, lowFirst = Math.random() < .5, lo = mk(lessHalf), hi = mk(moreHalf); return {sets:lowFirst ? [lo, hi] : [hi, lo], names:[n1, n2], unit}; }
+
+/* 8 · story problems, step by step */
+const STORIES = [
+  {k:'Lacy (Test #8)', ctx:LACY, q:'How many more pounds of beans does Lacy need?', ans:`5${fr(5,8)} pounds`,
+    steps:[['🔎 What do we need?','Beans for <b>both</b> kinds, minus what she has.'], ['Step 1 · second kind', `3${fr(5,8)} + ${fr(3,4)} = 3${fr(5,8)} + ${fr(6,8)} = 4${fr(3,8)}`], ['Step 2 · both kinds', `3${fr(5,8)} + 4${fr(3,8)} = 8`], ['Step 3 · what she still needs', `8 − 2${fr(3,8)} = <span class="hl">5${fr(5,8)}</span>`]],
+    fig:st => tape([{lab:'1st kind', segs:[{v:M(3,5,8), t:'3 5/8', c:PA}]}].concat(st >= 1 ? [{lab:'2nd kind', segs:[{v:M(3,5,8), t:'3 5/8', c:PA}, {v:Q(3,4), t:'3/4', c:PB}]}] : []).concat(st >= 3 ? [{lab:'Needs 8', segs:[{v:M(2,3,8), t:'has 2 3/8', c:PC}, {v:M(5,5,8), t:'5 5/8', dash:true}]}] : []), {max:8})},
+  {k:'Miss Song (Test #3)', ctx:`Miss Song cuts a board that is <b>16 feet</b> long into <b>3</b> equal pieces. Then she realizes that the pieces each need to be <b>1${fr(1,4)} feet</b> longer.`, q:'How long does each piece need to be?', ans:`6${fr(7,12)} feet`,
+    steps:[['🔎 What do we need?','The new length of <b>one</b> piece.'], ['Step 1 · share the board', `16 ÷ 3 = ${fr(16,3)} = 5${fr(1,3)} feet`], ['Step 2 · make it longer', `5${fr(1,3)} + 1${fr(1,4)} = 5${fr(4,12)} + 1${fr(3,12)} = <span class="hl">6${fr(7,12)}</span>`]],
+    fig:st => tape([{lab:'Board', segs:[0,1,2].map(() => ({v:Q(16,3), t:st >= 1 ? '5 1/3' : '?', c:PA}))}].concat(st >= 2 ? [{lab:'New piece', segs:[{v:Q(16,3), t:'5 1/3', c:PA}, {v:M(1,1,4), t:'1 1/4', c:PB}]}] : []), {max:16})},
+  {k:'Cheese (Test #10)', ctx:CHEESE, q:'How many pounds of cheese do they bring altogether?', ans:`5${fr(2,3)} pounds`,
+    steps:[['🔎 What do we need?','The <b>total</b>: add all three.'], ['Step 1 · wholes', '1 + 1 + 2 = 4'], ['Step 2 · fractions in sixths', `${fr(5,6)} + ${fr(2,6)} + ${fr(3,6)} = ${fr(10,6)} = 1${fr(4,6)}`], ['Step 3 · together', `4 + 1${fr(4,6)} = <span class="hl">5${fr(2,3)}</span>`]],
+    fig:() => CHEESE_LINE}
+];
+L[8] = box => {
+  let cur = STORIES[0], st = 0;
+  const card = h('div',{class:'ctx blk'}), fig = h('div',{class:'stage',style:'padding:6px'}), lines = h('div',{class:'work card pad'});
+  const sb = stepBtn(() => cur.steps.length - 1, () => st, v => { st = v; paint(); });
+  const paint = () => {
+    card.innerHTML = cur.ctx + `<div style="font-weight:800;margin-top:4px">${cur.q}</div>`;
+    const f = cur.fig ? cur.fig(st) : null; fig.innerHTML = f || ''; fig.hidden = !f;
+    lines.replaceChildren(...cur.steps.slice(0, st + 1).map(([t, m], i) => h('div',{class:'col',style:'gap:0'}, h('b',{class:i === st && i ? 'on' : '',style:'font-size:14px'}, t), h('span',{html:m}))));
+    sb.label();
+  };
+  const fromGen = () => { const q = g8(), parts = q.why.split(/(?=Step \d)/); return {k:'new', ctx:q.ctx, q:q.prompt, fig:q.fig ? () => q.fig : null, steps:[['🔎 Read it twice','What do they ask for? What do you know?']].concat(parts.map((p, i) => [parts.length > 1 ? 'Step ' + (i + 1) : 'Solve', p.replace(/^Step \d: /, '')])).concat([['Answer', `<span class="hl">${q.blanks[0].show}</span> ${q.blanks[0].post || ''}`]])}; };
+  box.append(rule('Find <b>every</b> step: what you need, what you have, then the last step.'), chips(STORIES.map(s => [s.k, s]).concat([['🎲 New story', null]]), v => { cur = v || fromGen(); st = 0; paint(); }), card, fig, lines, sb.el);
+  paint();
+};
+
+/* 9 · mistake detective */
+const CASES = [
+  {k:'Adesh (Test #6)', prob:`Adesh adds ${EXs(fr(1,4), '+', fr(2,5))}`, lines:[`${fr(1,4)} + ${fr(2,5)}`, `= ${fr(5,20)} + ${fr(8,20)}`, `= ${fr(13,40)}`], bad:2, why:`He added the denominators. Twentieths + twentieths are still twentieths: <b>${fr(13,20)}</b>.`},
+  {k:'Lost wholes', prob:`Jade adds ${EXs(`1${fr(2,3)}`, '+', `5${fr(2,7)}`)}`, lines:[`1${fr(2,3)} + 5${fr(2,7)}`, `= 1${fr(14,21)} + 5${fr(6,21)}`, `= ${fr(20,21)}`], bad:2, why:`The 1 and the 5 disappeared! 1 + 5 = 6, so the answer is <b>6${fr(20,21)}</b>.`},
+  {k:'No rename', prob:`Max subtracts ${EXs(`7${fr(3,8)}`, '−', `6${fr(2,3)}`)}`, lines:[`7${fr(3,8)} − 6${fr(2,3)}`, `= 7${fr(9,24)} − 6${fr(16,24)}`, `= 1${fr(7,24)}`], bad:2, why:`9 is less than 16, so he did 16 − 9 instead. Rename first: 6${fr(33,24)} − 6${fr(16,24)} = <b>${fr(17,24)}</b>.`},
+  {k:'Flipped', prob:'8 cups of water are poured equally into 6 glasses. Rosa finds how much is in each glass.', lines:['6 ÷ 8', `= ${fr(6,8)} = ${fr(3,4)} cup`], bad:0, why:`It is cups ÷ glasses: 8 ÷ 6 = <b>1${fr(1,3)}</b> cups. More cups than glasses, so each glass gets more than 1.`},
+  {k:'Missed a step', prob:LACY, lines:[`Second kind: 3${fr(5,8)} + ${fr(3,4)} = 4${fr(3,8)}`, `Needs: 4${fr(3,8)} − 2${fr(3,8)} = 2`], bad:1, why:`She needs beans for <b>both</b> kinds: 3${fr(5,8)} + 4${fr(3,8)} = 8. Then 8 − 2${fr(3,8)} = <b>5${fr(5,8)}</b>.`},
+  {k:'Wrong letter', prob:`Evaluate ${EXs('(1 ÷ 5)', '+', '(3 ÷ 8)')}. Choices: A. ${fr(23,3)} B. ${fr(13,4)} C. ${fr(23,40)} D. ${fr(4,13)}`, lines:['(1 ÷ 5) + (3 ÷ 8)', `= ${fr(8,40)} + ${fr(15,40)}`, `= ${fr(23,40)}`, `Circled: A. ${fr(23,3)}`], bad:3, why:`The math is right, but ${fr(23,40)} is choice <b>C</b>! Always check the letter matches your work.`}
+];
+L[9] = box => {
+  let cur = CASES[0];
+  const card = h('div',{class:'ctx blk'}), list = h('div',{class:'col',style:'gap:6px'}), res = h('div',{});
+  const paint = () => {
+    card.innerHTML = cur.prob; res.replaceChildren(); let found = false;
+    const pickLine = (i, b) => {
+      if (found) return;
+      if (i === cur.bad){ found = true; b.classList.add('bad'); res.replaceChildren(h('div',{class:'fb good',html:'🕵️ Found it! ' + cur.why})); xp(2); }
+      else if (i < 0 && cur.bad < 0){ found = true; b.classList.add('good'); res.replaceChildren(h('div',{class:'fb good',html:'✅ Right, no mistake! ' + cur.why})); xp(2); }
+      else if (i < 0){ b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); toast('There is a mistake. Keep looking!'); }
+      else { b.classList.add('good'); toast('That line is fine ✓'); }
+    };
+    list.replaceChildren(...cur.lines.map((l, i) => { const b = h('button',{class:'opt',html:`<span class="hint">Line ${i + 1}</span> &nbsp;${l}`,onclick:() => pickLine(i, b)}); return b; }), (() => { const b = h('button',{class:'opt',onclick:() => pickLine(-1, b)}, '✅ No mistake'); return b; })());
+  };
+  const fromGen = () => { const type = pick(['den','whole','rename','flip','ok']), c = detCase(type), badI = {den:2, whole:2, rename:2, flip:0, ok:-1}[type]; return {prob:(c.ctx ? c.ctx + '<br>' : '') + `🕵️ ${c.who}’s work:`, lines:c.lines, bad:badI, why:c.why}; };
+  box.append(rule('One line has a mistake. <b>Tap it!</b> 🕵️'), chips(CASES.map(c => [c.k, c]).concat([['🎲 New case', null]]), v => { cur = v || fromGen(); paint(); }), card, list, res);
+  paint();
+};
+
+function practiceSet(id, n){
+  const out = [], seen = new Set();
+  for (let t = 0; t < 60 && out.length < n; t++){ const q = GENS[id](), key = JSON.stringify([q.prompt, q.ctx, q.fig, q.choices && q.choices.slice().sort(), q.rows && q.rows.map(r => r.opts.slice().sort()), q.blanks && q.blanks.map(b => b.answer), q.target, q.type]); if (!seen.has(key)){ seen.add(key); out.push(q); } }
+  return out;
+}
+VIEWS.learn = v => {
+  let open = null; const heads = {};
+  v.append(h('div',{class:'card pad row sp',style:'flex-wrap:nowrap'}, h('div',{}, h('b',{style:'font:600 17px var(--fd)'}, LAB.learn.title), h('div',{class:'hint'}, LAB.learn.sub)), h('span',{style:'font-size:30px'}, LAB.learn.emoji)));
+  Object.entries(UNITS).forEach(([u,name]) => {
+    v.append(h('div',{class:'unit u-' + u}, h('h2',{}, name)));
+    SKILLS.filter(t => t.u === u).forEach(t => {
+      const m = mast(t.id), dot = h('i',{class:'dot ' + (m >= 80 ? 'm' : m >= 30 ? 'h' : '')}), body = h('div',{class:'body',hidden:true});
+      const head = h('button',{'aria-expanded':'false'}, h('span',{class:'ico'}, t.e), t.n, dot), card = h('div',{class:'card tp u-' + t.u}, head, body); heads[t.id] = head;
+      const lesson = () => {
+        if (cleanup){ cleanup(); cleanup = null; }
+        body.replaceChildren(); L[t.id](body);
+        body.append(h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:() => practice()},'Practice 5'), h('button',{class:'btn ghost',onclick:() => { bump(t.id, 15); dot.className = 'dot ' + (mast(t.id) >= 80 ? 'm' : 'h'); xp(5); toast('Nice! +15 mastery'); }},'I know this')));
+      };
+      const practice = () => {
+        const box = h('div',{class:'col'});
+        body.replaceChildren(backBtn('Back to lesson', lesson), box);
+        const run = () => runSet(box, practiceSet(t.id, 5), {mode:'drill', actions:() => [h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:run},'5 more'), h('button',{class:'btn ghost',onclick:lesson},'Back to lesson'))]});
+        run(); card.scrollIntoView({block:'start'});
+      };
+      head.addEventListener('click', () => {
+        const was = !body.hidden;
+        if (open){ open.b.hidden = true; open.b.replaceChildren(); open.h.setAttribute('aria-expanded','false'); open = null; if (cleanup){ cleanup(); cleanup = null; } }
+        if (!was){ lesson(); body.hidden = false; head.setAttribute('aria-expanded','true'); open = {b:body, h:head}; setTimeout(() => card.scrollIntoView({behavior:'smooth',block:'start'}), 50); }
+      });
+      v.append(card);
+    });
+  });
+  if (S.focus){ const f = heads[S.focus]; S.focus = null; if (f) setTimeout(() => f.click(), 0); }
+};
+
+/* ---------- FLASH CARDS ---------- */
+const CARDS_C = [
+  [1,'8 ÷ 6 as a fraction',`${fr(8,6)} = ${fr(4,3)} = <b>1${fr(1,3)}</b>`],
+  [1,`What does ${fr(3,4)} mean?`,'<b>3 ÷ 4</b>. The fraction bar means divide.'],
+  [1,'More to share than sharers?','Each one gets <b>more than 1</b> whole.'],
+  [1,'3 pizzas, 4 friends',`Each gets 3 ÷ 4 = <b>${fr(3,4)}</b> pizza`],
+  [2,'Like units','Pieces that are the <b>same size</b>, like sixths and sixths.'],
+  [2,`${fr(1,2)} and ${fr(1,3)}: like units?`,`Cut both into <b>sixths</b>: ${fr(3,6)} and ${fr(2,6)}`],
+  [2,`${fr(1,4)} = ${fr('?',20)}`,`<b>${fr(5,20)}</b>. Times 5 on top and bottom.`],
+  [2,'Equivalent fractions',`Same amount, different names: ${fr(2,3)} = ${fr(4,6)} = ${fr(8,12)}`],
+  [3,'Add the bottoms?','<b>Never!</b> Like units, add the tops, keep the bottom.'],
+  [3,`${fr(1,4)} + ${fr(2,5)}`,`${fr(5,20)} + ${fr(8,20)} = <b>${fr(13,20)}</b>`],
+  [3,`${fr(1,5)} + ${fr(3,8)}`,`${fr(8,40)} + ${fr(15,40)} = <b>${fr(23,40)}</b>`],
+  [4,`${fr(1,2)} − ${fr(1,3)}`,`${fr(3,6)} − ${fr(2,6)} = <b>${fr(1,6)}</b>`],
+  [4,'Subtracting fractions','Like units first. Then subtract the tops.'],
+  [5,'Adding mixed numbers','Add the wholes. Add the fractions. Put them together.'],
+  [5,`1${fr(2,3)} + 5${fr(2,7)}`,`Wholes 6, fractions ${fr(20,21)}: <b>6${fr(20,21)}</b>`],
+  [5,'The fractions make more than 1?',`Regroup: ${fr(10,6)} = 1${fr(4,6)}. Add the 1 to the wholes.`],
+  [6,'Rename a whole',`7${fr(9,24)} = <b>6${fr(33,24)}</b>. 1 whole = ${fr(24,24)}.`],
+  [6,`7${fr(3,8)} − 6${fr(2,3)}`,`6${fr(33,24)} − 6${fr(16,24)} = <b>${fr(17,24)}</b>`],
+  [6,`8 − 2${fr(3,8)}`,`7${fr(8,8)} − 2${fr(3,8)} = <b>5${fr(5,8)}</b>`],
+  [7,'Benchmarks','<b>0, ½, 1.</b> Which one is the fraction closest to?'],
+  [7,'Two fractions, both more than ½','Their sum is <b>more than 1</b>.'],
+  [8,'Story problem steps','What do you need? What do you have? Find <b>every</b> step.'],
+  [9,`${fr(5,20)} + ${fr(8,20)} = ${fr(13,40)}?`,`<b>Wrong.</b> Twentieths + twentieths = twentieths: ${fr(13,20)}`]
+];
+function cardsGame(box, exit){
+  let unit = S.cu || 'all', deck = [], i = 0, flip = false;
+  const wrap = h('div',{class:'col'});
+  box.replaceChildren(backBtn('Games', exit), wrap);
+  const build = () => { deck = shuffle(CARDS.filter(c => unit === 'all' || SK[c[0]].u === unit)); i = 0; flip = false; draw(); };
+  function next(good){ const c = deck[i]; if (good){ bump(c[0], 4); xp(1); } else deck.splice(Math.min(deck.length, i + 4), 0, c); i++; flip = false; draw(); }
+  function draw(){
+    wrap.replaceChildren(h('div',{class:'row',style:'gap:6px'}, [['all','All'], ...Object.entries(UNITS)].map(([k,l]) => h('button',{class:'chip' + (unit === k ? ' sel' : ''),style:'min-height:34px',onclick:() => { unit = k; S.cu = k; save(); build(); }}, l))));
+    if (i >= deck.length){ wrap.append(h('div',{class:'card pad col c'}, h('h2',{style:'font-size:28px'},'Deck done! 🎉'), h('button',{class:'btn hlb',onclick:build},'Shuffle again'))); return; }
+    const c = deck[i], t = SK[c[0]], toggle = () => { flip = !flip; card.classList.toggle('flip', flip); };
+    const card = h('div',{class:'fc u-' + t.u + (flip ? ' flip' : ''),role:'button',tabindex:'0','aria-label':'Flashcard. Tap to flip.'},
+      h('div',{class:'in'}, h('div',{class:'face'}, h('div',{class:'lbl'}, t.n), h('div',{class:'q',style:c[1].length > 24 ? 'font-size:23px' : '',html:c[1]}), h('div',{class:'tapn'},'tap to flip · swipe right = got it')),
+        h('div',{class:'face back'}, h('div',{class:'a',html:c[2]}))));
+    let x0 = null, y0 = 0;
+    card.addEventListener('pointerdown', e => { x0 = e.clientX; y0 = e.clientY; });
+    card.addEventListener('pointerup', e => { if (x0 === null) return; const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)) next(dx > 0); else if (Math.abs(dx) < 12 && Math.abs(dy) < 12) toggle(); });
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
+    wrap.append(h('div',{class:'bar u-' + t.u}, h('i',{style:`width:${Math.round(i / deck.length * 100)}%`})), card,
+      h('div',{class:'grid2'}, h('button',{class:'btn ghost',onclick:() => next(false)},'Again'), h('button',{class:'btn',onclick:() => next(true)},'Got it')), h('div',{class:'hint c'}, `${i + 1} / ${deck.length}`));
+  }
+  build();
+}
+
+/* ---------- ROUND GAMES ---------- */
+function gmHalf(){
+  if (Math.random() < .6){
+    let f; do f = rfrac([3,4,5,6,7,8,9,10,12]); while (!qcmp(f, HALF));
+    const more = qcmp(f, HALF) > 0;
+    return {prompt:`${EX(FR(f))}`, sub:'More or less than ½?', choices:['Less than ½','More than ½'], answer:more ? 1 : 0, cols:2, big:true, why:`Half of ${f.d} is ${half(f.d)}. ${f.n} is ${more ? 'more' : 'less'}.`, val:[f.n, f.d, 'h']};
+  }
+  const less = Math.random() < .5; let a, b; do { a = less ? lessHalf() : moreHalf(); b = less ? lessHalf() : moreHalf(); } while (a.d === b.d);
+  return {prompt:`${EX(FR(a), '+', FR(b))}`, sub:'More or less than 1?', choices:['Less than 1','More than 1'], answer:less ? 0 : 1, cols:2, big:true, why:`Both are ${less ? 'less' : 'more'} than ½, so the sum is ${less ? 'less' : 'more'} than 1.`, val:[a.n, a.d, b.n, b.d]};
+}
+function gmPizza(){
+  let n, k; do { n = rnd(1, 8); k = rnd(2, 6); } while (n === k || n % k === 0);
+  const pool = [[n, k]]; [[k, n], [n, k + 1], [n + 1, k], [n - 1, k], [n, k - 1], [n + 2, k]].forEach(([a, b]) => { if (pool.length < 4 && a > 0 && b > 1 && a !== b && !pool.some(([x, y]) => x * b === a * y)) pool.push([a, b]); });
+  const all = shuffle(pool), lab = all.map(([a, b]) => fr(a, b));
+  return {prompt:`🍕 ${n} pizza${n > 1 ? 's' : ''}, ${k} friends. How much does each friend get?`, fig:pies(n, k), choices:lab, answer:all.findIndex(([a, b]) => a === n && b === k), cols:2, why:whyShare(n, k), val:[n, k]};
+}
+function gmPotion(){
+  let a, c, T; for (;;){ const [x, y] = unlike([2,3,4,5,6,8,12], 24); a = x; c = y; T = qadd(a, c); if (qcmp(T, Q(1)) <= 0) break; }
+  const L0 = lcm(a.d, c.d), wrongs = uniqVals(c, [Q(T.n - a.n, T.d - a.d), qadd(c, Q(1, L0)), Q(c.n, c.d + 1), qsub(c, Q(1, L0)), Q(c.n + 1, c.d)]).map(FR), all = shuffle([FR(c), ...wrongs]);
+  const fig = bars([{parts:L0, on:up(a, L0), col:PA, lab:a}, {parts:L0, fills:Array.from({length:L0}, (_, k) => k < up(T, L0) ? 'var(--hl)' : 'var(--surf)'), lab:T}], {bh:22});
+  return {prompt:`🧪 The cauldron has ${EXs(FR(a))}. Fill it to exactly ${EXs(FR(T))}. Which bottle?`, fig, choices:all, answer:all.indexOf(FR(c)), cols:2, why:`${FR(T)} − ${FR(a)}: in ${unitName(L0)}, ${fr(up(T, L0), L0)} − ${fr(up(a, L0), L0)} = ${fr(up(c, L0), L0)} = ${FR(c)}.`, val:[a.n, a.d, T.n, T.d, c.n, c.d]};
+}
+const GAMES_C = [
+  {id:'half', e:'⚡', name:'Half Rush', d:'Bigger or smaller? 45 s', u:'d', skill:7, time:45, par:14, gen:gmHalf, how:'Is it more or less than ½? Is the sum more or less than 1? Use benchmarks. Don’t add! Go fast!'},
+  {id:'match', e:'🧩', name:'Word Match', d:'Match fraction words', u:'w', custom:matchGame},
+  {id:'steps', e:'🪜', name:'Step Sorter', d:'Order the rename steps', u:'x', custom:stepGame},
+  {id:'pizza', e:'🍕', name:'Pizza Party', d:'Share it fairly', u:'w', skill:1, rounds:8, par:8, gen:gmPizza, how:'Look at the pizzas and the friends. Each friend’s share is pizzas ÷ friends. 8 rounds.'},
+  {id:'potion', e:'🧪', name:'Potion Pour', d:'Fill it exactly', u:'w', skill:3, rounds:8, par:8, gen:gmPotion, how:'The cauldron needs an exact amount. Which bottle finishes it? Make like units. 8 rounds.'},
+  {id:'cards', e:'🃏', name:'Flash Cards', d:'Flip. Swipe. Learn.', u:'d', custom:cardsGame}
+];
+
+function playGame(box, G, exit){
+  const st = {n:0, score:0, streak:0, best:0, tl:G.time || 0, over:false};
+  let timer = null, adv = null, locked = false;
+  const stop = () => { clearInterval(timer); clearTimeout(adv); timer = adv = null; };
+  cleanup = stop;
+  const back = backBtn('Games', () => { stop(); cleanup = null; exit(); });
+  const hud = h('div',{class:'row sp',style:'font-weight:700'}), area = h('div',{class:'col'}), bar = G.time ? h('div',{class:'bar'}, h('i',{style:'width:100%;transition:width 1s linear'})) : null;
+  const paintHud = () => { hud.replaceChildren(h('span',{}, G.rounds ? `Round ${Math.min(st.n, G.rounds)}/${G.rounds}` : `Streak ${st.streak} 🔥`), h('span',{class:'hl'}, `Score ${st.score}`), h('span',{}, G.time ? `${st.tl}s` : '')); if (bar) bar.firstChild.style.width = (st.tl / G.time * 100) + '%'; };
+  const isLast = () => G.rounds && st.n >= G.rounds;
+  function next(){
+    clearTimeout(adv); if (st.over) return; if (isLast()) return end();
+    const q = G.gen(); st.n++; locked = false; paintHud();
+    const btns = [], list = h('div',{class:'opts' + (q.cols === 2 ? ' g2' : '') + (q.big ? ' big' : '')});
+    q.choices.forEach((c,k) => { const b = h('button',{class:'opt',html:c,onclick:() => choose(k)}); btns.push(b); list.append(b); });
+    function choose(k){
+      if (locked || st.over) return; locked = true;
+      const ok = k === q.answer; btns[q.answer].classList.add('good');
+      if (ok){ st.score++; st.streak++; st.best = Math.max(st.best, st.streak); btns[k].classList.add('pop'); } else { st.streak = 0; btns[k].classList.add('bad','shake'); }
+      paintHud();
+      if (!(ok && G.time)) area.append(h('div',{class:'fb ' + (ok ? 'good' : 'bad'),html:(ok ? (st.streak >= 3 ? `🔥 ${st.streak} in a row! ` : '✓ ') : '✗ ') + q.why}));
+      if (ok) adv = setTimeout(next, G.time ? 300 : 1100); else if (G.time) adv = setTimeout(next, 1500); else area.append(h('button',{class:'btn',onclick:next}, isLast() ? 'See results' : 'Next'));
+    }
+    area.replaceChildren(...[h('div',{class:'pq' + (q.big ? ' c' : ''),html:q.prompt,style:q.big ? 'font-size:22px;min-height:60px;display:grid;place-items:center' : ''}), q.sub ? h('div',{class:'lbl c'}, q.sub) : null, q.fig ? h('div',{html:q.fig}) : null, list].filter(Boolean));
+  }
+  function end(){
+    st.over = true; stop(); cleanup = null;
+    const sc = st.score, prev = S.hs[G.id] || 0, nb = sc > prev; if (nb) S.hs[G.id] = sc;
+    xp(sc * 3); bump(G.skill, Math.round(8 * Math.min(1, sc / G.par))); save();
+    box.replaceChildren(back, h('div',{class:'card pad col c'}, h('div',{class:'lbl'}, G.name), h('div',{class:'score'}, G.rounds ? `${sc}/${G.rounds}` : String(sc)),
+      h('div',{class:'big-out'}, nb && prev > 0 ? 'New best! 🎉' : sc >= G.par ? 'Great run!' : 'Nice try'), h('div',{class:'hint'}, `Best: ${S.hs[G.id]} · longest streak: ${st.best} · +${sc * 3} XP`)),
+      h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:() => playGame(box, G, exit)},'Play again'), h('button',{class:'btn ghost',onclick:exit},'All games')));
+    window.scrollTo(0,0);
+  }
+  box.replaceChildren(back, hud, ...(bar ? [bar] : []), area); paintHud();
+  if (G.time) timer = setInterval(() => { st.tl--; paintHud(); if (st.tl <= 0) end(); }, 1000);
+  next();
+}
+
+/* a stopwatch shared by the timed puzzles; lower time is better */
+function stopwatch(el){ const t0 = Date.now(); let pen = 0; const iv = setInterval(() => { el.textContent = `⏱ ${((Date.now() - t0) / 1000 + pen).toFixed(0)}s`; }, 250); return {add:s => pen += s, stop:() => { clearInterval(iv); return Math.round(((Date.now() - t0) / 1000 + pen) * 10) / 10; }, kill:() => clearInterval(iv)}; }
+function timeResult(box, id, name, secs, exit, again, extra){
+  const prev = S.hs[id], nb = !prev || secs < prev; if (nb) S.hs[id] = secs; xp(15); save();
+  box.replaceChildren(backBtn('Games', exit), h('div',{class:'card pad col c'}, h('div',{class:'lbl'}, name), h('div',{class:'score'}, secs + 's'), h('div',{class:'big-out'}, nb && prev ? 'New record! 🎉' : nb ? 'First record set!' : 'Done!'), h('div',{class:'hint'}, `Best: ${S.hs[id]}s · ${extra} · +15 XP`)),
+    h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:again},'Play again'), h('button',{class:'btn ghost',onclick:exit},'All games')));
+}
+
+function matchGame(box, exit){
+  const clock = h('b',{}), area = h('div',{class:'col'}), rounds = shuffle(Object.keys(SHORT));
+  let r = 0, miss = 0, sel = null; const sw = stopwatch(clock); cleanup = sw.kill;
+  box.replaceChildren(backBtn('Games', () => { sw.kill(); cleanup = null; exit(); }), h('div',{class:'row sp'}, h('span',{class:'hint'},'Tap a word, then its meaning.'), clock), area);
+  const deal = () => {
+    const words = rounds.slice(r*4, r*4 + 4), left = h('div',{class:'col',style:'gap:6px'}), right = h('div',{class:'col',style:'gap:6px'}); let left4 = words.length;
+    shuffle(words).forEach(w => { const b = h('button',{class:'tile u-w',style:'min-height:60px',onclick:() => { if (b.disabled) return; left.querySelectorAll('.tile').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = w; }}, w); left.append(b); });
+    shuffle(words).forEach(w => { const b = h('button',{class:'tile',style:'min-height:60px;font-size:13px',onclick:() => {
+      if (b.disabled || !sel) return;
+      const lb = [...left.children].find(x => x.textContent === sel);
+      if (sel === w){ [lb, b].forEach(x => { x.classList.remove('sel'); x.classList.add('good'); x.disabled = true; }); sel = null; if (--left4 === 0){ r++; if (r * 4 >= rounds.length){ const s = sw.stop(); cleanup = null; bump(LAB.matchSkill, 10); timeResult(box, GAMES.find(g => g.custom === matchGame).id, 'Word Match', s, exit, () => matchGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } else setTimeout(deal, 350); } }
+      else { miss++; sw.add(2); [lb, b].forEach(x => x.classList.add('bad','shake')); setTimeout(() => [lb, b].forEach(x => x.classList.remove('bad','shake')), 450); toast('+2 seconds'); }
+    }}, SHORT[w]); right.append(b); });
+    area.replaceChildren(h('div',{class:'lbl'}, `Round ${r + 1} of ${Math.ceil(rounds.length / 4)}`), h('div',{class:'grid2'}, left, right));
+  };
+  deal();
+}
+function stepGame(box, exit){
+  const clock = h('b',{}), slots = h('div',{class:'ord'}), pk = h('div',{class:'pick'}); let nxt = 0, miss = 0; const sw = stopwatch(clock); cleanup = sw.kill;
+  const paint = () => slots.replaceChildren(...STEPS.map((s,k) => h('div',{class:'slot' + (k < nxt ? ' good' : '')}, h('i',{}, k + 1), k < nxt ? s[0] : '')));
+  shuffle(STEPS.map((s,i) => i)).forEach(i => { const b = h('button',{style:'min-height:48px',onclick:() => {
+    if (i === nxt){ b.remove(); nxt++; paint(); if (nxt === STEPS.length){ const s = sw.stop(); cleanup = null; bump(LAB.stepSkill, 8); timeResult(box, GAMES.find(g => g.custom === stepGame).id, 'Step Sorter', s, exit, () => stepGame(box, exit), `${miss} miss${miss === 1 ? '' : 'es'}`); } }
+    else { miss++; sw.add(2); b.classList.add('bad','shake'); setTimeout(() => b.classList.remove('bad','shake'), 450); toast('+2 seconds'); }
+  }}, STEPS[i][0]); pk.append(b); });
+  box.replaceChildren(backBtn('Games', () => { sw.kill(); cleanup = null; exit(); }), h('div',{class:'row sp'}, h('span',{class:'hint'},`Tap the ${STEPS.length} steps in order. Wrong tap = +2s.`), clock), slots, pk);
+  paint();
+}
+
+VIEWS.games = v => {
+  const show = () => {
+    if (cleanup){ cleanup(); cleanup = null; }
+    v.replaceChildren(h('div',{class:'grid2'}, GAMES.map(G => h('button',{class:'tile u-' + G.u,style:'min-height:118px;gap:2px;align-content:center;border-color:var(--ac);padding:8px',onclick:() => open(G)},
+      h('span',{style:'font-size:30px;line-height:1.1'}, G.e), h('b',{style:'font:600 17px/1.1 var(--fd)'}, G.name), h('span',{class:'hint'}, G.d),
+      S.hs[G.id] != null ? h('span',{class:'hl',style:'font-size:12px;margin-top:2px'}, 'Best ' + S.hs[G.id] + (G.custom && G.id !== 'cards' ? 's' : '')) : null))));
+    window.scrollTo(0,0);
+  };
+  const open = G => {
+    const box = h('div',{class:'col u-' + G.u}); v.replaceChildren(box); window.scrollTo(0,0);
+    if (G.custom) return G.custom(box, show);
+    box.append(backBtn('Games', show), h('div',{class:'card pad col c'}, h('div',{style:'font-size:44px;line-height:1'}, G.e), h('h2',{style:'font-size:26px'}, G.name), h('div',{}, G.how), S.hs[G.id] != null ? h('div',{class:'hint'}, 'Best: ' + S.hs[G.id]) : null, h('button',{class:'btn hlb',onclick:() => playGame(box, G, show)},'Start')));
+  };
+  show();
+};
+
+/* ---------- STUDY GUIDE / BOSS QUIZ / PROGRESS ---------- */
+VIEWS.guide = v => {
+  S.gp = S.gp || {};
+  const home = () => { if (cleanup){ cleanup(); cleanup = null; } v.replaceChildren(); VIEWS.guide(v); window.scrollTo(0,0); };
+  const run = (items, key) => {
+    if (cleanup){ cleanup(); cleanup = null; }
+    const box = h('div',{class:'col'});
+    v.replaceChildren(backBtn('Study guide', home), box);
+    runSet(box, items, {mode:'drill', onDone:(g,t) => { S.gp[gpKey(key)] = `${g}/${t}`; save(); }, actions:() => [h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:() => run(items, key)},'Try again'), h('button',{class:'btn ghost',onclick:home},'All parts'))]});
+    window.scrollTo(0,0);
+  };
+  v.append(h('div',{class:'card pad row sp',style:'flex-wrap:nowrap'}, h('div',{}, h('b',{style:'font:600 17px var(--fd)'}, LAB.guide.title), h('div',{class:'hint'}, LAB.guide.sub)), h('span',{style:'font-size:30px'}, LAB.guide.emoji)),
+    h('button',{class:'btn hlb',onclick:() => run(GUIDE, 'all')}, `Do all ${GUIDE.length}` + (S.gp[gpKey('all')] ? ` · last ${S.gp[gpKey('all')]}` : '')));
+  PARTS.forEach(([L0, name, a, b, note]) => {
+    const items = GUIDE.filter(q => q.no >= a && q.no <= b), u = SK[items[0].skill].u;
+    v.append(h('button',{class:'card mrow u-' + u,style:'width:100%;text-align:left',onclick:() => run(items, L0)},
+      h('span',{class:'ico',style:'font:600 17px var(--fd)'}, L0), h('div',{}, h('div',{class:'nm'}, name), h('div',{class:'hint'}, note || (a === b ? `#${a}` : `#${a}–${b}`))), h('span',{class:'pct',style:S.gp[gpKey(L0)] ? 'color:var(--ok)' : ''}, S.gp[gpKey(L0)] || '→')));
+  });
+};
+
+const BOSSART = `<svg class="fx" viewBox="0 0 160 150" role="img" aria-label="A cartoon purple dragon called the Denominator Dragon"><ellipse cx="80" cy="144" rx="54" ry="5" fill="var(--line)"/>
+<path d="M110 122c20 6 34-2 38-18l9 5-5-14-10 5c-2 12-12 18-30 12z" fill="#6D49B6"/>
+<path d="M48 80L10 50l8 30-14 2 34 18z" fill="#C3A6F0" stroke="#5A3A9C" stroke-width="2" stroke-linejoin="round"/><path d="M112 80l38-30-8 30 14 2-34 18z" fill="#C3A6F0" stroke="#5A3A9C" stroke-width="2" stroke-linejoin="round"/>
+<ellipse cx="80" cy="110" rx="38" ry="33" fill="#8159CC"/><ellipse cx="80" cy="116" rx="23" ry="23" fill="#F6DCA8"/><path d="M64 106h32M62 116h36M66 126h28" stroke="#D8B36E" stroke-width="2"/>
+<ellipse cx="60" cy="141" rx="12" ry="6" fill="#6D49B6"/><ellipse cx="100" cy="141" rx="12" ry="6" fill="#6D49B6"/>
+<path d="M57 30l-8-22 18 14zM103 30l8-22-18 14z" fill="#F6DCA8" stroke="#C69A4E" stroke-width="1.5"/><path d="M74 20l6-10 6 10z" fill="#E58BB8"/>
+<ellipse cx="80" cy="50" rx="35" ry="28" fill="#9068DA"/><ellipse cx="80" cy="66" rx="21" ry="12" fill="#AE8CEA"/><circle cx="72" cy="64" r="2.6" fill="#36205F"/><circle cx="88" cy="64" r="2.6" fill="#36205F"/>
+<circle cx="66" cy="44" r="8.5" fill="#fff"/><circle cx="94" cy="44" r="8.5" fill="#fff"/><circle cx="67" cy="46" r="4.2" fill="#21183A"/><circle cx="93" cy="46" r="4.2" fill="#21183A"/>
+<path d="M55 33l17 6M105 33l-17 6" stroke="#21183A" stroke-width="3.6" stroke-linecap="round"/><path d="M69 74q11 7 22 0" fill="none" stroke="#21183A" stroke-width="2.6" stroke-linecap="round"/><path d="M73 75l2.5 5 2.5-4M83 76l2.5 4 2.5-5" fill="#fff" stroke="#21183A" stroke-width="1"/>
+<circle cx="40" cy="58" r="6" fill="#E6DCF5" opacity=".9"/><circle cx="30" cy="50" r="4" fill="#E6DCF5" opacity=".8"/><text x="13" y="40" font-size="13" font-weight="800" fill="#B4528F">?/?</text></svg>`;
+VIEWS.boss = v => {
+  const home = () => { if (cleanup){ cleanup(); cleanup = null; } v.replaceChildren(); VIEWS.boss(v); window.scrollTo(0,0); };
+  const run = () => {
+    if (cleanup){ cleanup(); cleanup = null; }
+    const box = h('div',{class:'col'}); v.replaceChildren(box);
+    runSet(box, buildBoss(), {mode:'boss', actions:() => [h('div',{class:'grid2'}, h('button',{class:'btn hlb',onclick:run},'New quiz'), h('button',{class:'btn ghost',onclick:home},'Done'))]});
+    window.scrollTo(0,0);
+  };
+  v.append(h('div',{class:'card pad col c u-x'}, h('div',{style:'max-width:132px;margin-inline:auto;width:100%',html:LAB.boss.art || BOSSART}),
+    h('div',{class:'hpbar','aria-label':'Boss health full'}, h('i',{style:'width:100%'})),
+    h('h2',{style:'font-size:26px'}, LAB.boss.name),
+    h('div',{}, LAB.boss.blurb),
+    h('div',{class:'grid2'}, h('div',{class:'card pad'}, h('div',{class:'lbl'},'Best'), h('b',{style:'font:600 26px var(--fd)'}, bossStat().runs ? bossStat().best + '%' : '–')), h('div',{class:'card pad'}, h('div',{class:'lbl'},'Tries'), h('b',{style:'font:600 26px var(--fd)'}, String(bossStat().runs)))),
+    h('button',{class:'btn hlb',onclick:run}, LAB.boss.btn)),
+    h('div',{class:'hint c'}, LAB.boss.foot));
+};
+
+VIEWS.me = v => {
+  const into = S.xp % 100;
+  v.append(h('div',{class:'card pad col'}, h('div',{class:'row sp'}, h('b',{style:'font:600 24px var(--fd)'}, 'Level ' + lvl()), h('span',{class:'hint'}, `${S.xp} XP · ${100 - into} to next`)), h('div',{class:'bar'}, h('i',{style:`width:${into}%`})),
+    h('div',{class:'grid2'}, h('div',{class:'card pad c'}, h('div',{class:'lbl'},'Mastery'), h('b',{style:'font:600 26px var(--fd)'}, overall() + '%')), h('div',{class:'card pad c'}, h('div',{class:'lbl'},'Best boss'), h('b',{style:'font:600 26px var(--fd)'}, bossStat().runs ? bossStat().best + '%' : '–')))));
+  const weak = SKILLS.slice().sort((a,b) => mast(a.id) - mast(b.id))[0];
+  v.append(h('button',{class:'btn hlb',onclick:() => { S.focus = weak.id; go('learn'); }}, `Practice next: ${weak.e} ${weak.n}`));
+  const list = h('div',{class:'card'}), C = chk(), n = () => READY.filter((_,i) => C[i]).length, head = h('div',{class:'lbl',style:'padding:10px 12px 0'});
+  const paintHead = () => head.textContent = `Before the test · ${n()} of ${READY.length} checked`;
+  list.append(head, ...READY.map((t,i) => { const b = h('button',{class:'chk' + (C[i] ? ' on' : ''),onclick:() => { C[i] = !C[i]; b.classList.toggle('on', C[i]); b.firstChild.textContent = C[i] ? '✓' : ''; save(); paintHead(); if (n() === READY.length) toast('Ready for the test! 🎉'); }}, h('i',{}, C[i] ? '✓' : ''), h('span',{html:t})); return b; }));
+  paintHead(); v.append(list);
+  Object.entries(UNITS).forEach(([u,name]) => {
+    v.append(h('div',{class:'unit u-' + u}, h('h2',{}, name)));
+    SKILLS.filter(t => t.u === u).forEach(t => v.append(h('button',{class:'card mrow u-' + t.u,style:'width:100%;text-align:left',onclick:() => { S.focus = t.id; go('learn'); }},
+      h('span',{class:'ico'}, t.e), h('div',{}, h('div',{class:'nm'}, t.n), h('div',{class:'bar',style:'margin-top:5px'}, h('i',{style:`width:${mast(t.id)}%`}))), h('span',{class:'pct'}, mast(t.id) + '%'))));
+  });
+  const rs = h('button',{class:'btn ghost',style:'color:var(--no)'},'Reset my progress'); let armed = false, to;
+  rs.addEventListener('click', () => {
+    if (!armed){ armed = true; rs.textContent = 'Tap again to erase everything'; clearTimeout(to); to = setTimeout(() => { armed = false; rs.textContent = 'Reset my progress'; }, 3000); return; }
+    const keep = MODE; Object.keys(S).forEach(k => delete S[k]); Object.assign(S, {m:{}, tab:'me', xp:0, best:0, bossRuns:0, hs:{}, chk:{}, chkM:{}, gp:{}, mode:keep});
+    save(); drawRing(); toast('Progress reset'); v.replaceChildren(); VIEWS.me(v);
+  });
+  v.append(rs);
+};
+
+/* ---------- BOOT ---------- */
+MODES.c = {units:UNITS_C, skills:SKILLS_C, guide:GUIDE_C, parts:PARTS_C, lab:LAB_C, cards:CARDS_C, games:GAMES_C, short:SHORT_C, steps:STEPS_C, ready:READY_C, boss:buildBossC};
+buildNav(); buildModebar(); setMode(S.mode); drawRing(); go(VIEWS[S.tab] ? S.tab : 'learn');
+
+})();
+</script>
+
+<div class="a2hs" id="a2hs" hidden><span>📲 <b>Make it full screen:</b> tap <b>Share</b> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> then <b>Add to Home Screen</b>.</span><button id="a2hsx" aria-label="Dismiss">✕</button></div>
+<script>
+(function(){ try { if (window.navigator.standalone === false && !localStorage.getItem('a2hs-x')){ var b = document.getElementById('a2hs'); b.hidden = false; document.getElementById('a2hsx').onclick = function(){ b.hidden = true; try { localStorage.setItem('a2hs-x','1'); } catch(e){} }; } } catch(e){} })();
+</script>
+</body>
+</html>

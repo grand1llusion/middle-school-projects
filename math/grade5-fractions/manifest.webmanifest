@@ -1,0 +1,24 @@
+{
+  "name": "Fraction Lab",
+  "short_name": "Fraction Lab",
+  "description": "Grade 5 Module 2 study lab: fractions as division, like units, adding and subtracting fractions and mixed numbers.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EEE8F8",
+  "theme_color": "#EEE8F8",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

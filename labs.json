@@ -12,5 +12,12 @@
     "app_name": "Plus & Minus",
     "subtitle": "7th grade · Add, subtract, multiply & divide",
     "added": "2026-11-03"
+  },
+  {
+    "path": "math/grade5-fractions",
+    "class": "Math",
+    "app_name": "Fraction Lab",
+    "subtitle": "5th grade · Adding & subtracting fractions",
+    "added": "2026-11-12"
   }
 ]

@@ -162,6 +162,20 @@ nav button.on svg{stroke:var(--pink)}
 .sync-dot.pending{background:var(--gold);animation:pulse 1s ease-in-out infinite alternate}
 @keyframes pulse{to{opacity:.4}}
 nav button{font-size:10px}
+/* answer blank → digit reveal */
+.ans-box{display:flex;justify-content:center;gap:10px;margin:12px 0 0;padding:8px 0}
+.ans-dig{text-align:center;min-width:52px}
+.ans-slot{height:48px;min-width:52px;display:flex;align-items:flex-end;justify-content:center;font:800 36px/1 var(--fd);border-bottom:3px solid var(--line);padding:0 6px;color:var(--ink);transition:border-color .3s}
+.ans-slot.on{border-color:var(--ok);color:var(--ok)}
+.ans-lab{font:600 12px var(--fd);color:var(--mut);margin-top:3px;text-align:center}
+.ans-num{display:inline-block}
+.ans-num.pop{animation:numPop .4s ease-out}
+@keyframes numPop{0%{transform:scale(.4) translateY(14px);opacity:0}70%{transform:scale(1.12) translateY(-2px)}100%{transform:scale(1) translateY(0)}}
+/* sum row */
+.pv-sep{grid-column:1/-1;height:2px;background:var(--line);border-radius:2px;margin:4px 0}
+.cell.sum{min-height:60px;border-style:dashed;opacity:0;transition:opacity .4s}
+.cell.sum.in{opacity:1}
+.carry-badge{font:800 11px var(--fd);color:var(--gold);text-align:center;min-height:14px;line-height:1.3}
 </style>
 
 <div class="app">
@@ -672,46 +686,159 @@ const nextProblem = () => { const i = S.pv.i || 0; S.pv.cur = i < WORKSHEET.leng
 function drawToAdd(v){
   if (!S.pv.cur) nextProblem();
   const [a, b] = S.pv.cur, rows = [a, b], want = rows.map(digits);
-  let have = [[0, 0, 0], [0, 0, 0]], checked = false;
-  const cells = [[], []], banner = h('div', {class:'banner', hidden:true});
-  const label = (r, k) => `${rows[r]}, ${PLACES[k][2]}: ${have[r][k]} mark${have[r][k] === 1 ? '' : 's'}`;
-  const paint = () => cells.forEach((row, r) => row.forEach((c, k) => {
-    c.innerHTML = marks(have[r][k], want[r][k], checked); c.setAttribute('aria-label', label(r, k));
-    c.classList.toggle('right', checked && have[r][k] === want[r][k]); c.classList.toggle('fix', checked && have[r][k] !== want[r][k]);
+  // per-column raw sums before carry propagation
+  const colSum = [0,1,2].map(k => want[0][k] + want[1][k]);
+  const c1  = colSum[2] >= 10 ? 1 : 0;              // ones → tens carry
+  const c10 = (colSum[1] + c1) >= 10 ? 1 : 0;       // tens → hundreds carry
+  const answer = a + b, ansD = digits(answer);
+
+  let have = [[0,0,0],[0,0,0]], checked = false;
+  const cells = [[],[]], sumCells = [], carryBadges = [];
+  const banner = h('div', {class:'banner', hidden:true});
+  const lbl = (r,k) => `${rows[r]}, ${PLACES[k][2]}: ${have[r][k]} mark${have[r][k]===1?'':'s'}`;
+  const paint = () => cells.forEach((row,r) => row.forEach((c,k) => {
+    c.innerHTML = marks(have[r][k], want[r][k], checked); c.setAttribute('aria-label', lbl(r,k));
+    c.classList.toggle('right', checked && have[r][k]===want[r][k]); c.classList.toggle('fix', checked && have[r][k]!==want[r][k]);
   }));
-  const grid = h('div', {class:'pv', role:'group', 'aria-label':'Place value chart'}, h('div'), PLACES.map(p => h('div', {class:'hd'}, p[0])), h('div'));
-  rows.forEach((n, r) => {
-    grid.append(h('div', {class:'num'}, String(n)));
-    PLACES.forEach((p, k) => {
-      const c = h('button', {class:'cell ' + p[1], onclick:() => {
-        if (checked) return;
-        if (have[r][k] >= 9){ c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake'); toast('9 is the most in one box!'); return; }
-        have[r][k]++; paint();
-      }});
-      cells[r].push(c); grid.append(c);
-    });
-    grid.append(h('button', {class:'erase', 'aria-label':'Erase the ' + n + ' row', html:ERASER, onclick:() => { if (checked) return; have[r] = [0, 0, 0]; paint(); }}));
+
+  /* answer blank: underlines that fill in with the actual digits after checking */
+  const ansBox = h('div', {class:'ans-box', 'aria-live':'polite'});
+  const ansSlots = ansD.map((_,i) => {
+    const slot = h('div', {class:'ans-slot'});
+    ansBox.append(h('div', {class:'ans-dig'}, slot, h('div', {class:'ans-lab'}, PLACES[i][0])));
+    return slot;
   });
-  const act = h('button', {class:'btn', onclick:() => {
-    if (!checked){
-      checked = true;
-      const right = have.every((row, r) => row.every((x, k) => x === want[r][k]));
-      banner.hidden = false; banner.className = 'banner ' + (right ? 'good' : 'bad');
-      banner.textContent = right ? '⭐ You got it!' : 'Almost! See the red and green.';
-      act.textContent = 'OK ▶'; act.className = 'btn ok'; paint();
-      if (right) award('pv-add');
-    } else { nextProblem(); render(); }
-  }}, 'Check');
-  const render = () => { v.replaceChildren(); drawToAdd(v); };
+  const revealAns = () => ansD.forEach((d,i) => setTimeout(() => {
+    const sp = h('span', {class:'ans-num pop'}, String(d));
+    ansSlots[i].replaceChildren(sp); ansSlots[i].classList.add('on');
+  }, 300 + i*160));
+
+  /* build SVG for sum cells: n marks total, first carryOut in gold */
+  const sumSVG = (n, carryOut) => {
+    if (n <= 0) return '';
+    const W=80, gap=n<=9 ? 7.2 : Math.min(7.2, 72/Math.max(n-1,1));
+    const gg=n>5&&n<=9 ? 5 : 0, used=n<=1 ? 0 : (n-1)*gap+gg, x0=(W-used)/2;
+    let s='';
+    for (let j=0; j<n; j++){
+      const gold=j<carryOut, x=(x0+j*gap+(j>=5&&n<=9?gg:0)).toFixed(1), t=(j%3-1)*.8;
+      s+=`<line x1="${x}" y1="10" x2="${(+x+t).toFixed(1)}" y2="52" stroke="${gold?'var(--gold)':'var(--pencil)'}" stroke-width="${gold?4.2:3.6}" stroke-linecap="round"/>`;
+    }
+    return `<svg viewBox="0 0 80 62" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+  };
+
+  /* animate: marks clones fly from cells to sum row, then carry badges, then answer pops */
+  const animateSolution = () => {
+    PLACES.forEach((_,k) => {
+      const tgt=sumCells[k], tR=tgt.getBoundingClientRect();
+      [0,1].forEach(r => {
+        const src=cells[r][k], svg=src.querySelector('svg'); if(!svg) return;
+        const sR=src.getBoundingClientRect();
+        const fly=document.createElement('div');
+        fly.style.cssText=`position:fixed;left:${sR.left}px;top:${sR.top}px;width:${sR.width}px;height:${sR.height}px;pointer-events:none;z-index:50;transition:transform .7s ease-in-out,opacity .7s ease-in-out;overflow:hidden;`;
+        fly.innerHTML=svg.outerHTML;
+        document.body.appendChild(fly);
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{
+          const dy=tR.top-sR.top+(r===1?tR.height*.12:0);
+          fly.style.transform=`translate(${tR.left-sR.left}px,${dy}px)`;
+          fly.style.opacity='0';
+        }));
+        setTimeout(()=>fly.remove(), 780);
+      });
+    });
+
+    // sum cells appear with combined raw marks; carry groups highlighted in gold
+    setTimeout(()=>{
+      PLACES.forEach((_,k)=>{
+        const co = k===2 ? c1*10 : k===1 ? c10*10 : 0;
+        sumCells[k].innerHTML=sumSVG(colSum[k], co);
+        sumCells[k].classList.add('in');
+      });
+      if (c1)  carryBadges[1].textContent='+1 carry';
+      if (c10) carryBadges[0].textContent='+1 carry';
+    }, 740);
+
+    // fade each sum cell to show the final answer digit's marks (after carry)
+    setTimeout(()=>{
+      PLACES.forEach((_,k)=>{
+        sumCells[k].style.opacity='0';
+        setTimeout(()=>{ sumCells[k].innerHTML=sumSVG(ansD[k],0); sumCells[k].style.opacity='1'; }, 360);
+      });
+    }, 1300);
+
+    // pop in the answer number
+    setTimeout(revealAns, 1900);
+  };
+
+  /* grid */
+  const grid=h('div',{class:'pv',role:'group','aria-label':'Place value chart'},
+    h('div'), PLACES.map(p=>h('div',{class:'hd'},p[0])), h('div'));
+
+  rows.forEach((n,r)=>{
+    let pressTimer=null, didLong=false;
+    grid.append(h('div',{class:'num'},String(n)));
+    PLACES.forEach((p,k)=>{
+      const c=h('button',{class:'cell '+p[1]});
+      c.addEventListener('click',()=>{
+        if(checked||didLong){didLong=false;return;}
+        if(have[r][k]>=9){c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');toast('9 is the most in one box!');return;}
+        have[r][k]++;paint();
+      });
+      c.addEventListener('pointerdown',()=>{
+        didLong=false;
+        pressTimer=setTimeout(()=>{
+          if(checked)return;
+          const add=Math.min(5,9-have[r][k]);
+          if(add<=0){toast('9 is the most!');return;}
+          have[r][k]+=add;paint();didLong=true;toast('+'+add);
+        },400);
+      });
+      c.addEventListener('pointerup',()=>clearTimeout(pressTimer));
+      c.addEventListener('pointerleave',()=>clearTimeout(pressTimer));
+      c.setAttribute('aria-label',lbl(r,k));
+      cells[r].push(c);grid.append(c);
+    });
+    grid.append(h('button',{class:'erase','aria-label':'Erase the '+n+' row',html:ERASER,onclick:()=>{if(checked)return;have[r]=[0,0,0];paint();}}));
+  });
+
+  // separator spanning all columns
+  grid.append(h('div',{class:'pv-sep'}));
+  // carry badge row (one badge per place column, starts empty)
+  grid.append(h('div'));
+  PLACES.forEach((_,k)=>{const cb=h('div',{class:'carry-badge'});carryBadges.push(cb);grid.append(cb);});
+  grid.append(h('div'));
+  // sum row
+  grid.append(h('div',{class:'num',style:'font-size:28px'},'='));
+  PLACES.forEach((_,k)=>{const sc=h('div',{class:'cell '+PLACES[k][1]+' sum'});sumCells.push(sc);grid.append(sc);});
+  grid.append(h('div'));
+
+  const act=h('button',{class:'btn',onclick:()=>{
+    if(!checked){
+      checked=true;
+      const right=have.every((row,r)=>row.every((x,k)=>x===want[r][k]));
+      banner.hidden=false;banner.className='banner '+(right?'good':'bad');
+      paint();
+      if(right){
+        banner.textContent='⭐ You got it!';act.textContent='OK ▶';act.className='btn ok';
+        award('pv-add');animateSolution();
+      } else {
+        banner.textContent='Almost! See the red and green.';act.textContent='OK ▶';act.className='btn ok';
+        revealAns();
+      }
+    } else {nextProblem();render();}
+  }},'Check');
+  const render=()=>{v.replaceChildren();drawToAdd(v);};
   v.append(
-    h('div', {style:'margin-bottom:12px'}, h('button', {class:'btn ghost', onclick:() => go('learn')}, '← Learn')),
-    h('div', {class:'card'},
-      h('div', {class:'hint', style:'text-align:center;font-size:14px'}, 'Draw on the place value chart to add.'),
-      h('div', {class:'eq'}, String(a), ' ', h('span', {}, '+'), ' ', String(b)),
+    h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
+    h('div',{class:'card'},
+      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap a box to draw a mark. Hold for +5.'),
+      h('div',{class:'eq'},String(a),' ',h('span',{},'+'),' ',String(b)),
       grid,
-      h('div', {class:'legend', 'aria-hidden':'true'}, h('span', {}, 'Tap a box: ', h('b', {}, '+1')), h('span', {}, h('b', {html:ERASER.replace('<svg ', '<svg style="width:18px;height:18px;vertical-align:-4px" ')}), ' clears a row')),
+      h('div',{class:'legend','aria-hidden':'true'},
+        h('span',{},'Tap: ',h('b',{},'+1'),' · Hold: ',h('b',{},'+5')),
+        h('span',{},h('b',{html:ERASER.replace('<svg ','<svg style="width:18px;height:18px;vertical-align:-4px" ')}),' clears row')),
+      ansBox,
       banner,
-      h('div', {class:'acts'}, act)));
+      h('div',{class:'acts'},act)));
   paint();
 }
 

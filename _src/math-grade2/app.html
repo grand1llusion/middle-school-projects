@@ -178,32 +178,39 @@ nav button{font-size:10px}
 .carry-badge{font:800 11px var(--fd);color:var(--gold);text-align:center;min-height:14px;line-height:1.3}
 /* skill categories */
 .skill-cat{font:700 12px var(--fb);color:var(--chrome-mut);text-transform:uppercase;letter-spacing:.08em;margin:8px 4px 2px}
-/* skip counting */
-.sc-seq{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px 0}
-.sc-box{width:68px;height:60px;border:3px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center;font:800 26px/1 var(--fd);background:var(--soft);color:var(--ink)}
-.sc-box.blank{background:var(--cell);cursor:pointer}
-.sc-box.blank.sel{border-color:var(--pink);background:var(--pinkt)}
-.sc-box.sc-right{border-color:var(--ok);background:var(--okt);color:var(--ok)}
-.sc-box.sc-fix{border-color:var(--no);color:var(--no)}
-.sc-entry{font:800 48px/1.3 var(--fd);text-align:center;border-bottom:3px solid var(--line);margin:0 0 8px;padding:4px;min-height:64px}
-/* number sense */
-.ns-trees{display:flex;gap:12px;justify-content:center;margin:14px 0;align-items:flex-start}
-.ns-tree{flex:1;max-width:160px;display:flex;flex-direction:column;align-items:center;gap:6px}
-.ns-root{width:100%;min-height:56px;border:3px solid var(--line);border-radius:18px;background:var(--soft);display:flex;align-items:center;justify-content:center;font:800 30px/1 var(--fd);cursor:pointer;transition:border-color .25s,background .25s;user-select:none}
+/* skip counting — speed round */
+.sc-choice{width:118px;height:94px;border:4px solid var(--line);border-radius:22px;background:var(--soft);font:800 44px/1 var(--fd);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent}
+.sc-choice:active{background:var(--pinkt);border-color:var(--pink)}
+.sc-celeb{position:relative;height:52px;overflow:visible;pointer-events:none}
+.sc-float{position:absolute;left:50%;transform:translateX(-50%);font-size:44px;line-height:1;animation:floatUp .85s ease-out forwards;pointer-events:none}
+@keyframes floatUp{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-64px)}}
+/* number sense — SVG branching tree (addition) */
+.ns2-row{display:flex;justify-content:center;align-items:center;gap:10px;min-height:60px;margin:2px 0}
+.ns2-root{min-width:72px;padding:0 12px;height:56px;border:3px solid var(--line);border-radius:18px;background:var(--soft);display:flex;align-items:center;justify-content:center;font:800 30px/1 var(--fd);cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.ns2-root.open{border-color:var(--ok);background:var(--okt);cursor:default}
+.ns2-op{font:800 28px/1 var(--fd);color:var(--mut);padding:0 4px}
+.ns2-leaves{display:flex;gap:6px}
+.ns2-leaf{min-width:46px;height:48px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 22px/1 var(--fd);padding:0 4px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.ns2-leaf.tens{border-color:var(--ok);color:var(--ok)}
+.ns2-leaf.ones{border-color:#a855f7;color:#a855f7}
+.ns2-leaf.sel{background:var(--pinkt);border-color:var(--pink);color:var(--ink)}
+.ns2-leaf.paired{opacity:.38;cursor:default}
+.ns2-leaf.auto{opacity:.32;cursor:default;border-style:dashed;font-size:18px}
+.ns2-sum{font:700 17px/1.4 var(--fd);padding:5px 9px;border-radius:12px;cursor:default;border-bottom:3px solid currentColor;user-select:none;transition:opacity .4s;white-space:nowrap}
+.ns2-sum.tens{color:var(--ok)}
+.ns2-sum.ones{color:#a855f7}
+.ns2-sum.ready{cursor:pointer}
+.ns2-sum.tapped{opacity:.42;cursor:default}
+.ns2-final{font:800 36px/1 var(--fd);text-align:center;border-radius:18px;border:3px solid var(--ok);background:var(--okt);color:var(--ok);padding:12px 24px;transition:opacity .5s}
+/* number sense — subtraction variant */
+.ns-trees{display:flex;gap:16px;justify-content:center;align-items:flex-start;margin:12px 0}
+.ns-root{min-height:56px;border:3px solid var(--line);border-radius:18px;background:var(--soft);display:flex;align-items:center;justify-content:center;font:800 30px/1 var(--fd);cursor:pointer;transition:border-color .25s,background .25s;user-select:none;padding:0 12px}
 .ns-root.ready{border-color:var(--gold);background:var(--pinkt)}
 .ns-root.open{border-color:var(--ok);background:var(--okt);cursor:default}
-.ns-branches{display:flex;gap:6px;width:100%}
-.ns-leaf{flex:1;min-height:52px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 22px/1 var(--fd);cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.ns-branches{display:flex;gap:6px}
+.ns-leaf{min-width:52px;min-height:52px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 22px/1 var(--fd);padding:0 6px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
 .ns-leaf.sel{border-color:var(--pink);background:var(--pinkt)}
-.ns-leaf.joined{border-color:var(--ok);background:var(--okt);opacity:.5;cursor:default}
-.ns-leaf.zero{opacity:.25;cursor:default;font-size:16px}
 .ns-leaf.conflict{border-color:var(--gold);animation:pulse 1s ease-in-out infinite alternate}
-.ns-sums-row{display:flex;gap:8px;justify-content:center;margin:8px 0}
-.ns-sum-box{width:68px;min-height:52px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 22px/1 var(--fd);opacity:0;transition:opacity .4s}
-.ns-sum-box.show{opacity:1;border-color:var(--ok)}
-.ns-total-reveal{text-align:center;font:800 40px/1 var(--fd);color:var(--ok);opacity:0;transition:opacity .4s;margin:4px 0}
-.ns-total-reveal.show{opacity:1;animation:numPop .4s ease-out}
-/* number sense — subtraction variant */
 .ns-sub-min{text-align:center;font:800 50px/1 var(--fd);flex:1;padding-top:6px}
 .ns-steps{display:flex;flex-direction:column;gap:6px;margin:12px 0}
 .ns-step{display:flex;align-items:center;justify-content:center;gap:8px;font:700 22px/1.3 var(--fd);opacity:0;transition:opacity .4s}
@@ -968,67 +975,63 @@ function drawToSubtract(v){
 }
 
 /* ---------- Skill 3: Skip Count by 10s ---------- */
-const SKIP_WORKSHEET=[[85,1],[52,1]];
-function makeSkipProblem(){const dir=Math.random()<.7?1:-1;return [dir>0?rnd(10,89):rnd(70,189),dir];}
+const SKIP_WORKSHEET=[[25,10],[65,10],[145,-10]];
+function makeSkipProblem(){const up=Math.random()<.7;return up?[rnd(10,89),10]:[rnd(70,169),-10];}
 const nextSkipProblem=()=>{const i=S.skip.i||0;S.skip.cur=i<SKIP_WORKSHEET.length?SKIP_WORKSHEET[i].slice():makeSkipProblem();S.skip.i=i+1;save();};
 
 function skipCountBy10(v){
   if(!S.skip.cur) nextSkipProblem();
-  const [start,dir]=S.skip.cur;
-  const seq=Array.from({length:7},(_,i)=>start+i*10*dir);
-  const SHOW=[0,1,6];
-  let typed=Array(7).fill(null); SHOW.forEach(i=>{typed[i]=seq[i];});
-  let selIdx=null, entryVal='', checked=false;
-  const banner=h('div',{class:'banner',hidden:true});
-  const boxes=[];
-  const entry=h('div',{class:'sc-entry'},' ');
-  const keypadWrap=h('div',{hidden:true});
-  const renderBoxes=()=>{
-    boxes.forEach((bx,i)=>{
-      const isFixed=SHOW.includes(i);
-      if(isFixed){bx.textContent=String(seq[i]);bx.className='sc-box';return;}
-      const val=typed[i];
-      if(checked){bx.textContent=val!==null?String(val):'?';bx.className='sc-box '+(val===seq[i]?'sc-right':'sc-fix');}
-      else{bx.textContent=val!==null?String(val):'?';bx.className='sc-box blank'+(i===selIdx?' sel':'');}
-    });
-    entry.textContent=entryVal||' ';
+  const [start,by]=S.skip.cur;
+  const totalRounds=8;
+  let current=start, roundNum=0;
+
+  const progEl=h('div',{style:'text-align:center;font:400 14px var(--fb);color:var(--mut);margin-top:6px'},
+    String(roundNum)+' / '+totalRounds);
+  const celebWrap=h('div',{class:'sc-celeb'});
+  const choicesRow=h('div',{style:'display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0'});
+
+  const showRound=()=>{
+    const answer=current+by;
+    const wrong=Math.random()<.5?answer-1:answer+1;
+    const leftIsRight=Math.random()<.5;
+    const lVal=leftIsRight?answer:wrong, rVal=leftIsRight?wrong:answer;
+    const lBtn=h('button',{class:'sc-choice'},String(lVal));
+    const rBtn=h('button',{class:'sc-choice'},String(rVal));
+    const orEl=h('div',{style:'font:800 20px/1 var(--fb);color:var(--mut)'},'or');
+    const onChoice=(wasRight,btn)=>{
+      if(wasRight){
+        current=answer; roundNum++;
+        progEl.textContent=String(roundNum)+' / '+totalRounds;
+        const f=h('div',{class:'sc-float'},'👍');
+        celebWrap.append(f); setTimeout(()=>f.remove(),950);
+        if(roundNum>=totalRounds){
+          award('skip-10'); nextSkipProblem();
+          setTimeout(()=>{v.replaceChildren();skipCountBy10(v);},1000);
+        } else {
+          setTimeout(showRound,320);
+        }
+      } else {
+        btn.classList.add('shake');
+        setTimeout(()=>btn.classList.remove('shake'),500);
+      }
+    };
+    lBtn.addEventListener('click',()=>onChoice(leftIsRight,lBtn));
+    rBtn.addEventListener('click',()=>onChoice(!leftIsRight,rBtn));
+    choicesRow.replaceChildren(lBtn,orEl,rBtn);
   };
-  seq.forEach((_,i)=>{
-    const bx=h('div',{class:'sc-box'});
-    if(!SHOW.includes(i)) bx.addEventListener('click',()=>{if(checked)return;selIdx=i;entryVal=typed[i]!==null?String(typed[i]):'';keypadWrap.hidden=false;renderBoxes();});
-    boxes.push(bx);
-  });
-  const kp=h('div',{class:'keypad'});
-  for(let n=1;n<=9;n++) kp.append(h('button',{onclick:()=>{if(entryVal.length<4)entryVal+=n;renderBoxes();}},String(n)));
-  kp.append(h('button',{onclick:()=>{entryVal=entryVal.slice(0,-1);renderBoxes();}},'⌫'));
-  kp.append(h('button',{onclick:()=>{if(entryVal.length<4)entryVal+='0';renderBoxes();}},'0'));
-  kp.append(h('button',{class:'btn ok',style:'border-radius:14px',onclick:()=>{
-    if(selIdx===null)return;
-    typed[selIdx]=entryVal===''?null:parseInt(entryVal,10);
-    entryVal='';selIdx=null;keypadWrap.hidden=true;renderBoxes();
-  }},'✓'));
-  keypadWrap.append(entry,kp);
-  const act=h('button',{class:'btn',onclick:()=>{
-    if(!checked){
-      checked=true;
-      const right=seq.every((_,i)=>typed[i]===seq[i]);
-      banner.hidden=false;banner.className='banner '+(right?'good':'bad');
-      banner.textContent=right?'⭐ You got it!':'Almost! Red boxes need fixing.';
-      act.textContent='OK ▶';act.className='btn ok';keypadWrap.hidden=true;renderBoxes();
-      if(right)award('skip-10');
-    }else{nextSkipProblem();render();}
-  }},'Check');
-  const render=()=>{v.replaceChildren();skipCountBy10(v);};
+
+  showRound();
   v.append(
     h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
     h('div',{class:'card'},
-      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Count by 10s. Tap a ? box, type the number, then ✓.'),
-      h('div',{class:'sc-seq'},...boxes),
-      h('div',{class:'hint',style:'text-align:center;font-size:12px'},dir>0?'Counting up by 10':'Counting down by 10'),
-      keypadWrap,banner,
-      h('div',{class:'acts'},act)));
-  renderBoxes();
-}
+      h('div',{style:'text-align:center;margin-bottom:8px'},
+        h('div',{style:'font:700 18px var(--fb)'},
+          'Start at ',h('b',{style:'color:var(--pink)'},String(start)),
+          ' — count by ',h('b',{style:'color:var(--pink)'},String(Math.abs(by))),
+          by<0?' (down)':'')),
+      h('div',{style:'text-align:center;font:400 15px var(--fb);color:var(--mut);margin-bottom:4px'},'Which comes next?'),
+      choicesRow,celebWrap,progEl));
+}
 
 /* ---------- Skill 4: Number Sense (addition + subtraction branching) ---------- */
 const NS_WORKSHEET=[{op:'+',a:136,b:53},{op:'+',a:142,b:47},{op:'-',a:143,b:56},{op:'-',a:165,b:48}];
@@ -1059,75 +1062,146 @@ function numberSense(v){
 }
 
 function nsAdd(v,a,b){
-  const ad=digits(a),bd=digits(b);
-  const vals=[ad,bd];
-  const sums=PLACES.map((_,k)=>ad[k]+bd[k]);
-  let rootExp=[false,false], sel=null, joined=[false,false,false];
+  const aH=Math.floor(a/100)*100, aT=Math.floor(a/10)%10*10, aO=a%10;
+  const bT=Math.floor(b/10)%10*10, bO=b%10;
+
+  let rootAOpen=false, rootBOpen=false;
+  let tensState='none', onesState='none';
+  let tensSumShown=false, onesSumShown=false;
+  let sumATapped=false, sumBTapped=false;
+
+  const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svgEl.setAttribute('style','position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible');
+  const wrap=h('div',{style:'position:relative;min-height:290px;padding-bottom:8px'});
+  wrap.append(svgEl);
+
+  const drawLine=(fromEl,toEl,color,delay=0)=>{
+    const cr=wrap.getBoundingClientRect();
+    const a2=fromEl.getBoundingClientRect(), b2=toEl.getBoundingClientRect();
+    const x1=a2.left+a2.width/2-cr.left, y1=a2.bottom-cr.top-1;
+    const x2=b2.left+b2.width/2-cr.left, y2=b2.top-cr.top+1;
+    const len=Math.hypot(x2-x1,y2-y1)+4;
+    const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+    ln.setAttribute('x1',x1);ln.setAttribute('y1',y1);
+    ln.setAttribute('x2',x2);ln.setAttribute('y2',y2);
+    ln.setAttribute('stroke',color);ln.setAttribute('stroke-width','3.5');
+    ln.setAttribute('stroke-linecap','round');
+    ln.setAttribute('stroke-dasharray',len);ln.setAttribute('stroke-dashoffset',len);
+    ln.style.transition='stroke-dashoffset 0.35s ease-out '+delay+'s';
+    svgEl.append(ln);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>ln.setAttribute('stroke-dashoffset','0')));
+  };
+
   const banner=h('div',{class:'banner',hidden:true});
-  const sumBoxes=PLACES.map((_,k)=>h('div',{class:'ns-sum-box'}));
-  const totalEl=h('div',{class:'ns-total-reveal'});
-  const leafEls=[[],[]];
-  const act=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSProblem();render();}},' ');
+  const actBtn=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSProblem();v.replaceChildren();numberSense(v);}});
 
-  const checkDone=()=>{
-    if(!joined.every(Boolean))return;
-    sumBoxes.forEach((sb,k)=>{if(sums[k]>0){sb.textContent=String(sums[k]);sb.classList.add('show');}});
-    setTimeout(()=>{totalEl.textContent='= '+(a+b);totalEl.classList.add('show');},500);
-    setTimeout(()=>{banner.hidden=false;banner.className='banner good';banner.textContent='⭐ You got it!';award('ns-add');act.hidden=false;act.textContent='OK ▶';act.className='btn ok';},950);
+  const leafAH=h('div',{class:'ns2-leaf auto'},String(aH));
+  const leafAT=h('div',{class:'ns2-leaf tens'},String(aT));
+  const leafAO=h('div',{class:'ns2-leaf ones'},String(aO));
+  const leafBT=h('div',{class:'ns2-leaf tens'},String(bT));
+  const leafBO=h('div',{class:'ns2-leaf ones'},String(bO));
+  const leavesA=h('div',{class:'ns2-leaves',style:'opacity:0'},leafAH,leafAT,leafAO);
+  const leavesB=h('div',{class:'ns2-leaves',style:'opacity:0'},leafBT,leafBO);
+
+  const rootA=h('div',{class:'ns2-root'},String(a));
+  const rootB=h('div',{class:'ns2-root'},String(b));
+
+  const tensSumEl=h('div',{class:'ns2-sum tens',style:'opacity:0'},
+    String(aT),'+',String(bT),'=',h('u',{},String(aT+bT)));
+  const onesSumEl=h('div',{class:'ns2-sum ones',style:'opacity:0'},
+    String(aO),'+',String(bO),'=',h('u',{},String(aO+bO)));
+
+  const finalEl=h('div',{class:'ns2-final',style:'opacity:0'},String(a+b));
+
+  const getLeaf=(place,fromA)=>place==='tens'?(fromA?leafAT:leafBT):(fromA?leafAO:leafBO);
+
+  const tryShowFinal=()=>{
+    if(!sumATapped||!sumBTapped) return;
+    finalEl.style.opacity='1';
+    finalEl.style.animation='numPop .4s ease-out';
+    drawLine(tensSumEl,finalEl,'#999');
+    drawLine(onesSumEl,finalEl,'#999',0.1);
+    setTimeout(()=>{
+      banner.hidden=false;banner.className='banner good';
+      banner.textContent='⭐ You got it!';
+      actBtn.hidden=false;actBtn.textContent='OK ▶';actBtn.className='btn ok';
+      award('ns-add');
+    },700);
   };
 
-  const tryJoin=(tree,k)=>{
-    if(joined[k])return;
-    if(!rootExp[0]||!rootExp[1]){toast('Tap both numbers first!');return;}
-    const otherVal=vals[1-tree][k];
-    if(otherVal===0){
-      joined[k]=true;[0,1].forEach(t=>{leafEls[t][k].classList.add('joined');leafEls[t][k].classList.remove('sel');});
-      sel=null;checkDone();return;
-    }
-    if(sel===null){sel={tree,k};leafEls[tree][k].classList.add('sel');return;}
-    if(sel.tree===tree){leafEls[sel.tree][sel.k].classList.remove('sel');sel={tree,k};leafEls[tree][k].classList.add('sel');return;}
-    if(sel.k!==k){toast('Pair 100s↔100s, 10s↔10s, 1s↔1s');leafEls[sel.tree][sel.k].classList.remove('sel');sel=null;return;}
-    leafEls[sel.tree][sel.k].classList.remove('sel');leafEls[sel.tree][sel.k].classList.add('joined');
-    leafEls[tree][k].classList.add('joined');joined[k]=true;sel=null;checkDone();
-  };
-
-  const treeEls=[0,1].map(t=>{
-    const v2=vals[t];
-    const branchDiv=h('div',{class:'ns-branches',hidden:true});
-    PLACES.forEach((p,k)=>{
-      const isZero=v2[k]===0;
-      const lf=h('div',{class:'ns-leaf'+(isZero?' zero':'')},String(v2[k]));
-      if(!isZero) lf.addEventListener('click',()=>{if(rootExp[t])tryJoin(t,k);});
-      leafEls[t].push(lf);branchDiv.append(lf);
-    });
-    const root=h('div',{class:'ns-root'},[a,b][t].toString());
-    root.addEventListener('click',()=>{
-      if(rootExp[t])return;
-      rootExp[t]=true;root.classList.add('open');branchDiv.hidden=false;
-      if(rootExp[1-t]){
-        PLACES.forEach((_,k)=>{
-          if(!joined[k]&&(vals[0][k]===0||vals[1][k]===0)){
-            joined[k]=true;[0,1].forEach(tr=>leafEls[tr][k].classList.add('joined'));
-          }
-        });
-        checkDone();
-      }
-    });
-    return h('div',{class:'ns-tree'},root,branchDiv);
+  tensSumEl.addEventListener('click',()=>{
+    if(tensState!=='done'||sumATapped) return;
+    sumATapped=true;tensSumEl.classList.add('tapped');tryShowFinal();
+  });
+  onesSumEl.addEventListener('click',()=>{
+    if(onesState!=='done'||sumBTapped) return;
+    sumBTapped=true;onesSumEl.classList.add('tapped');tryShowFinal();
   });
 
-  const sumLabels=h('div',{class:'ns-sums-row',...{style:'gap:8px'}},
-    ...PLACES.map((_,k)=>h('div',{style:'width:68px;text-align:center'},sumBoxes[k],h('div',{class:'ans-lab'},PLACES[k][0]))));
+  const tryShowSums=()=>{
+    if(tensState==='done'&&!tensSumShown){
+      tensSumShown=true;
+      tensSumEl.style.opacity='1';tensSumEl.classList.add('ready');
+      drawLine(leafAT,tensSumEl,'var(--ok)');
+      drawLine(leafBT,tensSumEl,'var(--ok)',0.12);
+    }
+    if(onesState==='done'&&!onesSumShown){
+      onesSumShown=true;
+      onesSumEl.style.opacity='1';onesSumEl.classList.add('ready');
+      drawLine(leafAO,onesSumEl,'#a855f7');
+      drawLine(leafBO,onesSumEl,'#a855f7',0.12);
+    }
+  };
 
-  const render=()=>{v.replaceChildren();numberSense(v);};
+  const handleLeafTap=(place,fromA)=>{
+    const curS=place==='tens'?tensState:onesState;
+    const otherS=place==='tens'?onesState:tensState;
+    const setS=s=>{if(place==='tens')tensState=s;else onesState=s;};
+    if(curS==='done') return;
+    if(otherS!=='none'&&otherS!=='done'){toast('Finish the other pair first');return;}
+    const lf=getLeaf(place,fromA);
+    if(curS==='none'){
+      setS(fromA?'selA':'selB'); lf.classList.add('sel');
+    } else if(curS===(fromA?'selA':'selB')){
+      setS('none'); lf.classList.remove('sel');
+    } else {
+      setS('done');
+      getLeaf(place,true).classList.remove('sel'); getLeaf(place,false).classList.remove('sel');
+      getLeaf(place,true).classList.add('paired'); getLeaf(place,false).classList.add('paired');
+      tryShowSums();
+    }
+  };
+
+  leafAT.addEventListener('click',()=>{if(!rootAOpen||!rootBOpen){toast('Tap both numbers first');return;}handleLeafTap('tens',true);});
+  leafBT.addEventListener('click',()=>{if(!rootAOpen||!rootBOpen){toast('Tap both numbers first');return;}handleLeafTap('tens',false);});
+  leafAO.addEventListener('click',()=>{if(!rootAOpen||!rootBOpen){toast('Tap both numbers first');return;}handleLeafTap('ones',true);});
+  leafBO.addEventListener('click',()=>{if(!rootAOpen||!rootBOpen){toast('Tap both numbers first');return;}handleLeafTap('ones',false);});
+
+  rootA.addEventListener('click',()=>{
+    if(rootAOpen) return;
+    rootAOpen=true; rootA.classList.add('open');
+    leavesA.style.transition='opacity .3s';leavesA.style.opacity='1';
+    drawLine(rootA,leafAH,'#ccc'); drawLine(rootA,leafAT,'#ccc',0.08); drawLine(rootA,leafAO,'#ccc',0.16);
+  });
+  rootB.addEventListener('click',()=>{
+    if(rootBOpen) return;
+    rootBOpen=true; rootB.classList.add('open');
+    leavesB.style.transition='opacity .3s';leavesB.style.opacity='1';
+    drawLine(rootB,leafBT,'#ccc'); drawLine(rootB,leafBO,'#ccc',0.08);
+  });
+
+  const row1=h('div',{class:'ns2-row'},rootA,h('span',{class:'ns2-op'},'+'),rootB);
+  const row2=h('div',{class:'ns2-row'},leavesA,h('div',{style:'min-width:10px'}),leavesB);
+  const row3=h('div',{class:'ns2-row'},tensSumEl,h('div',{style:'min-width:14px'}),onesSumEl);
+  const row4=h('div',{class:'ns2-row'},finalEl);
+  wrap.append(row1,row2,row3,row4);
+
   v.append(
     h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
     h('div',{class:'card'},
-      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap each number to break it apart, then pair up matching places.'),
+      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap each number to split it, then pair matching places.'),
       h('div',{class:'eq'},String(a),' ',h('span',{},'+'),' ',String(b),' = ?'),
-      h('div',{class:'ns-trees'},...treeEls),
-      sumLabels,totalEl,banner,
-      h('div',{class:'acts'},act)));
+      wrap,banner,h('div',{class:'acts'},actBtn)));
 }
 
 function nsSub(v,a,b){

@@ -216,6 +216,22 @@ nav button{font-size:10px}
 .ns-step{display:flex;align-items:center;justify-content:center;gap:8px;font:700 22px/1.3 var(--fd);opacity:0;transition:opacity .4s}
 .ns-step.show{opacity:1}
 .ns-step b{color:var(--no)}.ns-step i{font-style:normal;color:var(--ok);font-weight:800}
+/* nsSub — expansion + boss battle */
+.ns-ones-badge{display:inline-block;font:700 18px var(--fb);text-align:center;margin-top:4px;padding:2px 10px;border-radius:8px;border:2px dashed var(--line);min-width:30px}
+.ns-drop-line{width:3px;height:22px;margin:0 auto;background:repeating-linear-gradient(to bottom,var(--mut) 0,var(--mut) 5px,transparent 5px,transparent 10px)}
+.ns2-leaf.blink,.ns-ones-badge.blink{animation:blinkAmber .55s ease-in-out infinite alternate;border-color:var(--gold);color:var(--gold)}
+.ns2-leaf.blink-green,.ns-ones-badge.blink-green{animation:blinkGreen .55s ease-in-out infinite alternate;border-color:var(--ok);color:var(--ok)}
+@keyframes blinkAmber{0%{opacity:1}100%{opacity:.25}}
+@keyframes blinkGreen{0%{background:var(--cell)}100%{background:var(--okt)}}
+.ns-boss-num{font:800 60px/1 var(--fd);display:inline-block;padding:8px 20px;border:4px solid var(--pink);border-radius:24px;background:var(--soft);min-width:110px;text-align:center;margin-bottom:12px}
+.ns-boss-num.hurt{animation:bossHurt .35s ease-out}
+@keyframes bossHurt{0%,100%{transform:scale(1)}35%{transform:scale(1.12)}70%{transform:scale(0.94)}}
+.ns-attack-row{display:flex;justify-content:center;gap:12px;margin:4px 0}
+.ns-attacker{min-width:56px;height:56px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 24px/1 var(--fd);user-select:none}
+.ns-attacker.ready{border-color:var(--ok);background:var(--okt);cursor:pointer;animation:pulse .7s ease-in-out infinite alternate}
+.ns-attacker.waiting{opacity:.3;cursor:default;pointer-events:none}
+.ns-hit-label{position:absolute;font:800 30px/1 var(--fd);color:var(--no);transform:translateX(-50%);pointer-events:none;animation:hitFloat .95s ease-out forwards;z-index:20}
+@keyframes hitFloat{0%{opacity:1;transform:translateX(-50%) translateY(0)}50%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-58px)}}
 </style>
 
 <div class="app">
@@ -1031,7 +1047,7 @@ function skipCountBy10(v){
           by<0?' (down)':'')),
       h('div',{style:'text-align:center;font:400 15px var(--fb);color:var(--mut);margin-bottom:4px'},'Which comes next?'),
       choicesRow,celebWrap,progEl));
-}
+}
 
 /* ---------- Skill 4: Number Sense (addition + subtraction branching) ---------- */
 const NS_WORKSHEET=[{op:'+',a:136,b:53},{op:'+',a:142,b:47},{op:'-',a:143,b:56},{op:'-',a:165,b:48}];
@@ -1064,6 +1080,7 @@ function numberSense(v){
 function nsAdd(v,a,b){
   const aH=Math.floor(a/100)*100, aT=Math.floor(a/10)%10*10, aO=a%10;
   const bT=Math.floor(b/10)%10*10, bO=b%10;
+  const tensSumVal=aT+bT, onesSumVal=aO+bO;
 
   let rootAOpen=false, rootBOpen=false;
   let tensState='none', onesState='none';
@@ -1072,7 +1089,7 @@ function nsAdd(v,a,b){
 
   const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svgEl.setAttribute('style','position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible');
-  const wrap=h('div',{style:'position:relative;min-height:290px;padding-bottom:8px'});
+  const wrap=h('div',{style:'position:relative;min-height:350px;padding-bottom:8px'});
   wrap.append(svgEl);
 
   const drawLine=(fromEl,toEl,color,delay=0)=>{
@@ -1107,26 +1124,59 @@ function nsAdd(v,a,b){
   const rootB=h('div',{class:'ns2-root'},String(b));
 
   const tensSumEl=h('div',{class:'ns2-sum tens',style:'opacity:0'},
-    String(aT),'+',String(bT),'=',h('u',{},String(aT+bT)));
+    String(aT),'+',String(bT),'=',h('u',{},String(tensSumVal)));
   const onesSumEl=h('div',{class:'ns2-sum ones',style:'opacity:0'},
-    String(aO),'+',String(bO),'=',h('u',{},String(aO+bO)));
+    String(aO),'+',String(bO),'=',h('u',{},String(onesSumVal)));
 
   const finalEl=h('div',{class:'ns2-final',style:'opacity:0'},String(a+b));
+
+  // Component tiles: hundreds pass-through + combined tens + combined ones
+  const compDefs=[];
+  if(aH>0) compDefs.push({key:'h',val:aH,color:'#999'});
+  compDefs.push({key:'t',val:tensSumVal,color:'var(--ok)'});
+  compDefs.push({key:'o',val:onesSumVal,color:'#a855f7'});
+
+  const compEls={};
+  let compDone=0;
+
+  const compTileEls=compDefs.map(d=>{
+    const el=h('div',{class:'ns2-leaf',style:'cursor:default;border-color:'+d.color+';color:'+d.color},String(d.val));
+    compEls[d.key]=el;
+    el.addEventListener('click',()=>{
+      if(el.dataset.tapped||el.style.cursor==='default') return;
+      el.dataset.tapped='1';
+      el.classList.add('sel');
+      el.style.transition='transform .2s ease-out';
+      el.style.transform='scale(1.25)';
+      el.style.cursor='default';
+      compDone++;
+      if(compDone===compDefs.length){
+        setTimeout(()=>{
+          finalEl.style.opacity='1';
+          finalEl.style.animation='numPop .4s ease-out';
+          compDefs.forEach((d2,i)=>drawLine(compEls[d2.key],finalEl,d2.color,i*0.1));
+          setTimeout(()=>{
+            banner.hidden=false;banner.className='banner good';
+            banner.textContent='⭐ You got it!';
+            actBtn.hidden=false;actBtn.textContent='OK ▶';actBtn.className='btn ok';
+            award('ns-add');
+          },700);
+        },200);
+      }
+    });
+    return el;
+  });
+  const compRow=h('div',{class:'ns2-row',style:'opacity:0;gap:10px'},...compTileEls);
 
   const getLeaf=(place,fromA)=>place==='tens'?(fromA?leafAT:leafBT):(fromA?leafAO:leafBO);
 
   const tryShowFinal=()=>{
     if(!sumATapped||!sumBTapped) return;
-    finalEl.style.opacity='1';
-    finalEl.style.animation='numPop .4s ease-out';
-    drawLine(tensSumEl,finalEl,'#999');
-    drawLine(onesSumEl,finalEl,'#999',0.1);
-    setTimeout(()=>{
-      banner.hidden=false;banner.className='banner good';
-      banner.textContent='⭐ You got it!';
-      actBtn.hidden=false;actBtn.textContent='OK ▶';actBtn.className='btn ok';
-      award('ns-add');
-    },700);
+    compRow.style.transition='opacity .4s 0.1s';
+    compRow.style.opacity='1';
+    compTileEls.forEach(el=>{ el.style.cursor='pointer'; });
+    drawLine(tensSumEl,compEls['t'],'var(--ok)',0.1);
+    drawLine(onesSumEl,compEls['o'],'#a855f7',0.2);
   };
 
   tensSumEl.addEventListener('click',()=>{
@@ -1193,8 +1243,9 @@ function nsAdd(v,a,b){
   const row1=h('div',{class:'ns2-row'},rootA,h('span',{class:'ns2-op'},'+'),rootB);
   const row2=h('div',{class:'ns2-row'},leavesA,h('div',{style:'min-width:10px'}),leavesB);
   const row3=h('div',{class:'ns2-row'},tensSumEl,h('div',{style:'min-width:14px'}),onesSumEl);
-  const row4=h('div',{class:'ns2-row'},finalEl);
-  wrap.append(row1,row2,row3,row4);
+  const row4=h('div',{class:'ns2-row'},compRow);
+  const row5=h('div',{class:'ns2-row'},finalEl);
+  wrap.append(row1,row2,row3,row4,row5);
 
   v.append(
     h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
@@ -1207,72 +1258,137 @@ function nsAdd(v,a,b){
 function nsSub(v,a,b){
   const aOnes=a%10, bTens=Math.floor(b/10)*10, bOnes=b%10;
   const needSplit=bOnes>aOnes;
-  let subPhase=0; // 0=whole 1=ready 2=expanded 3=ones-split
+  const matchOnes=needSplit?aOnes:0;
+  const remOnes=needSplit?bOnes-aOnes:bOnes;
+  const parts=needSplit?[bTens,matchOnes,remOnes]:[bTens,bOnes];
+
+  let runningTotal=a, attackIdx=0, phase=0;
   const banner=h('div',{class:'banner',hidden:true});
+  const actBtn=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSProblem();v.replaceChildren();numberSense(v);}});
+  const container=h('div',{style:'position:relative'});
 
-  // Subtraction steps:
-  // If needSplit: a - bTens → a-bTens-aOnes → answer
-  // Else:         a - bTens → answer
-  const steps=needSplit
-    ?[{sub:bTens,res:a-bTens},{sub:aOnes,res:a-bTens-aOnes},{sub:bOnes-aOnes,res:a-b}]
-    :[{sub:bTens,res:a-bTens},{sub:bOnes,res:a-b}];
+  /* ---- Phase 4: boss battle ---- */
+  const bossEl=h('div',{class:'ns-boss-num'},String(a));
+  const attackRow=h('div',{class:'ns-attack-row'});
+  const attackEls=parts.map((n,i)=>{
+    const el=h('div',{class:'ns-attacker '+(i===0?'ready':'waiting')},String(n));
+    el.addEventListener('click',()=>doAttack(i,el));
+    return el;
+  });
+  attackRow.append(...attackEls);
+  const bossArea=h('div',{hidden:true,style:'text-align:center;padding:8px 0'},
+    h('div',{style:'font:400 14px var(--fb);color:var(--mut);margin-bottom:8px'},'Click each number to subtract it!'),
+    bossEl,attackRow);
 
-  const stepEls=steps.map(s=>h('div',{class:'ns-step'},
-    h('b',{},'− '+s.sub),' = ',h('i',{},String(s.res))));
+  /* ---- Flying animation ---- */
+  const doAttack=(i,el)=>{
+    if(i!==attackIdx) return;
+    el.style.visibility='hidden';
+    const cr=container.getBoundingClientRect();
+    const eR=el.getBoundingClientRect(), bR=bossEl.getBoundingClientRect();
+    const sx=eR.left-cr.left+eR.width/2, sy=eR.top-cr.top+eR.height/2;
+    const tx=bR.left-cr.left+bR.width/2, ty=bR.top-cr.top+bR.height/2;
+    const flyer=h('div',{style:'position:absolute;left:'+sx+'px;top:'+sy+'px;transform:translate(-50%,-50%);font:800 22px var(--fd);background:var(--cell);border:3px solid var(--ok);border-radius:10px;padding:4px 10px;pointer-events:none;z-index:10'},String(parts[i]));
+    container.append(flyer);
+    const t0=performance.now(),dur=360;
+    const tick=t=>{
+      const p=Math.min(1,(t-t0)/dur),ep=p<.5?2*p*p:-1+(4-2*p)*p;
+      flyer.style.left=(sx+(tx-sx)*ep)+'px';
+      flyer.style.top=(sy+(ty-sy)*ep)+'px';
+      if(p<1) requestAnimationFrame(tick);
+      else{ flyer.remove(); impact(parts[i]); }
+    };
+    requestAnimationFrame(tick);
+  };
 
-  const bRootEl=h('div',{class:'ns-root'},String(b));
-  const bBranchEl=h('div',{class:'ns-branches',hidden:true});
-  const bTensLeaf=h('div',{class:'ns-leaf'},String(bTens));
-  const bOnesLeaf=h('div',{class:'ns-leaf'},String(bOnes));
-  bBranchEl.append(bTensLeaf);
-  if(bOnes>0) bBranchEl.append(bOnesLeaf);
+  const impact=(amt)=>{
+    runningTotal-=amt;
+    const bR=bossEl.getBoundingClientRect(), cr=container.getBoundingClientRect();
+    const hit=h('div',{class:'ns-hit-label',style:'left:'+(bR.left-cr.left+bR.width/2)+'px;top:'+(bR.top-cr.top+10)+'px'},'-'+amt);
+    container.append(hit);
+    setTimeout(()=>hit.remove(),1150);
+    bossEl.classList.remove('hurt'); void bossEl.offsetWidth; bossEl.classList.add('hurt');
+    setTimeout(()=>{bossEl.textContent=String(runningTotal);},170);
+    attackIdx++;
+    if(attackIdx<attackEls.length){
+      attackEls[attackIdx].style.visibility='visible';
+      attackEls[attackIdx].className='ns-attacker ready';
+    } else {
+      setTimeout(()=>{
+        banner.hidden=false;banner.className='banner good';banner.textContent='⭐ You got it!';
+        actBtn.hidden=false;actBtn.textContent='OK ▶';actBtn.className='btn ok';
+        award('ns-add');
+      },650);
+    }
+  };
 
-  const act=h('button',{class:'btn',disabled:true,onclick:()=>{
-    if(!banner.hidden){nextNSProblem();render();return;}
-    act.disabled=true;
-    stepEls.forEach((_,i)=>setTimeout(()=>stepEls[i].classList.add('show'),i*700));
-    setTimeout(()=>{
-      banner.hidden=false;banner.className='banner good';banner.textContent='⭐ You got it!';
-      award('ns-add');act.disabled=false;act.textContent='OK ▶';act.className='btn ok';
-    },steps.length*700+200);
-  }},'Subtract');
+  /* ---- Phases 0-3: expansion ---- */
+  const aEl=h('div',{class:'ns2-root'},String(a));
+  const bEl=h('div',{class:'ns2-root'},String(b));
+  const aOnesBadge=h('div',{class:'ns-ones-badge',style:'display:none'},String(aOnes));
+  const dropLine=h('div',{class:'ns-drop-line',style:'display:none'});
 
-  bRootEl.addEventListener('click',()=>{
-    if(subPhase===0){
-      subPhase=1;bRootEl.classList.add('ready');
-      toast(needSplit?'Tap again to break '+b+' into tens and ones':'Tap again to break apart');
-    } else if(subPhase===1){
-      subPhase=2;bRootEl.classList.remove('ready');bRootEl.classList.add('open');bBranchEl.hidden=false;
-      if(needSplit){
-        bOnesLeaf.classList.add('conflict');
-        toast(bOnes+' > '+aOnes+' — tap the '+bOnes+' to split it');
-      } else {act.disabled=false;}
+  const bTensEl=h('div',{class:'ns2-leaf'},String(bTens));
+  const bOnesEl=h('div',{class:'ns2-leaf'},String(bOnes));
+  const remEl=h('div',{class:'ns2-leaf'},String(remOnes));
+  const matchEl2=h('div',{class:'ns2-leaf'},String(matchOnes));
+
+  const bPartsRow=h('div',{class:'ns2-leaves',style:'margin-top:6px;display:none'});
+  if(bTens>0) bPartsRow.append(bTensEl);
+  if(bOnes>0) bPartsRow.append(bOnesEl);
+
+  const goToBoss=()=>{
+    expandArea.style.transition='opacity .4s';
+    expandArea.style.opacity='0';
+    setTimeout(()=>{expandArea.hidden=true;bossArea.hidden=false;},420);
+  };
+
+  aEl.addEventListener('click',()=>{
+    if(phase!==0) return;
+    phase=1; aEl.classList.add('open');
+    aOnesBadge.style.display='block';
+    dropLine.style.display='block';
+  });
+
+  bEl.addEventListener('click',()=>{
+    if(phase!==1) return;
+    phase=2; bEl.classList.add('open');
+    bPartsRow.style.display='flex';
+    if(needSplit){
+      bOnesEl.classList.add('blink');
+      aOnesBadge.classList.add('blink');
+    } else {
+      setTimeout(goToBoss,700);
     }
   });
 
   if(needSplit){
-    bOnesLeaf.addEventListener('click',()=>{
-      if(subPhase!==2)return;
-      subPhase=3;
-      bOnesLeaf.classList.remove('conflict');bOnesLeaf.hidden=true;
-      bBranchEl.append(
-        h('div',{class:'ns-leaf'},String(aOnes)),
-        h('div',{class:'ns-leaf'},String(bOnes-aOnes)));
-      act.disabled=false;
+    bOnesEl.addEventListener('click',()=>{
+      if(phase!==2) return;
+      phase=3;
+      bOnesEl.classList.remove('blink'); aOnesBadge.classList.remove('blink');
+      bOnesEl.replaceWith(remEl,matchEl2);
+      matchEl2.classList.add('blink-green');
+      aOnesBadge.classList.add('blink-green');
+      setTimeout(goToBoss,1300);
     });
   }
 
-  const render=()=>{v.replaceChildren();numberSense(v);};
-  const minEl=h('div',{class:'ns-sub-min'},String(a));
-  const opEl=h('div',{style:'font:800 36px var(--fd);line-height:56px;padding-top:6px'},'−');
+  const expandArea=h('div',{},
+    h('div',{class:'ns2-row'},
+      h('div',{style:'display:flex;flex-direction:column;align-items:center'},
+        aEl,dropLine,aOnesBadge),
+      h('div',{class:'ns2-op'},'−'),
+      h('div',{style:'display:flex;flex-direction:column;align-items:center'},
+        bEl,bPartsRow)));
+
+  container.append(expandArea,bossArea);
   v.append(
     h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
     h('div',{class:'card'},
-      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap the number you\'re subtracting to break it apart.'),
+      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap each number to break it apart!'),
       h('div',{class:'eq'},String(a),' ',h('span',{},'−'),' ',String(b),' = ?'),
-      h('div',{class:'ns-trees'},minEl,opEl,h('div',{class:'ns-tree'},bRootEl,bBranchEl)),
-      h('div',{class:'ns-steps'},...stepEls),
-      banner,h('div',{class:'acts'},act)));
+      container,banner,h('div',{class:'acts'},actBtn)));
 }
 
 const SKILLS = [{id:'pv-add', cat:'🗺️ Places',        n:'Draw to Add',       sub:'Hundreds, tens, and ones', e:'➕', open:drawToAdd},

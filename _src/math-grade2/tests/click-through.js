@@ -15,7 +15,7 @@ const eq = () => d.querySelector('.eq').textContent.replace(/\s+/g, ' ').trim();
 const tap = (r, k, n) => { for (let i = 0; i < n; i++) click(cells()[r * 3 + k]); };
 const draw = (a, b) => [a, b].forEach((n, r) => T.digits(n).forEach((x, k) => tap(r, k, x)));
 
-ok(q$('#nav button').length === 5, 'five tabs'); let textOK; ok(d.querySelector('#nav button.on').textContent === 'Learn', 'starts on Learn');
+ok(q$('#nav button').length === 6, 'six tabs'); let textOK; ok(d.querySelector('#nav button.on').textContent === 'Learn', 'starts on Learn');
 ok(q$('.skill').length === 1, 'one skill so far');
 click(q$('.skill')[0]);
 ok(eq() === '39 + 136', 'first problem is worksheet #1: ' + eq());
@@ -49,7 +49,7 @@ tap(0, 2, 12); ok(lines(cells()[2]) === 9, 'max 9 marks'); ok(/9 is the most/.te
 const saved = JSON.parse(w.localStorage.getItem('kitty-math-g2-v1')); ok(saved.stars === 1 && saved.pv.i === 3 && saved.area['pv-add'] === 1, 'saved ' + JSON.stringify(saved).slice(0, 120));
 /* header and tabs */
 ok(d.querySelector('.top h1').textContent === 'Meow Math' && d.title === 'Meow Math', 'named Meow Math');
-ok(q$('#nav button').map(b => b.textContent).join(',') === 'Learn,Study,Litter,Games,Progress', 'tab names ' + q$('#nav button').map(b => b.textContent).join(','));
+ok(q$('#nav button').map(b => b.textContent).join(',') === 'Learn,Study,Litter,Games,Progress,Club', 'tab names ' + q$('#nav button').map(b => b.textContent).join(','));
 ['Study', 'Games'].forEach(t => { click(q$('#nav button').find(b => b.textContent === t)); ok(/Coming soon/.test(d.querySelector('#view').textContent), t + ' coming soon'); });
 /* before any kitten: the Litter shows how close she is */
 click(d.querySelector('#petSlot')); ok(d.querySelector('#nav button.on').textContent === 'Litter', 'cat spot opens the Litter');

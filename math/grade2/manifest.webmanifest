@@ -1,13 +1,13 @@
 {
   "name": "Meow Math",
   "short_name": "Meow Math",
-  "description": "Grade 2 math app: draw hundreds, tens, and ones to add, and earn kittens and rewards.",
+  "description": "2nd-grade math practice with kittens: draw to add/subtract, earn cats, cloud save and friend clubs",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#3552A3",
-  "theme_color": "#24397A",
+  "background_color": "#FEF0F7",
+  "theme_color": "#FEF0F7",
   "icons": [
     {
       "src": "icon-192.png",

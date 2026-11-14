@@ -86,8 +86,8 @@ h2{margin:0 0 4px;font:600 22px var(--fd)}
 @keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
 @media (prefers-reduced-motion:reduce){.shake,.pop{animation:none}}
 
-/* bottom tabs */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);background:var(--chrome);border-radius:22px 22px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 14px var(--shadow)}
+/* bottom tabs (6 tabs) */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(6,1fr);background:var(--chrome);border-radius:22px 22px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 14px var(--shadow)}
 nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;border:0;background:none;border-radius:14px;font-size:11px;font-weight:800;color:var(--chrome-mut)}
 nav button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{color:var(--chrome-ink);background:rgba(255,255,255,.12)}
@@ -142,6 +142,26 @@ nav button.on svg{stroke:var(--pink)}
 @media (prefers-reduced-motion:reduce){.cat,.cat .tl,.cat.walk svg,.room .fly,.bub{animation:none!important;transition:none!important}}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 @media (max-width:360px){.eq{font-size:34px}.pv{grid-template-columns:50px repeat(3,1fr) 42px}}
+/* club tab */
+.lb{display:flex;flex-direction:column;gap:6px}
+.lb-row{display:grid;grid-template-columns:28px 40px 1fr auto;align-items:center;gap:8px;padding:8px 10px;border-radius:16px;background:var(--soft)}
+.lb-row.me{background:var(--pinkt)}
+.lb-row .rnk{font:800 15px var(--fd);color:var(--mut);text-align:center}
+.lb-row .nm{font:700 15px/1.2 var(--fb);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-row .sc{font:800 17px var(--fd);color:var(--gold);text-shadow:0 1px 3px var(--shadow);white-space:nowrap}
+.lb-row .bd{font-size:13px;color:var(--mut)}
+.lb-pin{margin-top:4px;padding-top:8px;border-top:1px solid var(--line)}
+.toggle-row{display:flex;gap:6px;margin-bottom:10px}
+.toggle-row button{flex:1;min-height:40px;border:2px solid var(--line);border-radius:12px;background:var(--soft);font:700 15px var(--fb);color:var(--ink)}
+.toggle-row button.on{background:var(--pink);border-color:var(--pink);color:#2A1030}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.keypad button{min-height:52px;border:0;border-radius:14px;background:var(--soft);font:700 22px var(--fd);color:var(--ink)}
+.keypad button:active{background:var(--pinkt)}
+.code-display{font:800 32px var(--fd);letter-spacing:.15em;text-align:center;padding:10px;border-radius:16px;background:var(--soft);min-height:54px;margin:10px 0}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;margin-left:4px;vertical-align:middle}
+.sync-dot.pending{background:var(--gold);animation:pulse 1s ease-in-out infinite alternate}
+@keyframes pulse{to{opacity:.4}}
+nav button{font-size:10px}
 </style>
 
 <div class="app">
@@ -159,12 +179,257 @@ nav button.on svg{stroke:var(--pink)}
 <script>
 (() => {
 'use strict';
+/* ---------- cloud config (inlined by build.sh) ---------- */
+const __CFG__ = __CONFIG_PLACEHOLDER__;
+const CLOUD_ACTIVE = !!((__CFG__.apiUrl||'') && (__CFG__.userPoolId||'') && (__CFG__.clientId||''));
+const CLOUD_API = __CFG__.apiUrl || null;
+const CLOUD_REGION = __CFG__.region || null;
+const CLOUD_POOL = __CFG__.userPoolId || null;
+const CLOUD_CLIENT = __CFG__.clientId || null;
+
 /* ---------- saved progress (on this phone only) ---------- */
 const KEY = 'kitty-math-g2-v1';
 const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
 let S = fresh();
+// Initial state loaded from KEY; if signed in, overwritten below after syncMeta is restored
 try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') S = Object.assign(fresh(), s); } catch (e) {}
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+/* ---------- per-player localStorage key ---------- */
+let activeKey = KEY; // updated after sign-in
+const loadState = k => {
+  try { const s = JSON.parse(localStorage.getItem(k) || 'null'); if (s && typeof s === 'object') return s; } catch (e) {}
+  return null;
+};
+
+const save = () => { try { localStorage.setItem(activeKey, JSON.stringify(S)); } catch (e) {} syncSoon(); };
+
+/* ---------- CLOUD: auth + sync (inert when CLOUD_ACTIVE is false) ---------- */
+const SYNC_KEY = 'meow-sync-v1';
+let syncMeta = (() => { try { return JSON.parse(localStorage.getItem(SYNC_KEY) || 'null') || {}; } catch (e) { return {}; } })();
+const saveSyncMeta = () => { try { localStorage.setItem(SYNC_KEY, JSON.stringify(syncMeta)); } catch (e) {} };
+
+const cognitoUrl = () => `https://cognito-idp.${CLOUD_REGION}.amazonaws.com/`;
+async function cognitoCall(target, body) {
+  const r = await fetch(cognitoUrl(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': `AWSCognitoIdentityProviderService.${target}` },
+    body: JSON.stringify(body),
+  });
+  const data = await r.json();
+  if (!r.ok) throw Object.assign(new Error(data.message || target), { code: data.__type || 'Error' });
+  return data;
+}
+
+function clientMerge(remote) {
+  /* mirrors the server merge.ts logic */
+  const L = S, R = remote;
+  const stars = Math.max(L.stars, R.stars), solved = Math.max(L.solved, R.solved), got = Math.max(L.got, R.got);
+  const area = { ...L.area }; for (const [k, v] of Object.entries(R.area || {})) area[k] = Math.max(area[k] || 0, v);
+  const catAreas = [...new Set([...(L.catAreas || []), ...(R.catAreas || [])])];
+  const len = Math.max((L.cats || []).length, (R.cats || []).length);
+  const cats = Array.from({ length: len }, (_, i) => {
+    const lc = (L.cats || [])[i], rc = (R.cats || [])[i];
+    if (!lc) return { ...rc }; if (!rc) return { ...lc };
+    return { name: lc.name || rc.name, coat: lc.coat, wear: [...new Set([...(lc.wear || []), ...(rc.wear || [])])] };
+  });
+  const useR = !L.day || R.day > L.day;
+  const streak = useR ? R.streak : L.streak, day = useR ? R.day : L.day;
+  const useCareR = !L._updatedAt || (R._updatedAt && R._updatedAt > L._updatedAt);
+  const food = useCareR ? R.food : L.food, treats = useCareR ? R.treats : L.treats, water = useCareR ? R.water : L.water;
+  return { ...L, stars, solved, area, catAreas, cats, got, streak, day, food, treats, water };
+}
+
+let syncTimer = null, syncDirty = false;
+function syncSoon() {
+  if (!CLOUD_ACTIVE || !syncMeta.playerId) return;
+  syncDirty = true; clearTimeout(syncTimer); syncTimer = setTimeout(syncNow, 3000);
+}
+async function syncNow() {
+  if (!CLOUD_ACTIVE || !syncMeta.playerId) return;
+  const tok = await CLOUD.getToken(); if (!tok) return;
+  const { stars, solved, area, catAreas, cats, got, food, treats, water, streak, day } = S;
+  const doc = { stars, solved, area, catAreas, cats, got, food, treats, water, streak, day };
+  try {
+    const r = await fetch(`${CLOUD_API}/v1/players/${syncMeta.playerId}/progress`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
+      body: JSON.stringify({ doc, baseRev: syncMeta.rev || 0 }),
+    });
+    if (r.ok) {
+      const data = await r.json();
+      syncMeta.rev = data.rev; saveSyncMeta();
+      const merged = clientMerge(data.doc);
+      Object.assign(S, merged); S._updatedAt = data.doc._updatedAt || new Date().toISOString();
+      grant(); try { localStorage.setItem(activeKey, JSON.stringify(S)); } catch (e) {}
+      syncDirty = false; paintStars(); paintPet(); paintSyncDot();
+    } else if (r.status === 401) { await CLOUD.refresh(); }
+  } catch (e) { /* offline — will retry on next save */ }
+}
+function paintSyncDot() {
+  const d = document.getElementById('syncDot'); if (!d) return;
+  d.className = 'sync-dot' + (syncDirty ? ' pending' : '');
+}
+
+const CLOUD = {
+  get idToken()      { return syncMeta.idToken || null; },
+  get refreshTok()   { return syncMeta.refreshToken || null; },
+  get playerId()     { return syncMeta.playerId || null; },
+  get signedIn()     { return !!(syncMeta.idToken && syncMeta.playerId); },
+
+  async getToken() {
+    if (!syncMeta.idToken) return null;
+    // ID tokens last 1 hour; refresh if within 2 min of expiry
+    if (syncMeta.idTokenExp && Date.now() / 1000 > syncMeta.idTokenExp - 120) {
+      return await this.refresh();
+    }
+    return syncMeta.idToken;
+  },
+
+  async refresh() {
+    if (!syncMeta.refreshToken) return null;
+    try {
+      const d = await cognitoCall('InitiateAuth', {
+        AuthFlow: 'REFRESH_TOKEN_AUTH', ClientId: CLOUD_CLIENT,
+        AuthParameters: { REFRESH_TOKEN: syncMeta.refreshToken },
+      });
+      const ar = d.AuthenticationResult;
+      syncMeta.idToken = ar.IdToken; syncMeta.idTokenExp = ar.ExpiresIn ? Date.now() / 1000 + ar.ExpiresIn : 0;
+      saveSyncMeta(); return syncMeta.idToken;
+    } catch (e) { syncMeta.idToken = null; saveSyncMeta(); return null; }
+  },
+
+  async signIn(email, password) {
+    const d = await cognitoCall('InitiateAuth', {
+      AuthFlow: 'USER_PASSWORD_AUTH', ClientId: CLOUD_CLIENT,
+      AuthParameters: { USERNAME: email, PASSWORD: password },
+    });
+    const ar = d.AuthenticationResult;
+    syncMeta.idToken = ar.IdToken; syncMeta.refreshToken = ar.RefreshToken;
+    syncMeta.idTokenExp = ar.ExpiresIn ? Date.now() / 1000 + ar.ExpiresIn : 0;
+    saveSyncMeta();
+    return ar;
+  },
+
+  async signUp(email, password) {
+    return cognitoCall('SignUp', { ClientId: CLOUD_CLIENT, Username: email, Password: password });
+  },
+
+  async confirmSignUp(email, code) {
+    return cognitoCall('ConfirmSignUp', { ClientId: CLOUD_CLIENT, Username: email, ConfirmationCode: code });
+  },
+
+  async forgotPassword(email) {
+    return cognitoCall('ForgotPassword', { ClientId: CLOUD_CLIENT, Username: email });
+  },
+
+  async confirmForgotPassword(email, code, password) {
+    return cognitoCall('ConfirmForgotPassword', { ClientId: CLOUD_CLIENT, Username: email, ConfirmationCode: code, Password: password });
+  },
+
+  async listPlayers() {
+    const tok = await this.getToken(); if (!tok) return [];
+    const r = await fetch(`${CLOUD_API}/v1/players`, { headers: { Authorization: `Bearer ${tok}` } });
+    if (!r.ok) return []; const d = await r.json(); return d.players || [];
+  },
+
+  async createPlayer() {
+    const tok = await this.getToken(); if (!tok) throw new Error('not_signed_in');
+    const r = await fetch(`${CLOUD_API}/v1/players`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` }, body: '{}',
+    });
+    if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'create_player_failed'); }
+    return r.json();
+  },
+
+  async linkPlayer(pid) {
+    // Set the active player and upload current local progress
+    const oldKey = activeKey;
+    activeKey = pid === '__local__' ? KEY : `${KEY}:${pid}`;
+    syncMeta.playerId = pid === '__local__' ? null : pid; saveSyncMeta();
+    if (pid !== '__local__') {
+      // Upload existing local save (merge will keep the best)
+      await syncNow();
+    } else {
+      // Load from local key
+      const saved = loadState(activeKey); if (saved) Object.assign(S, saved);
+      grant(); paintStars(); paintPet();
+    }
+  },
+
+  signOut() {
+    syncMeta = {}; saveSyncMeta();
+    activeKey = KEY;
+    const saved = loadState(KEY); if (saved) { Object.assign(S, fresh()); Object.assign(S, saved); }
+    grant(); paintStars(); paintPet(); go('club');
+  },
+
+  async deleteAccount() {
+    const tok = await this.getToken(); if (!tok) throw new Error('not_signed_in');
+    const r = await fetch(`${CLOUD_API}/v1/account`, { method: 'DELETE', headers: { Authorization: `Bearer ${tok}` } });
+    if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'delete_failed'); }
+    this.signOut();
+  },
+
+  async listClubs(pid) {
+    const tok = await this.getToken(); if (!tok) return [];
+    const r = await fetch(`${CLOUD_API}/v1/players/${pid}/clubs`, { headers: { Authorization: `Bearer ${tok}` } });
+    if (!r.ok) return []; const d = await r.json(); return d.clubs || [];
+  },
+
+  async createClub(name) {
+    const tok = await this.getToken(); if (!tok) throw new Error('not_signed_in');
+    const r = await fetch(`${CLOUD_API}/v1/clubs`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
+      body: JSON.stringify({ name }),
+    });
+    if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'create_failed'); }
+    return r.json();
+  },
+
+  async joinClub(code, pid) {
+    const tok = await this.getToken(); if (!tok) throw new Error('not_signed_in');
+    const r = await fetch(`${CLOUD_API}/v1/clubs/join`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
+      body: JSON.stringify({ inviteCode: code.toUpperCase(), playerId: pid }),
+    });
+    if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'join_failed'); }
+    return r.json();
+  },
+
+  async leaveClub(clubId, pid) {
+    const tok = await this.getToken(); if (!tok) throw new Error('not_signed_in');
+    const r = await fetch(`${CLOUD_API}/v1/clubs/${clubId}/members/${pid}`, {
+      method: 'DELETE', headers: { Authorization: `Bearer ${tok}` },
+    });
+    if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'leave_failed'); }
+  },
+
+  async leaderboard(clubId, pid, period) {
+    const tok = await this.getToken(); if (!tok) return null;
+    const r = await fetch(`${CLOUD_API}/v1/clubs/${clubId}/leaderboard?playerId=${pid}&period=${period}`, {
+      headers: { Authorization: `Bearer ${tok}` },
+    });
+    if (!r.ok) return null; return r.json();
+  },
+};
+
+/* ---------- parent gate: "What is 7 × 8?" ---------- */
+function parentGate(onPass) {
+  const q = [[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,6],[4,8]][Math.floor(Math.random()*8)];
+  const ans = String(q[0]*q[1]), entered = {v:''};
+  const disp = h('div', {class:'code-display', style:'letter-spacing:0;font-size:28px'}, '?');
+  const keypad = h('div', {class:'keypad'});
+  const updateDisp = () => { disp.textContent = entered.v || '?'; };
+  for (let i = 1; i <= 9; i++) keypad.append(h('button', {onclick: () => { if (entered.v.length < 3) { entered.v += i; updateDisp(); } }}, String(i)));
+  keypad.append(h('button', {onclick: () => { entered.v = entered.v.slice(0,-1); updateDisp(); }}, '⌫'));
+  keypad.append(h('button', {onclick: () => { if (entered.v.length < 3) { entered.v += '0'; updateDisp(); } }}, '0'));
+  keypad.append(h('button', {class:'btn ok', style:'border-radius:14px', onclick: () => {
+    if (entered.v === ans) { sheet.hidden = true; onPass(); }
+    else { disp.style.color = 'var(--no)'; entered.v = ''; setTimeout(() => { disp.style.color = ''; disp.textContent = '?'; }, 700); }
+  }}, '✓'));
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, `Ask a grown-up: ${q[0]} × ${q[1]} = ?`), h('div', {class:'hint'}, 'Type the answer to continue.'), disp, keypad);
+  sheet.hidden = false;
+}
+
 /* stars from before kittens existed all came from Draw to Add */
 if (S.solved && !Object.keys(S.area).length) S.area['pv-add'] = S.solved;
 
@@ -458,9 +723,10 @@ const ICONS = {
   guide:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
   litter:'<path d="M5.5 10.5V4l4.2 3.2h4.6L18.5 4v6.5"/><path d="M5.5 10.5C4.5 16 7.8 20 12 20s7.5-4 6.5-9.5"/><path d="M8.6 12.6q1.1-1.2 2.2 0M13.2 12.6q1.1-1.2 2.2 0"/><path d="M10 15.4q2 1.8 4 0"/>',
   games:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/>',
-  me:'<path d="M5 19V11M12 19V5M19 19v-5"/>'
+  me:'<path d="M5 19V11M12 19V5M19 19v-5"/>',
+  club:'<circle cx="9" cy="7" r="3"/><circle cx="15" cy="7" r="3"/><path d="M3 19c0-3.3 2.7-6 6-6h6c3.3 0 6 2.7 6 6"/>'
 };
-const TABS = [['learn','Learn'],['guide','Study'],['litter','Litter'],['games','Games'],['me','Progress']];
+const TABS = [['learn','Learn'],['guide','Study'],['litter','Litter'],['games','Games'],['me','Progress'],['club','Club']];
 const soon = (emoji, title) => h('div', {class:'card soon'}, h('div', {class:'big'}, emoji), h('h2', {}, title), h('div', {class:'hint'}, 'Coming soon!'));
 const VIEWS = {
   learn: v => {
@@ -471,6 +737,7 @@ const VIEWS = {
   guide: v => v.append(soon('📝', 'Study')),
   litter: v => litterView(v),
   games: v => v.append(soon('🎮', 'Games')),
+  club: v => { clubView(v); },
   me: v => {
     const next = REWARDS[S.got];
     v.append(
@@ -482,6 +749,281 @@ const VIEWS = {
       h('div', {class:'card'}, h('h2', {}, '🗓️ Every day'), h('div', {class:'hint'}, 'Open Meow Math each day for free kitten food. Every 3 days in a row: +2 treats! Right answers fill the water bowl.')));
   }
 };
+/* ---------- Club tab ---------- */
+const INVITE_ALPHA = /^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]+$/;
+function codeInput(onSubmit) {
+  const inp = h('input', {type:'text', maxlength:'6', autocapitalize:'characters', autocorrect:'off', spellcheck:false, placeholder:'XXXXXX', 'aria-label':'6-letter invite code', style:'width:100%;min-height:54px;border-radius:16px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:800 32px var(--fd);text-align:center;padding:0 12px;letter-spacing:.2em;text-transform:uppercase;margin:10px 0;box-sizing:border-box'});
+  inp.addEventListener('input', () => { inp.value = inp.value.toUpperCase().replace(/[^ABCDEFGHJKMNPQRSTUVWXYZ23456789]/g,'').slice(0,6); });
+  const submit = h('button', {class:'btn ok', onclick: async () => {
+    const v = inp.value.trim().toUpperCase();
+    if (v.length !== 6 || !INVITE_ALPHA.test(v)) { inp.style.borderColor = 'var(--no)'; return; }
+    inp.style.borderColor = ''; await onSubmit(v);
+  }}, 'Join ›');
+  return h('div', {}, inp, submit);
+}
+function lbRow(r, isSelf) {
+  const rank = r.rank <= 10 ? `${r.rank}.` : (r.rank ? `${r.rank}.` : '…');
+  const avatar = h('span', {style:'width:34px;height:34px;display:inline-block;flex:none', html:catSVG({coat:r.coat||0, wear:r.wear||[]})});
+  const badges = h('span', {class:'bd'}, r.streak ? `🔥${r.streak} ` : '', r.kittens ? `🐱${r.kittens}` : '');
+  return h('div', {class:'lb-row' + (isSelf ? ' me' : '')},
+    h('span', {class:'rnk'}, rank),
+    avatar,
+    h('div', {class:'nm'}, r.displayName || '…', h('br'), badges),
+    h('span', {class:'sc'}, `⭐${r.stars}`));
+}
+
+async function loadLeaderboard(v, clubId, period) {
+  const pid = syncMeta.playerId; if (!pid) return;
+  v.replaceChildren(h('div', {class:'hint', style:'text-align:center;padding:20px'}, '⏳ Loading…'));
+  const data = await CLOUD.leaderboard(clubId, pid, period);
+  if (!data) { v.replaceChildren(h('div', {class:'hint', style:'text-align:center;padding:20px'}, 'Could not load. Check connection.')); return; }
+  const rows = data.rows || [], ownRow = data.ownRow;
+  const lb = h('div', {class:'lb'});
+  if (!rows.length) lb.append(h('div', {class:'hint', style:'padding:16px;text-align:center'}, '🌟 No scores yet this week!'));
+  rows.forEach(r => lb.append(lbRow(r, r.playerId === pid)));
+  if (ownRow && ownRow.rank > 10) {
+    lb.append(h('div', {class:'lb-pin'}, lbRow(ownRow, true), h('div', {class:'hint', style:'text-align:center;margin-top:4px'}, 'Keep going! 💪')));
+  }
+  v.replaceChildren(lb);
+}
+
+async function clubView(v) {
+  if (!CLOUD_ACTIVE) {
+    v.append(h('div', {class:'card'}, h('h2', {}, '🐾 Club'), h('div', {class:'hint'}, 'Cloud features coming soon!')));
+    return;
+  }
+  if (!CLOUD.signedIn) {
+    v.append(h('div', {class:'card', style:'text-align:center'}, h('div', {style:'font-size:52px;margin-bottom:6px'}, '🐾'), h('h2', {}, 'Play with friends!'), h('div', {class:'hint'}, 'Ask a grown-up to sign in so your kittens can play with friends.'), h('div', {class:'hint', style:'margin-top:8px;font-size:13px'}, '🔒 Only a made-up name and your kitten show to friends. Ask a grown-up to sign in. Contact: bradley.papke@gmail.com'), h('div', {style:'height:12px'}), h('button', {class:'btn', onclick: () => parentGate(() => showSignIn())}, 'Sign in')));
+    return;
+  }
+
+  // Signed in: pick a player or use current
+  const pid = syncMeta.playerId;
+
+  // Fetch clubs
+  v.append(h('div', {class:'hint', style:'text-align:center;padding:16px'}, '⏳ Loading…'));
+  let clubs;
+  try { clubs = await CLOUD.listClubs(pid); } catch (e) { clubs = []; }
+  v.replaceChildren();
+
+  if (!clubs.length) {
+    // No clubs yet
+    const codeI = codeInput(async (code) => {
+      try { await CLOUD.joinClub(code, pid); go('club'); toast('🎉 Joined!'); }
+      catch (e) { toast(e.message === 'invalid_code' ? '❌ Code not found' : '❌ ' + (e.message || 'Error')); }
+    });
+    v.append(
+      h('div', {class:'card'}, h('h2', {}, '🏠 Join a club'), h('div', {class:'hint'}, 'Ask a friend for their 6-letter code.'), codeI),
+      h('div', {class:'card'}, h('h2', {}, '🌟 Make a club'), h('div', {class:'hint'}, 'Create a club and invite friends! Ask a grown-up.'), h('button', {class:'btn', style:'margin-top:8px', onclick: () => parentGate(() => showCreateClub(pid))}, 'Make a club')),
+      signOutCard());
+    return;
+  }
+
+  // Show first club's leaderboard (most apps show just one)
+  const club = clubs[0];
+  const lbArea = h('div');
+  let curPeriod = 'week';
+  loadLeaderboard(lbArea, club.clubId, curPeriod);
+
+  const refresh = async () => { loadLeaderboard(lbArea, club.clubId, curPeriod); };
+  const toggle = h('div', {class:'toggle-row'},
+    h('button', {class:'on', onclick: function() { curPeriod='week'; this.className='on'; this.nextSibling.className=''; loadLeaderboard(lbArea, club.clubId, 'week'); }}, 'This week'),
+    h('button', {onclick: function() { curPeriod='all'; this.className='on'; this.previousSibling.className=''; loadLeaderboard(lbArea, club.clubId, 'all'); }}, 'All time'));
+
+  v.append(
+    h('div', {class:'card'},
+      h('div', {style:'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px'},
+        h('h2', {style:'margin:0'}, `🐾 ${club.name}`),
+        h('button', {class:'btn ghost', onclick: refresh}, '↻')),
+      toggle,
+      lbArea,
+      club.inviteCode ? h('div', {style:'margin-top:12px'}, h('div', {class:'hint'}, 'Invite code (share with friends):'), h('div', {class:'code-display', style:'font-size:28px;letter-spacing:.25em'}, club.inviteCode)) : null),
+    clubs.length > 1 ? h('div', {class:'hint', style:'text-align:center'}, `${clubs.length} clubs — tap to switch`) : null,
+    h('div', {class:'card'}, h('button', {class:'btn ghost', onclick: () => parentGate(() => showLeaveClub(club.clubId, pid))}, '🚪 Leave club'), h('div', {style:'height:6px'}), h('button', {class:'btn ghost', onclick: () => parentGate(() => showJoinClub(pid))}, '➕ Join another club')),
+    signOutCard());
+}
+
+function signOutCard() {
+  return h('div', {class:'card'}, h('button', {class:'btn ghost', onclick: () => parentGate(() => { CLOUD.signOut(); go('club'); })}, 'Sign out'), h('div', {style:'height:6px'}), h('button', {class:'btn ghost', style:'color:var(--no)', onclick: () => parentGate(() => showDeleteAccount())}, 'Delete account'));
+}
+
+function showSignIn() {
+  const emailI = h('input', {type:'email', placeholder:'Parent email', 'aria-label':'Email', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 18px var(--fb);text-align:center;padding:0 12px;margin-bottom:8px;box-sizing:border-box', autocomplete:'email'});
+  const passI = h('input', {type:'password', placeholder:'Password (10+ chars)', 'aria-label':'Password', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 18px var(--fb);text-align:center;padding:0 12px;margin-bottom:8px;box-sizing:border-box', autocomplete:'current-password'});
+  const msg = h('div', {class:'hint', style:'color:var(--no);min-height:20px'});
+  const signInBtn = h('button', {class:'btn ok', onclick: async () => {
+    msg.textContent = '';
+    try {
+      await CLOUD.signIn(emailI.value.trim(), passI.value);
+      // Show "Who's playing?" after sign-in
+      showWhoIsPlaying();
+    } catch (e) {
+      msg.textContent = e.code === 'UserNotConfirmedException' ? 'Check your email for a confirmation code.' : (e.message || 'Sign-in failed');
+    }
+  }}, 'Sign in');
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '🔑 Sign in'), emailI, passI, msg, signInBtn,
+    h('div', {style:'height:8px'}),
+    h('button', {class:'btn ghost', style:'width:100%', onclick: () => showSignUp()}, 'Create account'),
+    h('button', {class:'btn ghost', style:'width:100%;margin-top:4px', onclick: () => showForgot()}, 'Forgot password?'),
+    h('button', {class:'btn ghost', style:'width:100%;margin-top:4px', onclick: () => { sheet.hidden = true; }}, 'Cancel'));
+  sheet.hidden = false;
+}
+
+function showSignUp() {
+  const emailI = h('input', {type:'email', placeholder:'Parent email', 'aria-label':'Email', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 18px var(--fb);text-align:center;padding:0 12px;margin-bottom:8px;box-sizing:border-box', autocomplete:'email'});
+  const passI = h('input', {type:'password', placeholder:'Password (10+ chars)', 'aria-label':'Password', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 18px var(--fb);text-align:center;padding:0 12px;margin-bottom:8px;box-sizing:border-box', autocomplete:'new-password'});
+  const msg = h('div', {class:'hint', style:'color:var(--no);min-height:20px'});
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '📝 Create account'), emailI, passI, msg,
+    h('button', {class:'btn ok', onclick: async () => {
+      msg.textContent = '';
+      try {
+        await CLOUD.signUp(emailI.value.trim(), passI.value);
+        showConfirm(emailI.value.trim());
+      } catch (e) { msg.textContent = e.message || 'Sign-up failed'; }
+    }}, 'Sign up'),
+    h('div', {style:'height:8px'}),
+    h('button', {class:'btn ghost', style:'width:100%', onclick: () => showSignIn()}, '← Back to sign in'));
+  sheet.hidden = false;
+}
+
+function showConfirm(email) {
+  const codeI = h('input', {type:'text', inputmode:'numeric', placeholder:'6-digit code', 'aria-label':'Confirmation code', maxlength:'6', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:800 24px var(--fd);text-align:center;padding:0 12px;margin-bottom:8px;letter-spacing:.2em;box-sizing:border-box'});
+  const msg = h('div', {class:'hint', style:'color:var(--no);min-height:20px'});
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '📧 Check your email'), h('div', {class:'hint'}, `Enter the code sent to ${email}`), codeI, msg,
+    h('button', {class:'btn ok', onclick: async () => {
+      msg.textContent = '';
+      try {
+        await CLOUD.confirmSignUp(email, codeI.value.trim());
+        showSignIn();
+      } catch (e) { msg.textContent = e.message || 'Invalid code'; }
+    }}, 'Confirm'),
+    h('div', {style:'height:8px'}),
+    h('button', {class:'btn ghost', style:'width:100%', onclick: () => showSignIn()}, '← Back to sign in'));
+  sheet.hidden = false;
+}
+
+function showForgot() {
+  const emailI = h('input', {type:'email', placeholder:'Parent email', 'aria-label':'Email', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 18px var(--fb);text-align:center;padding:0 12px;margin-bottom:8px;box-sizing:border-box', autocomplete:'email'});
+  const msg = h('div', {class:'hint', style:'color:var(--no);min-height:20px'});
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '🔑 Reset password'), h('div', {class:'hint'}, 'Enter your email to get a reset code.'), emailI, msg,
+    h('button', {class:'btn ok', onclick: async () => {
+      msg.textContent = '';
+      try {
+        await CLOUD.forgotPassword(emailI.value.trim());
+        showResetConfirm(emailI.value.trim());
+      } catch (e) { msg.textContent = e.message || 'Error'; }
+    }}, 'Send code'),
+    h('button', {class:'btn ghost', style:'width:100%;margin-top:8px', onclick: () => showSignIn()}, '← Back to sign in'));
+  sheet.hidden = false;
+}
+
+function showResetConfirm(email) {
+  const codeI = h('input', {type:'text', inputmode:'numeric', placeholder:'6-digit code', 'aria-label':'Code', maxlength:'6', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:800 24px var(--fd);text-align:center;padding:0 12px;margin-bottom:8px;letter-spacing:.2em;box-sizing:border-box'});
+  const passI = h('input', {type:'password', placeholder:'New password (10+ chars)', 'aria-label':'New password', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 18px var(--fb);text-align:center;padding:0 12px;margin-bottom:8px;box-sizing:border-box', autocomplete:'new-password'});
+  const msg = h('div', {class:'hint', style:'color:var(--no);min-height:20px'});
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '🔑 Set new password'), codeI, passI, msg,
+    h('button', {class:'btn ok', onclick: async () => {
+      msg.textContent = '';
+      try {
+        await CLOUD.confirmForgotPassword(email, codeI.value.trim(), passI.value);
+        showSignIn(); toast('Password updated!');
+      } catch (e) { msg.textContent = e.message || 'Error'; }
+    }}, 'Set password'));
+  sheet.hidden = false;
+}
+
+async function showWhoIsPlaying() {
+  sheet.hidden = true;
+  const players = await CLOUD.listPlayers();
+  if (!players.length) {
+    // First time: create a player and link it
+    const newP = await CLOUD.createPlayer();
+    await CLOUD.linkPlayer(newP.playerId);
+    activeKey = `${KEY}:${newP.playerId}`;
+    // Upload existing local progress
+    await syncNow();
+    toast(`Welcome, ${newP.displayName}!`);
+    go('club'); return;
+  }
+  const kids = h('div', {style:'display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px'});
+  players.forEach(p => {
+    const btn = h('button', {style:'background:var(--surf);border:2px solid var(--line);border-radius:18px;padding:10px 14px;text-align:center;min-width:80px', onclick: async () => {
+      sheet.hidden = true;
+      syncMeta.playerId = p.playerId; saveSyncMeta();
+      activeKey = `${KEY}:${p.playerId}`;
+      // Load this player's local save if any, then sync
+      const saved = loadState(activeKey);
+      if (saved) Object.assign(S, fresh(), saved);
+      await syncNow();
+      grant(); paintStars(); paintPet(); go('club');
+    }});
+    btn.append(h('div', {style:'width:48px;height:48px;margin:0 auto', html:catSVG({coat:p.coat||0, wear:p.wear||[]})}), h('div', {style:'font:700 13px var(--fb);margin-top:4px'}, p.displayName));
+    kids.append(btn);
+  });
+  kids.append(h('button', {style:'background:var(--soft);border:2px dashed var(--line);border-radius:18px;padding:10px 14px;min-width:80px', onclick: async () => {
+    sheet.hidden = true;
+    const newP = await CLOUD.createPlayer();
+    await CLOUD.linkPlayer(newP.playerId);
+    toast(`Welcome, ${newP.displayName}!`);
+    go('club');
+  }}, h('div', {style:'font-size:30px'}, '➕'), h('div', {style:'font:700 13px var(--fb);margin-top:4px'}, 'New player')));
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '🐱 Who\'s playing?'), h('div', {class:'hint'}, 'Tap your kitten!'), kids);
+  sheet.hidden = false;
+}
+
+function showCreateClub(pid) {
+  const nameI = h('input', {type:'text', maxlength:'24', placeholder:'Club name (e.g. The Kittens)', 'aria-label':'Club name', style:'width:100%;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 18px var(--fb);text-align:center;padding:0 12px;margin-bottom:8px;box-sizing:border-box', autocomplete:'off', autocapitalize:'words'});
+  const msg = h('div', {class:'hint', style:'color:var(--no);min-height:20px'});
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '🌟 Make a club'), h('div', {class:'hint'}, 'Club name is visible to members. Keep it family-friendly!'), nameI, msg,
+    h('button', {class:'btn ok', onclick: async () => {
+      msg.textContent = '';
+      const name = nameI.value.trim();
+      if (!name || name.length < 2) { msg.textContent = 'Name too short'; return; }
+      try {
+        await CLOUD.createClub(name);
+        sheet.hidden = true; go('club'); toast('🎉 Club created!');
+      } catch (e) {
+        msg.textContent = e.message === 'name_not_allowed' ? 'That name is not allowed' : e.message === 'max_clubs' ? 'You have too many clubs (max 5)' : (e.message || 'Error');
+      }
+    }}, 'Create'),
+    h('button', {class:'btn ghost', style:'width:100%;margin-top:8px', onclick: () => { sheet.hidden = true; }}, 'Cancel'));
+  sheet.hidden = false;
+}
+
+function showJoinClub(pid) {
+  const ci = codeInput(async (code) => {
+    try { await CLOUD.joinClub(code, pid); sheet.hidden = true; go('club'); toast('🎉 Joined!'); }
+    catch (e) { toast(e.message === 'invalid_code' ? '❌ Code not found' : '❌ ' + (e.message||'Error')); }
+  });
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '🏠 Join a club'), h('div', {class:'hint'}, 'Enter the 6-letter invite code.'), ci,
+    h('button', {class:'btn ghost', style:'width:100%;margin-top:8px', onclick: () => { sheet.hidden = true; }}, 'Cancel'));
+  sheet.hidden = false;
+}
+
+function showLeaveClub(clubId, pid) {
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, 'Leave club?'), h('div', {class:'hint'}, 'You can re-join later with the invite code.'),
+    h('div', {style:'height:12px'}),
+    h('button', {class:'btn', style:'background:var(--no);color:#fff', onclick: async () => {
+      try { await CLOUD.leaveClub(clubId, pid); sheet.hidden = true; go('club'); toast('Left club'); }
+      catch (e) { toast('Error: ' + (e.message || 'failed')); sheet.hidden = true; }
+    }}, 'Leave'),
+    h('div', {style:'height:8px'}),
+    h('button', {class:'btn ghost', style:'width:100%', onclick: () => { sheet.hidden = true; }}, 'Cancel'));
+  sheet.hidden = false;
+}
+
+function showDeleteAccount() {
+  sheetBox.replaceChildren(h('h2', {id:'sheetT'}, '⚠️ Delete account?'), h('div', {class:'hint'}, 'This permanently deletes the account, all players and progress. This cannot be undone.'),
+    h('div', {style:'height:12px'}),
+    h('button', {class:'btn', style:'background:var(--no);color:#fff', onclick: async () => {
+      try { await CLOUD.deleteAccount(); sheet.hidden = true; toast('Account deleted'); }
+      catch (e) { toast('Error: ' + (e.message || 'failed')); sheet.hidden = true; }
+    }}, 'Delete everything'),
+    h('div', {style:'height:8px'}),
+    h('button', {class:'btn ghost', style:'width:100%', onclick: () => { sheet.hidden = true; }}, 'Cancel'));
+  sheet.hidden = false;
+}
+
 function go(t){
   if (!VIEWS[t]) t = 'learn';
   if (cleanup){ cleanup(); cleanup = null; }
@@ -494,7 +1036,13 @@ TABS.forEach(([k, l]) => $('#nav').append(h('button', {'data-t':k, onclick:() =>
 S.cats.forEach((c, i) => { if (!c.name) queue.push({type:'name', i, first:i === 0}); });
 grant();
 paintStars(); paintPet(); go(S.tab);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) dayTick(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { dayTick(); if (CLOUD.signedIn) syncNow(); } });
+// Restore signed-in state: load the per-player key if one was active
+if (CLOUD_ACTIVE && syncMeta.playerId) {
+  activeKey = `${KEY}:${syncMeta.playerId}`;
+  const saved = loadState(activeKey); if (saved) Object.assign(S, fresh(), saved);
+  CLOUD.refresh().then(() => syncNow()).catch(() => {});
+}
 if (window.__TEST__) window.__T = {S:() => S, digits, makeProblem, marks, go, award, grant, dayTick, REWARDS, cost, catSVG, queue};
 })();
 </script>

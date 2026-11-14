@@ -1,13 +1,13 @@
 {
   "name": "Meow Math",
   "short_name": "Meow Math",
-  "description": "2nd-grade math practice with kittens: draw to add/subtract, earn cats, cloud save and friend clubs",
+  "description": "2nd grade · Math",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FEF0F7",
-  "theme_color": "#FEF0F7",
+  "background_color": "#EDF2EE",
+  "theme_color": "#FFFFFF",
   "icons": [
     {
       "src": "icon-192.png",

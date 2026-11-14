@@ -191,6 +191,39 @@ nav button{font-size:10px}
 .cell.sum{min-height:60px;border-style:dashed;opacity:0;transition:opacity .4s}
 .cell.sum.in{opacity:1}
 .carry-badge{font:800 11px var(--fd);color:var(--gold);text-align:center;min-height:14px;line-height:1.3}
+/* skill categories */
+.skill-cat{font:700 12px var(--fb);color:var(--chrome-mut);text-transform:uppercase;letter-spacing:.08em;margin:8px 4px 2px}
+/* skip counting */
+.sc-seq{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px 0}
+.sc-box{width:68px;height:60px;border:3px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center;font:800 26px/1 var(--fd);background:var(--soft);color:var(--ink)}
+.sc-box.blank{background:var(--cell);cursor:pointer}
+.sc-box.blank.sel{border-color:var(--pink);background:var(--pinkt)}
+.sc-box.sc-right{border-color:var(--ok);background:var(--okt);color:var(--ok)}
+.sc-box.sc-fix{border-color:var(--no);color:var(--no)}
+.sc-entry{font:800 48px/1.3 var(--fd);text-align:center;border-bottom:3px solid var(--line);margin:0 0 8px;padding:4px;min-height:64px}
+/* number sense */
+.ns-trees{display:flex;gap:12px;justify-content:center;margin:14px 0;align-items:flex-start}
+.ns-tree{flex:1;max-width:160px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.ns-root{width:100%;min-height:56px;border:3px solid var(--line);border-radius:18px;background:var(--soft);display:flex;align-items:center;justify-content:center;font:800 30px/1 var(--fd);cursor:pointer;transition:border-color .25s,background .25s;user-select:none}
+.ns-root.ready{border-color:var(--gold);background:var(--pinkt)}
+.ns-root.open{border-color:var(--ok);background:var(--okt);cursor:default}
+.ns-branches{display:flex;gap:6px;width:100%}
+.ns-leaf{flex:1;min-height:52px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 22px/1 var(--fd);cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.ns-leaf.sel{border-color:var(--pink);background:var(--pinkt)}
+.ns-leaf.joined{border-color:var(--ok);background:var(--okt);opacity:.5;cursor:default}
+.ns-leaf.zero{opacity:.25;cursor:default;font-size:16px}
+.ns-leaf.conflict{border-color:var(--gold);animation:pulse 1s ease-in-out infinite alternate}
+.ns-sums-row{display:flex;gap:8px;justify-content:center;margin:8px 0}
+.ns-sum-box{width:68px;min-height:52px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 22px/1 var(--fd);opacity:0;transition:opacity .4s}
+.ns-sum-box.show{opacity:1;border-color:var(--ok)}
+.ns-total-reveal{text-align:center;font:800 40px/1 var(--fd);color:var(--ok);opacity:0;transition:opacity .4s;margin:4px 0}
+.ns-total-reveal.show{opacity:1;animation:numPop .4s ease-out}
+/* number sense — subtraction variant */
+.ns-sub-min{text-align:center;font:800 50px/1 var(--fd);flex:1;padding-top:6px}
+.ns-steps{display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.ns-step{display:flex;align-items:center;justify-content:center;gap:8px;font:700 22px/1.3 var(--fd);opacity:0;transition:opacity .4s}
+.ns-step.show{opacity:1}
+.ns-step b{color:var(--no)}.ns-step i{font-style:normal;color:var(--ok);font-weight:800}
 </style>
 <style>
 /* hosted, full-screen app extras */
@@ -229,7 +262,7 @@ const CLOUD_CLIENT = __CFG__.clientId || null;
 
 /* ---------- saved progress (on this phone only) ---------- */
 const KEY = 'kitty-math-g2-v1';
-const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
+const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, pvs:{i:0, cur:null}, skip:{i:0, cur:null}, ns:{i:0, cur:null}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
 let S = fresh();
 // Initial state loaded from KEY; if signed in, overwritten below after syncMeta is restored
 try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') S = Object.assign(fresh(), s); } catch (e) {}
@@ -504,7 +537,7 @@ const REWARDS = [
 ];
 const cost = i => CAT_AT + STEP * (i + 1);   /* 25, 40, 55 ... */
 const has = id => REWARDS.findIndex(r => r.id === id) < S.got;
-const AREAS = {'pv-add':'Draw to Add'};
+const AREAS = {'pv-add':'Draw to Add','pv-sub':'Draw to Subtract','skip-10':'Count by 10s','ns-add':'Break Apart'};
 const COATS = [
   {n:'gray', b:'#A7AFC4', s:'#7F89A3'}, {n:'orange', b:'#F5A95F', s:'#D9823A'}, {n:'white', b:'#FBF8F2', s:'#DCD3C3'},
   {n:'black', b:'#3F3F50', s:'#2A2A36'}, {n:'cream', b:'#F3DDB8', s:'#D8B988'}, {n:'blue', b:'#93A9D0', s:'#6F86B0'}
@@ -695,6 +728,22 @@ function marks(have, want, checked){
 }
 const ERASER = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 21l11-11a3 3 0 014 0l5 5a3 3 0 010 4l-7 7H11z" fill="var(--pink)"/><path d="M6 21l5-5 9 9-1 1h-8z" fill="var(--surf)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 21l11-11a3 3 0 014 0l5 5a3 3 0 010 4l-7 7H11z" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 28h16" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"/></svg>';
 
+/* pre-drawn marks with X overlays for subtraction */
+function subMarks(total, crossed){
+  if(total<=0) return '';
+  const W=80, gap=7.2, gg=5, used=total<=1?0:(total-1)*gap+(total>5?gg:0), x0=(W-used)/2;
+  let s='';
+  for(let j=0;j<total;j++){
+    const x=(x0+j*gap+(j>=5?gg:0)).toFixed(1), t=(j%3-1)*.8, out=j<crossed;
+    s+=`<line x1="${x}" y1="10" x2="${(+x+t).toFixed(1)}" y2="52" stroke="${out?'var(--mut)':'var(--pencil)'}" stroke-width="3.6" stroke-linecap="round"${out?' opacity=".35"':''}/>`;
+    if(out){
+      s+=`<line x1="${(+x-7).toFixed(1)}" y1="8" x2="${(+x+7).toFixed(1)}" y2="54" stroke="var(--no)" stroke-width="2.6" stroke-linecap="round"/>`;
+      s+=`<line x1="${(+x+7).toFixed(1)}" y1="8" x2="${(+x-7).toFixed(1)}" y2="54" stroke="var(--no)" stroke-width="2.6" stroke-linecap="round"/>`;
+    }
+  }
+  return `<svg viewBox="0 0 80 62" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${s}</svg>`;
+}
+
 /* ---------- problems: the worksheet's two first, then new ones like them ---------- */
 const WORKSHEET = [[39, 136], [126, 66]];
 function makeProblem(){
@@ -868,7 +917,320 @@ function drawToAdd(v){
   paint();
 }
 
-const SKILLS = [{id:'pv-add', n:'Draw to Add', sub:'Hundreds, tens, and ones', e:'🧮', open:drawToAdd}];
+/* ---------- Skill 2: Draw to Subtract ---------- */
+const SUB_WORKSHEET=[[143,21],[165,32]];
+function makeSubProblem(){
+  for(;;){
+    const a=100+rnd(1,89),b=rnd(11,89);
+    const ad=digits(a),bd=digits(b);
+    if(ad[2]<bd[2]||ad[1]<bd[1])continue;
+    if(a%10===0||b%10===0)continue;
+    if(S.pvs.cur&&S.pvs.cur[0]===a)continue;
+    return [a,b];
+  }
+}
+const nextSubProblem=()=>{const i=S.pvs.i||0;S.pvs.cur=i<SUB_WORKSHEET.length?SUB_WORKSHEET[i].slice():makeSubProblem();S.pvs.i=i+1;save();};
+
+function drawToSubtract(v){
+  if(!S.pvs.cur) nextSubProblem();
+  const [a,b]=S.pvs.cur, startD=digits(a), subD=digits(b);
+  const answer=a-b, ansD=digits(answer);
+  let crossed=[0,0,0], checked=false;
+  const cells=[], banner=h('div',{class:'banner',hidden:true});
+  const paint=()=>cells.forEach((c,k)=>{
+    c.innerHTML=subMarks(startD[k],crossed[k]);
+    c.classList.toggle('right',checked&&crossed[k]===subD[k]);
+    c.classList.toggle('fix',checked&&crossed[k]!==subD[k]);
+  });
+  const ansBox=h('div',{class:'ans-box','aria-live':'polite'});
+  const ansSlots=ansD.map((_,i)=>{const slot=h('div',{class:'ans-slot'});ansBox.append(h('div',{class:'ans-dig'},slot,h('div',{class:'ans-lab'},PLACES[i][0])));return slot;});
+  const revealAns=()=>ansD.forEach((d,i)=>setTimeout(()=>{const sp=h('span',{class:'ans-num pop'},String(d));ansSlots[i].replaceChildren(sp);ansSlots[i].classList.add('on');},300+i*160));
+  const grid=h('div',{class:'pv',role:'group','aria-label':'Place value chart'},h('div'),PLACES.map(p=>h('div',{class:'hd'},p[0])),h('div'));
+  grid.append(h('div',{class:'num'},String(a)));
+  PLACES.forEach((p,k)=>{
+    let pressTimer=null,didLong=false;
+    const c=h('button',{class:'cell '+p[1]});
+    c.addEventListener('click',()=>{
+      if(checked||didLong){didLong=false;return;}
+      if(crossed[k]>=startD[k]){c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');toast('No more marks here!');return;}
+      crossed[k]++;paint();
+    });
+    c.addEventListener('pointerdown',()=>{
+      didLong=false;pressTimer=setTimeout(()=>{
+        if(checked||crossed[k]<=0)return;
+        crossed[k]--;paint();didLong=true;toast('Uncrossed 1');
+      },400);
+    });
+    c.addEventListener('pointerup',()=>clearTimeout(pressTimer));
+    c.addEventListener('pointerleave',()=>clearTimeout(pressTimer));
+    cells.push(c);grid.append(c);
+  });
+  grid.append(h('div'));
+  grid.append(h('div',{class:'pv-sep'}));
+  grid.append(h('div',{class:'num',style:'font-size:22px'},String(b)));
+  PLACES.forEach((p,k)=>grid.append(h('div',{class:'cell '+p[1]+' sum',style:'min-height:52px;border-style:dashed;display:grid;place-items:center;font:800 24px var(--fd);color:var(--mut)'},subD[k]>0?String(subD[k]):'')));
+  grid.append(h('div'));
+  const act=h('button',{class:'btn',onclick:()=>{
+    if(!checked){
+      checked=true;
+      const right=crossed.every((x,k)=>x===subD[k]);
+      banner.hidden=false;banner.className='banner '+(right?'good':'bad');
+      paint();revealAns();
+      if(right){banner.textContent='⭐ You got it!';act.textContent='OK ▶';act.className='btn ok';award('pv-sub');}
+      else{banner.textContent='Almost! Check the red boxes.';act.textContent='OK ▶';act.className='btn ok';}
+    }else{nextSubProblem();render();}
+  }},'Check');
+  const render=()=>{v.replaceChildren();drawToSubtract(v);};
+  v.append(
+    h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
+    h('div',{class:'card'},
+      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap marks to cross them out. Hold to un-cross.'),
+      h('div',{class:'eq'},String(a),' ',h('span',{},'−'),' ',String(b)),
+      grid,
+      h('div',{class:'legend','aria-hidden':'true'},h('span',{},'Tap: cross out 1'),h('span',{},'Hold: un-cross 1')),
+      ansBox,banner,
+      h('div',{class:'acts'},act)));
+  paint();
+}
+
+/* ---------- Skill 3: Skip Count by 10s ---------- */
+const SKIP_WORKSHEET=[[85,1],[52,1]];
+function makeSkipProblem(){const dir=Math.random()<.7?1:-1;return [dir>0?rnd(10,89):rnd(70,189),dir];}
+const nextSkipProblem=()=>{const i=S.skip.i||0;S.skip.cur=i<SKIP_WORKSHEET.length?SKIP_WORKSHEET[i].slice():makeSkipProblem();S.skip.i=i+1;save();};
+
+function skipCountBy10(v){
+  if(!S.skip.cur) nextSkipProblem();
+  const [start,dir]=S.skip.cur;
+  const seq=Array.from({length:7},(_,i)=>start+i*10*dir);
+  const SHOW=[0,1,6];
+  let typed=Array(7).fill(null); SHOW.forEach(i=>{typed[i]=seq[i];});
+  let selIdx=null, entryVal='', checked=false;
+  const banner=h('div',{class:'banner',hidden:true});
+  const boxes=[];
+  const entry=h('div',{class:'sc-entry'},' ');
+  const keypadWrap=h('div',{hidden:true});
+  const renderBoxes=()=>{
+    boxes.forEach((bx,i)=>{
+      const isFixed=SHOW.includes(i);
+      if(isFixed){bx.textContent=String(seq[i]);bx.className='sc-box';return;}
+      const val=typed[i];
+      if(checked){bx.textContent=val!==null?String(val):'?';bx.className='sc-box '+(val===seq[i]?'sc-right':'sc-fix');}
+      else{bx.textContent=val!==null?String(val):'?';bx.className='sc-box blank'+(i===selIdx?' sel':'');}
+    });
+    entry.textContent=entryVal||' ';
+  };
+  seq.forEach((_,i)=>{
+    const bx=h('div',{class:'sc-box'});
+    if(!SHOW.includes(i)) bx.addEventListener('click',()=>{if(checked)return;selIdx=i;entryVal=typed[i]!==null?String(typed[i]):'';keypadWrap.hidden=false;renderBoxes();});
+    boxes.push(bx);
+  });
+  const kp=h('div',{class:'keypad'});
+  for(let n=1;n<=9;n++) kp.append(h('button',{onclick:()=>{if(entryVal.length<4)entryVal+=n;renderBoxes();}},String(n)));
+  kp.append(h('button',{onclick:()=>{entryVal=entryVal.slice(0,-1);renderBoxes();}},'⌫'));
+  kp.append(h('button',{onclick:()=>{if(entryVal.length<4)entryVal+='0';renderBoxes();}},'0'));
+  kp.append(h('button',{class:'btn ok',style:'border-radius:14px',onclick:()=>{
+    if(selIdx===null)return;
+    typed[selIdx]=entryVal===''?null:parseInt(entryVal,10);
+    entryVal='';selIdx=null;keypadWrap.hidden=true;renderBoxes();
+  }},'✓'));
+  keypadWrap.append(entry,kp);
+  const act=h('button',{class:'btn',onclick:()=>{
+    if(!checked){
+      checked=true;
+      const right=seq.every((_,i)=>typed[i]===seq[i]);
+      banner.hidden=false;banner.className='banner '+(right?'good':'bad');
+      banner.textContent=right?'⭐ You got it!':'Almost! Red boxes need fixing.';
+      act.textContent='OK ▶';act.className='btn ok';keypadWrap.hidden=true;renderBoxes();
+      if(right)award('skip-10');
+    }else{nextSkipProblem();render();}
+  }},'Check');
+  const render=()=>{v.replaceChildren();skipCountBy10(v);};
+  v.append(
+    h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
+    h('div',{class:'card'},
+      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Count by 10s. Tap a ? box, type the number, then ✓.'),
+      h('div',{class:'sc-seq'},...boxes),
+      h('div',{class:'hint',style:'text-align:center;font-size:12px'},dir>0?'Counting up by 10':'Counting down by 10'),
+      keypadWrap,banner,
+      h('div',{class:'acts'},act)));
+  renderBoxes();
+}
+
+/* ---------- Skill 4: Number Sense (addition + subtraction branching) ---------- */
+const NS_WORKSHEET=[{op:'+',a:136,b:53},{op:'+',a:142,b:47},{op:'-',a:143,b:56},{op:'-',a:165,b:48}];
+function makeNSProblem(){
+  if(Math.random()<.5){
+    for(;;){
+      const a=100+rnd(1,89),b=rnd(11,89);
+      if(a%10===0||b%10===0)continue;
+      const ad=digits(a),bd=digits(b);
+      if(ad[1]+bd[1]>=10||ad[2]+bd[2]>=10)continue;
+      return {op:'+',a,b};
+    }
+  } else {
+    for(;;){
+      const a=100+rnd(1,89),b=rnd(11,89);
+      if(a%10===0||b%10===0)continue;
+      if(a-b<20)continue;
+      return {op:'-',a,b};
+    }
+  }
+}
+const nextNSProblem=()=>{const i=S.ns.i||0;S.ns.cur=i<NS_WORKSHEET.length?NS_WORKSHEET[i]:makeNSProblem();S.ns.i=i+1;save();};
+
+function numberSense(v){
+  if(!S.ns.cur) nextNSProblem();
+  const {op,a,b}=S.ns.cur;
+  if(op==='+') nsAdd(v,a,b); else nsSub(v,a,b);
+}
+
+function nsAdd(v,a,b){
+  const ad=digits(a),bd=digits(b);
+  const vals=[ad,bd];
+  const sums=PLACES.map((_,k)=>ad[k]+bd[k]);
+  let rootExp=[false,false], sel=null, joined=[false,false,false];
+  const banner=h('div',{class:'banner',hidden:true});
+  const sumBoxes=PLACES.map((_,k)=>h('div',{class:'ns-sum-box'}));
+  const totalEl=h('div',{class:'ns-total-reveal'});
+  const leafEls=[[],[]];
+  const act=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSProblem();render();}},' ');
+
+  const checkDone=()=>{
+    if(!joined.every(Boolean))return;
+    sumBoxes.forEach((sb,k)=>{if(sums[k]>0){sb.textContent=String(sums[k]);sb.classList.add('show');}});
+    setTimeout(()=>{totalEl.textContent='= '+(a+b);totalEl.classList.add('show');},500);
+    setTimeout(()=>{banner.hidden=false;banner.className='banner good';banner.textContent='⭐ You got it!';award('ns-add');act.hidden=false;act.textContent='OK ▶';act.className='btn ok';},950);
+  };
+
+  const tryJoin=(tree,k)=>{
+    if(joined[k])return;
+    if(!rootExp[0]||!rootExp[1]){toast('Tap both numbers first!');return;}
+    const otherVal=vals[1-tree][k];
+    if(otherVal===0){
+      joined[k]=true;[0,1].forEach(t=>{leafEls[t][k].classList.add('joined');leafEls[t][k].classList.remove('sel');});
+      sel=null;checkDone();return;
+    }
+    if(sel===null){sel={tree,k};leafEls[tree][k].classList.add('sel');return;}
+    if(sel.tree===tree){leafEls[sel.tree][sel.k].classList.remove('sel');sel={tree,k};leafEls[tree][k].classList.add('sel');return;}
+    if(sel.k!==k){toast('Pair 100s↔100s, 10s↔10s, 1s↔1s');leafEls[sel.tree][sel.k].classList.remove('sel');sel=null;return;}
+    leafEls[sel.tree][sel.k].classList.remove('sel');leafEls[sel.tree][sel.k].classList.add('joined');
+    leafEls[tree][k].classList.add('joined');joined[k]=true;sel=null;checkDone();
+  };
+
+  const treeEls=[0,1].map(t=>{
+    const v2=vals[t];
+    const branchDiv=h('div',{class:'ns-branches',hidden:true});
+    PLACES.forEach((p,k)=>{
+      const isZero=v2[k]===0;
+      const lf=h('div',{class:'ns-leaf'+(isZero?' zero':'')},String(v2[k]));
+      if(!isZero) lf.addEventListener('click',()=>{if(rootExp[t])tryJoin(t,k);});
+      leafEls[t].push(lf);branchDiv.append(lf);
+    });
+    const root=h('div',{class:'ns-root'},[a,b][t].toString());
+    root.addEventListener('click',()=>{
+      if(rootExp[t])return;
+      rootExp[t]=true;root.classList.add('open');branchDiv.hidden=false;
+      if(rootExp[1-t]){
+        PLACES.forEach((_,k)=>{
+          if(!joined[k]&&(vals[0][k]===0||vals[1][k]===0)){
+            joined[k]=true;[0,1].forEach(tr=>leafEls[tr][k].classList.add('joined'));
+          }
+        });
+        checkDone();
+      }
+    });
+    return h('div',{class:'ns-tree'},root,branchDiv);
+  });
+
+  const sumLabels=h('div',{class:'ns-sums-row',...{style:'gap:8px'}},
+    ...PLACES.map((_,k)=>h('div',{style:'width:68px;text-align:center'},sumBoxes[k],h('div',{class:'ans-lab'},PLACES[k][0]))));
+
+  const render=()=>{v.replaceChildren();numberSense(v);};
+  v.append(
+    h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
+    h('div',{class:'card'},
+      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap each number to break it apart, then pair up matching places.'),
+      h('div',{class:'eq'},String(a),' ',h('span',{},'+'),' ',String(b),' = ?'),
+      h('div',{class:'ns-trees'},...treeEls),
+      sumLabels,totalEl,banner,
+      h('div',{class:'acts'},act)));
+}
+
+function nsSub(v,a,b){
+  const aOnes=a%10, bTens=Math.floor(b/10)*10, bOnes=b%10;
+  const needSplit=bOnes>aOnes;
+  let subPhase=0; // 0=whole 1=ready 2=expanded 3=ones-split
+  const banner=h('div',{class:'banner',hidden:true});
+
+  // Subtraction steps:
+  // If needSplit: a - bTens → a-bTens-aOnes → answer
+  // Else:         a - bTens → answer
+  const steps=needSplit
+    ?[{sub:bTens,res:a-bTens},{sub:aOnes,res:a-bTens-aOnes},{sub:bOnes-aOnes,res:a-b}]
+    :[{sub:bTens,res:a-bTens},{sub:bOnes,res:a-b}];
+
+  const stepEls=steps.map(s=>h('div',{class:'ns-step'},
+    h('b',{},'− '+s.sub),' = ',h('i',{},String(s.res))));
+
+  const bRootEl=h('div',{class:'ns-root'},String(b));
+  const bBranchEl=h('div',{class:'ns-branches',hidden:true});
+  const bTensLeaf=h('div',{class:'ns-leaf'},String(bTens));
+  const bOnesLeaf=h('div',{class:'ns-leaf'},String(bOnes));
+  bBranchEl.append(bTensLeaf);
+  if(bOnes>0) bBranchEl.append(bOnesLeaf);
+
+  const act=h('button',{class:'btn',disabled:true,onclick:()=>{
+    if(!banner.hidden){nextNSProblem();render();return;}
+    act.disabled=true;
+    stepEls.forEach((_,i)=>setTimeout(()=>stepEls[i].classList.add('show'),i*700));
+    setTimeout(()=>{
+      banner.hidden=false;banner.className='banner good';banner.textContent='⭐ You got it!';
+      award('ns-add');act.disabled=false;act.textContent='OK ▶';act.className='btn ok';
+    },steps.length*700+200);
+  }},'Subtract');
+
+  bRootEl.addEventListener('click',()=>{
+    if(subPhase===0){
+      subPhase=1;bRootEl.classList.add('ready');
+      toast(needSplit?'Tap again to break '+b+' into tens and ones':'Tap again to break apart');
+    } else if(subPhase===1){
+      subPhase=2;bRootEl.classList.remove('ready');bRootEl.classList.add('open');bBranchEl.hidden=false;
+      if(needSplit){
+        bOnesLeaf.classList.add('conflict');
+        toast(bOnes+' > '+aOnes+' — tap the '+bOnes+' to split it');
+      } else {act.disabled=false;}
+    }
+  });
+
+  if(needSplit){
+    bOnesLeaf.addEventListener('click',()=>{
+      if(subPhase!==2)return;
+      subPhase=3;
+      bOnesLeaf.classList.remove('conflict');bOnesLeaf.hidden=true;
+      bBranchEl.append(
+        h('div',{class:'ns-leaf'},String(aOnes)),
+        h('div',{class:'ns-leaf'},String(bOnes-aOnes)));
+      act.disabled=false;
+    });
+  }
+
+  const render=()=>{v.replaceChildren();numberSense(v);};
+  const minEl=h('div',{class:'ns-sub-min'},String(a));
+  const opEl=h('div',{style:'font:800 36px var(--fd);line-height:56px;padding-top:6px'},'−');
+  v.append(
+    h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
+    h('div',{class:'card'},
+      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap the number you\'re subtracting to break it apart.'),
+      h('div',{class:'eq'},String(a),' ',h('span',{},'−'),' ',String(b),' = ?'),
+      h('div',{class:'ns-trees'},minEl,opEl,h('div',{class:'ns-tree'},bRootEl,bBranchEl)),
+      h('div',{class:'ns-steps'},...stepEls),
+      banner,h('div',{class:'acts'},act)));
+}
+
+const SKILLS = [{id:'pv-add', cat:'🗺️ Places',        n:'Draw to Add',       sub:'Hundreds, tens, and ones', e:'➕', open:drawToAdd},
+                {id:'pv-sub', cat:'🗺️ Places',        n:'Draw to Subtract',  sub:'Cross out on the chart',   e:'➖', open:drawToSubtract},
+                {id:'skip-10',cat:'🔢 Skip Counting', n:'Count by 10s',      sub:'Ten, twenty, thirty…',     e:'🔢', open:skipCountBy10},
+                {id:'ns-add', cat:'🧩 Number Sense',  n:'Break Apart',       sub:'Expand and simplify',      e:'🌳', open:numberSense}];
 
 /* ---------- tabs ---------- */
 const ICONS = {
@@ -884,8 +1246,12 @@ const soon = (emoji, title) => h('div', {class:'card soon'}, h('div', {class:'bi
 const VIEWS = {
   learn: v => {
     v.append(h('div', {class:'hint', style:'color:var(--chrome-mut);margin:0 4px 10px'}, 'Pick a skill'));
-    SKILLS.forEach((s, i) => v.append(h('button', {class:'skill', onclick:() => { v.replaceChildren(); s.open(v); window.scrollTo(0, 0); }},
-      h('span', {class:'ico'}, s.e), h('span', {}, h('b', {}, (i + 1) + ' · ' + s.n), h('span', {class:'hint'}, s.sub)), h('span', {class:'go'}, '›'))));
+    let lastCat='';
+    SKILLS.forEach(s => {
+      if(s.cat && s.cat!==lastCat){v.append(h('div',{class:'skill-cat'},s.cat));lastCat=s.cat;}
+      v.append(h('button', {class:'skill', onclick:() => { v.replaceChildren(); s.open(v); window.scrollTo(0, 0); }},
+        h('span', {class:'ico'}, s.e), h('span', {}, h('b', {}, s.n), h('span', {class:'hint'}, s.sub)), h('span', {class:'go'}, '›')));
+    });
   },
   guide: v => v.append(soon('📝', 'Study')),
   litter: v => litterView(v),

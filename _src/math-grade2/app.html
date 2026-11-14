@@ -161,6 +161,8 @@ nav button.on svg{stroke:var(--pink)}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;margin-left:4px;vertical-align:middle}
 .sync-dot.pending{background:var(--gold);animation:pulse 1s ease-in-out infinite alternate}
 @keyframes pulse{to{opacity:.4}}
+.hint-pulse{animation:hintGlow .55s ease-in-out infinite alternate!important}
+@keyframes hintGlow{to{box-shadow:0 0 0 7px rgba(244,143,191,.65);transform:scale(1.08)}}
 nav button{font-size:10px}
 /* answer blank → digit reveal */
 .ans-box{display:flex;justify-content:center;gap:10px;margin:12px 0 0;padding:8px 0}
@@ -259,10 +261,15 @@ const CLOUD_CLIENT = __CFG__.clientId || null;
 
 /* ---------- saved progress (on this phone only) ---------- */
 const KEY = 'kitty-math-g2-v1';
-const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, pvs:{i:0, cur:null}, skip:{i:0, cur:null}, ns:{i:0, cur:null}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
+const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, pvs:{i:0, cur:null}, skip:{i:0, cur:null}, ns:{i:0, cur:null}, nss:{i:0, cur:null}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
 let S = fresh();
 // Initial state loaded from KEY; if signed in, overwritten below after syncMeta is restored
 try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') S = Object.assign(fresh(), s); } catch (e) {}
+let _hintTimer=null;
+const _ch=()=>{clearTimeout(_hintTimer);document.querySelectorAll('.hint-pulse').forEach(e=>e.classList.remove('hint-pulse'));};
+const _sh=()=>{_hintTimer=setTimeout(()=>document.querySelectorAll('.hint-target').forEach(e=>e.classList.add('hint-pulse')),2000);};
+function markNext(...els){_ch();document.querySelectorAll('.hint-target').forEach(e=>e.classList.remove('hint-target'));els.forEach(e=>e&&e.classList.add('hint-target'));_sh();}
+document.addEventListener('click',()=>{_ch();_sh();},true);
 /* ---------- per-player localStorage key ---------- */
 let activeKey = KEY; // updated after sign-in
 const loadState = k => {
@@ -534,7 +541,7 @@ const REWARDS = [
 ];
 const cost = i => CAT_AT + STEP * (i + 1);   /* 25, 40, 55 ... */
 const has = id => REWARDS.findIndex(r => r.id === id) < S.got;
-const AREAS = {'pv-add':'Draw to Add','pv-sub':'Draw to Subtract','skip-10':'Count by 10s','ns-add':'Break Apart'};
+const AREAS = {'pv-add':'Draw to Add','pv-sub':'Draw to Subtract','skip-10':'Count by 10s','ns-add':'Break Apart','ns-sub':'Combine'};
 const COATS = [
   {n:'gray', b:'#A7AFC4', s:'#7F89A3'}, {n:'orange', b:'#F5A95F', s:'#D9823A'}, {n:'white', b:'#FBF8F2', s:'#DCD3C3'},
   {n:'black', b:'#3F3F50', s:'#2A2A36'}, {n:'cream', b:'#F3DDB8', s:'#D8B988'}, {n:'blue', b:'#93A9D0', s:'#6F86B0'}
@@ -1051,33 +1058,17 @@ function skipCountBy10(v){
       choicesRow,celebWrap,progEl));
 }
 
-/* ---------- Skill 4: Number Sense (addition + subtraction branching) ---------- */
-const NS_WORKSHEET=[{op:'+',a:136,b:53},{op:'+',a:142,b:47},{op:'-',a:143,b:56},{op:'-',a:165,b:48}];
-function makeNSProblem(){
-  if(Math.random()<.5){
-    for(;;){
-      const a=100+rnd(1,89),b=rnd(11,89);
-      if(a%10===0||b%10===0)continue;
-      const ad=digits(a),bd=digits(b);
-      if(ad[1]+bd[1]>=10||ad[2]+bd[2]>=10)continue;
-      return {op:'+',a,b};
-    }
-  } else {
-    for(;;){
-      const a=100+rnd(1,89),b=rnd(11,89);
-      if(a%10===0||b%10===0)continue;
-      if(a-b<20)continue;
-      return {op:'-',a,b};
-    }
-  }
-}
-const nextNSProblem=()=>{const i=S.ns.i||0;S.ns.cur=i<NS_WORKSHEET.length?NS_WORKSHEET[i]:makeNSProblem();S.ns.i=i+1;save();};
+/* ---------- Skill 4: Number Sense (addition) ---------- */
+const NS_ADD_WORKSHEET=[{a:136,b:53},{a:142,b:47}];
+function makeNSAddProblem(){for(;;){const a=100+rnd(1,89),b=rnd(11,89);if(a%10===0||b%10===0)continue;const ad=digits(a),bd=digits(b);if(ad[1]+bd[1]>=10||ad[2]+bd[2]>=10)continue;return {a,b};}}
+const nextNSAddProblem=()=>{const i=S.ns.i||0;S.ns.cur=i<NS_ADD_WORKSHEET.length?NS_ADD_WORKSHEET[i]:makeNSAddProblem();S.ns.i=i+1;save();};
+function numberSenseAdd(v){if(!S.ns.cur)nextNSAddProblem();const {a,b}=S.ns.cur;nsAdd(v,a,b);}
 
-function numberSense(v){
-  if(!S.ns.cur) nextNSProblem();
-  const {op,a,b}=S.ns.cur;
-  if(op==='+') nsAdd(v,a,b); else nsSub(v,a,b);
-}
+/* ---------- Skill 5: Number Sense (subtraction / combine) ---------- */
+const NS_SUB_WORKSHEET=[{a:143,b:56},{a:165,b:48}];
+function makeNSSubProblem(){for(;;){const a=100+rnd(1,89),b=rnd(11,89);if(a%10===0||b%10===0)continue;if(a-b<20)continue;return {a,b};}}
+const nextNSSubProblem=()=>{const i=(S.nss||{}).i||0;if(!S.nss)S.nss={i:0,cur:null};S.nss.cur=i<NS_SUB_WORKSHEET.length?NS_SUB_WORKSHEET[i]:makeNSSubProblem();S.nss.i=i+1;save();};
+function numberSenseSub(v){if(!S.nss||!S.nss.cur)nextNSSubProblem();const {a,b}=S.nss.cur;nsSub(v,a,b);}
 
 function nsAdd(v,a,b){
   const aH=Math.floor(a/100)*100, aT=Math.floor(a/10)%10*10, aO=a%10;
@@ -1112,7 +1103,7 @@ function nsAdd(v,a,b){
   };
 
   const banner=h('div',{class:'banner',hidden:true});
-  const actBtn=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSProblem();v.replaceChildren();numberSense(v);}});
+  const actBtn=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSAddProblem();v.replaceChildren();numberSenseAdd(v);}});
 
   const leafAH=h('div',{class:'ns2-leaf auto'},String(aH));
   const leafAT=h('div',{class:'ns2-leaf tens'},String(aT));
@@ -1132,12 +1123,10 @@ function nsAdd(v,a,b){
 
   const finalEl=h('div',{class:'ns2-final',style:'opacity:0'},String(a+b));
 
-  // Component tiles: hundreds pass-through + combined tens + combined ones
   const compDefs=[];
   if(aH>0) compDefs.push({key:'h',val:aH,color:'#999'});
   compDefs.push({key:'t',val:tensSumVal,color:'var(--ok)'});
   compDefs.push({key:'o',val:onesSumVal,color:'#a855f7'});
-
   const compEls={};
   let compDone=0;
 
@@ -1147,11 +1136,14 @@ function nsAdd(v,a,b){
     el.addEventListener('click',()=>{
       if(el.dataset.tapped||el.style.cursor==='default') return;
       el.dataset.tapped='1';
+      el.classList.remove('hint-target');
       el.classList.add('sel');
       el.style.transition='transform .2s ease-out';
       el.style.transform='scale(1.25)';
       el.style.cursor='default';
       compDone++;
+      const rem=compTileEls.filter(t=>!t.dataset.tapped);
+      if(rem.length>0) markNext(...rem);
       if(compDone===compDefs.length){
         setTimeout(()=>{
           finalEl.style.opacity='1';
@@ -1176,32 +1168,40 @@ function nsAdd(v,a,b){
     if(!sumATapped||!sumBTapped) return;
     compRow.style.transition='opacity .4s 0.1s';
     compRow.style.opacity='1';
-    compTileEls.forEach(el=>{ el.style.cursor='pointer'; });
+    compTileEls.forEach(el=>{el.style.cursor='pointer';});
     drawLine(tensSumEl,compEls['t'],'var(--ok)',0.1);
     drawLine(onesSumEl,compEls['o'],'#a855f7',0.2);
+    setTimeout(()=>markNext(...compTileEls),250);
   };
 
   tensSumEl.addEventListener('click',()=>{
     if(tensState!=='done'||sumATapped) return;
-    sumATapped=true;tensSumEl.classList.add('tapped');tryShowFinal();
+    sumATapped=true; tensSumEl.classList.add('tapped'); tensSumEl.classList.remove('hint-target');
+    if(!sumBTapped) markNext(onesSumEl);
+    tryShowFinal();
   });
   onesSumEl.addEventListener('click',()=>{
     if(onesState!=='done'||sumBTapped) return;
-    sumBTapped=true;onesSumEl.classList.add('tapped');tryShowFinal();
+    sumBTapped=true; onesSumEl.classList.add('tapped'); onesSumEl.classList.remove('hint-target');
+    if(!sumATapped) markNext(tensSumEl);
+    tryShowFinal();
   });
 
   const tryShowSums=()=>{
     if(tensState==='done'&&!tensSumShown){
       tensSumShown=true;
-      tensSumEl.style.opacity='1';tensSumEl.classList.add('ready');
+      tensSumEl.style.opacity='1'; tensSumEl.classList.add('ready');
       drawLine(leafAT,tensSumEl,'var(--ok)');
       drawLine(leafBT,tensSumEl,'var(--ok)',0.12);
     }
     if(onesState==='done'&&!onesSumShown){
       onesSumShown=true;
-      onesSumEl.style.opacity='1';onesSumEl.classList.add('ready');
+      onesSumEl.style.opacity='1'; onesSumEl.classList.add('ready');
       drawLine(leafAO,onesSumEl,'#a855f7');
       drawLine(leafBO,onesSumEl,'#a855f7',0.12);
+    }
+    if(tensState==='done'&&onesState==='done'){
+      setTimeout(()=>markNext(tensSumEl,onesSumEl),200);
     }
   };
 
@@ -1214,13 +1214,19 @@ function nsAdd(v,a,b){
     const lf=getLeaf(place,fromA);
     if(curS==='none'){
       setS(fromA?'selA':'selB'); lf.classList.add('sel');
+      markNext(getLeaf(place,!fromA));
     } else if(curS===(fromA?'selA':'selB')){
       setS('none'); lf.classList.remove('sel');
+      markNext(getLeaf(place,true),getLeaf(place,false));
     } else {
       setS('done');
       getLeaf(place,true).classList.remove('sel'); getLeaf(place,false).classList.remove('sel');
       getLeaf(place,true).classList.add('paired'); getLeaf(place,false).classList.add('paired');
       tryShowSums();
+      const otherDone=place==='tens'?onesState==='done':tensState==='done';
+      if(!otherDone){
+        markNext(...(place==='tens'?[leafAO,leafBO]:[leafAT,leafBT]));
+      }
     }
   };
 
@@ -1231,15 +1237,17 @@ function nsAdd(v,a,b){
 
   rootA.addEventListener('click',()=>{
     if(rootAOpen) return;
-    rootAOpen=true; rootA.classList.add('open');
-    leavesA.style.transition='opacity .3s';leavesA.style.opacity='1';
+    rootAOpen=true; rootA.classList.add('open'); rootA.classList.remove('hint-target');
+    leavesA.style.transition='opacity .3s'; leavesA.style.opacity='1';
     drawLine(rootA,leafAH,'#ccc'); drawLine(rootA,leafAT,'#ccc',0.08); drawLine(rootA,leafAO,'#ccc',0.16);
+    if(rootBOpen) markNext(leafAT,leafBT); else markNext(rootB);
   });
   rootB.addEventListener('click',()=>{
     if(rootBOpen) return;
-    rootBOpen=true; rootB.classList.add('open');
-    leavesB.style.transition='opacity .3s';leavesB.style.opacity='1';
+    rootBOpen=true; rootB.classList.add('open'); rootB.classList.remove('hint-target');
+    leavesB.style.transition='opacity .3s'; leavesB.style.opacity='1';
     drawLine(rootB,leafBT,'#ccc'); drawLine(rootB,leafBO,'#ccc',0.08);
+    if(rootAOpen) markNext(leafAT,leafBT); else markNext(rootA);
   });
 
   const row1=h('div',{class:'ns2-row'},rootA,h('span',{class:'ns2-op'},'+'),rootB);
@@ -1248,6 +1256,8 @@ function nsAdd(v,a,b){
   const row4=h('div',{class:'ns2-row'},compRow);
   const row5=h('div',{class:'ns2-row'},finalEl);
   wrap.append(row1,row2,row3,row4,row5);
+
+  markNext(rootA,rootB);
 
   v.append(
     h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
@@ -1264,65 +1274,64 @@ function nsSub(v,a,b){
   const remOnes=needSplit?bOnes-aOnes:bOnes;
   const parts=needSplit?[bTens,matchOnes,remOnes]:[bTens,bOnes];
 
-  let runningTotal=a, attackIdx=0, phase=0;
+  let runningTotal=a, phase=0;
   const banner=h('div',{class:'banner',hidden:true});
-  const actBtn=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSProblem();v.replaceChildren();numberSense(v);}});
+  const actBtn=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSSubProblem();v.replaceChildren();numberSenseSub(v);}});
   const container=h('div',{style:'position:relative'});
 
-  /* ---- Phase 4: boss battle ---- */
+  /* ---- Boss battle area ---- */
   const bossEl=h('div',{class:'ns-boss-num'},String(a));
-  const attackRow=h('div',{class:'ns-attack-row'});
-  const attackEls=parts.map((n,i)=>{
-    const el=h('div',{class:'ns-attacker '+(i===0?'ready':'waiting')},String(n));
-    el.addEventListener('click',()=>doAttack(i,el));
-    return el;
-  });
-  attackRow.append(...attackEls);
+  const attackEls=parts.map((n)=>h('div',{class:'ns-attacker waiting'},String(n)));
+  const attackRow=h('div',{class:'ns-attack-row'},...attackEls);
+  const subBtn=h('button',{class:'btn ok',style:'margin-top:16px;min-height:52px;font-size:20px'},'Subtract! ➖');
   const bossArea=h('div',{hidden:true,style:'text-align:center;padding:8px 0'},
-    h('div',{style:'font:400 14px var(--fb);color:var(--mut);margin-bottom:8px'},'Click each number to subtract it!'),
-    bossEl,attackRow);
+    h('div',{style:'font:400 14px var(--fb);color:var(--mut);margin-bottom:8px'},'Tap Subtract to attack!'),
+    bossEl,attackRow,subBtn);
 
-  /* ---- Flying animation ---- */
-  const doAttack=(i,el)=>{
-    if(i!==attackIdx) return;
-    el.style.visibility='hidden';
-    const cr=container.getBoundingClientRect();
-    const eR=el.getBoundingClientRect(), bR=bossEl.getBoundingClientRect();
-    const sx=eR.left-cr.left+eR.width/2, sy=eR.top-cr.top+eR.height/2;
-    const tx=bR.left-cr.left+bR.width/2, ty=bR.top-cr.top+bR.height/2;
-    const flyer=h('div',{style:'position:absolute;left:'+sx+'px;top:'+sy+'px;transform:translate(-50%,-50%);font:800 22px var(--fd);background:var(--cell);border:3px solid var(--ok);border-radius:10px;padding:4px 10px;pointer-events:none;z-index:10'},String(parts[i]));
-    container.append(flyer);
-    const t0=performance.now(),dur=360;
-    const tick=t=>{
-      const p=Math.min(1,(t-t0)/dur),ep=p<.5?2*p*p:-1+(4-2*p)*p;
-      flyer.style.left=(sx+(tx-sx)*ep)+'px';
-      flyer.style.top=(sy+(ty-sy)*ep)+'px';
-      if(p<1) requestAnimationFrame(tick);
-      else{ flyer.remove(); impact(parts[i]); }
+  /* ---- Auto-fire attack sequence ---- */
+  subBtn.addEventListener('click',()=>{
+    subBtn.classList.remove('hint-target','hint-pulse');
+    subBtn.disabled=true; subBtn.style.opacity='0.5';
+    attackEls.forEach(el=>{ el.style.opacity='1'; });
+    const fireSeq=(i)=>{
+      if(i>=parts.length){
+        setTimeout(()=>{
+          banner.hidden=false; banner.className='banner good'; banner.textContent='⭐ You got it!';
+          actBtn.hidden=false; actBtn.textContent='OK ▶'; actBtn.className='btn ok';
+          award('ns-sub');
+        },500);
+        return;
+      }
+      const el=attackEls[i];
+      el.style.opacity='0.3';
+      const cr=container.getBoundingClientRect();
+      const eR=el.getBoundingClientRect(), bR=bossEl.getBoundingClientRect();
+      const sx=eR.left-cr.left+eR.width/2, sy=eR.top-cr.top+eR.height/2;
+      const tx=bR.left-cr.left+bR.width/2, ty=bR.top-cr.top+bR.height/2;
+      const flyer=h('div',{style:'position:absolute;left:'+sx+'px;top:'+sy+'px;transform:translate(-50%,-50%);font:800 22px var(--fd);background:var(--cell);border:3px solid var(--ok);border-radius:10px;padding:4px 10px;pointer-events:none;z-index:10'},String(parts[i]));
+      container.append(flyer);
+      const t0=performance.now(), dur=700;
+      const tick=t=>{
+        const p=Math.min(1,(t-t0)/dur), ep=p<.5?2*p*p:-1+(4-2*p)*p;
+        flyer.style.left=(sx+(tx-sx)*ep)+'px';
+        flyer.style.top=(sy+(ty-sy)*ep)+'px';
+        if(p<1) requestAnimationFrame(tick);
+        else{
+          flyer.remove();
+          runningTotal-=parts[i];
+          const bRn=bossEl.getBoundingClientRect(), crN=container.getBoundingClientRect();
+          const hit=h('div',{class:'ns-hit-label',style:'left:'+(bRn.left-crN.left+bRn.width/2)+'px;top:'+(bRn.top-crN.top+10)+'px'},'-'+parts[i]);
+          container.append(hit);
+          setTimeout(()=>hit.remove(),1150);
+          bossEl.classList.remove('hurt'); void bossEl.offsetWidth; bossEl.classList.add('hurt');
+          setTimeout(()=>{ bossEl.textContent=String(runningTotal); },170);
+          setTimeout(()=>fireSeq(i+1),850);
+        }
+      };
+      requestAnimationFrame(tick);
     };
-    requestAnimationFrame(tick);
-  };
-
-  const impact=(amt)=>{
-    runningTotal-=amt;
-    const bR=bossEl.getBoundingClientRect(), cr=container.getBoundingClientRect();
-    const hit=h('div',{class:'ns-hit-label',style:'left:'+(bR.left-cr.left+bR.width/2)+'px;top:'+(bR.top-cr.top+10)+'px'},'-'+amt);
-    container.append(hit);
-    setTimeout(()=>hit.remove(),1150);
-    bossEl.classList.remove('hurt'); void bossEl.offsetWidth; bossEl.classList.add('hurt');
-    setTimeout(()=>{bossEl.textContent=String(runningTotal);},170);
-    attackIdx++;
-    if(attackIdx<attackEls.length){
-      attackEls[attackIdx].style.visibility='visible';
-      attackEls[attackIdx].className='ns-attacker ready';
-    } else {
-      setTimeout(()=>{
-        banner.hidden=false;banner.className='banner good';banner.textContent='⭐ You got it!';
-        actBtn.hidden=false;actBtn.textContent='OK ▶';actBtn.className='btn ok';
-        award('ns-add');
-      },650);
-    }
-  };
+    fireSeq(0);
+  });
 
   /* ---- Phases 0-3: expansion ---- */
   const aEl=h('div',{class:'ns2-root'},String(a));
@@ -1340,21 +1349,22 @@ function nsSub(v,a,b){
   if(bOnes>0) bPartsRow.append(bOnesEl);
 
   const goToBoss=()=>{
+    document.querySelectorAll('.hint-target').forEach(e=>e.classList.remove('hint-target'));
     expandArea.style.transition='opacity .4s';
     expandArea.style.opacity='0';
-    setTimeout(()=>{expandArea.hidden=true;bossArea.hidden=false;},420);
+    setTimeout(()=>{ expandArea.hidden=true; bossArea.hidden=false; markNext(subBtn); },420);
   };
 
   aEl.addEventListener('click',()=>{
     if(phase!==0) return;
-    phase=1; aEl.classList.add('open');
-    aOnesBadge.style.display='block';
-    dropLine.style.display='block';
+    phase=1; aEl.classList.add('open'); aEl.classList.remove('hint-target');
+    aOnesBadge.style.display='block'; dropLine.style.display='block';
+    markNext(bEl);
   });
 
   bEl.addEventListener('click',()=>{
     if(phase!==1) return;
-    phase=2; bEl.classList.add('open');
+    phase=2; bEl.classList.add('open'); bEl.classList.remove('hint-target');
     bPartsRow.style.display='flex';
     if(needSplit){
       bOnesEl.classList.add('blink');
@@ -1385,6 +1395,9 @@ function nsSub(v,a,b){
         bEl,bPartsRow)));
 
   container.append(expandArea,bossArea);
+
+  markNext(aEl);
+
   v.append(
     h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
     h('div',{class:'card'},
@@ -1396,7 +1409,8 @@ function nsSub(v,a,b){
 const SKILLS = [{id:'pv-add', cat:'🗺️ Places',        n:'Draw to Add',       sub:'Hundreds, tens, and ones', e:'➕', open:drawToAdd},
                 {id:'pv-sub', cat:'🗺️ Places',        n:'Draw to Subtract',  sub:'Cross out on the chart',   e:'➖', open:drawToSubtract},
                 {id:'skip-10',cat:'🔢 Skip Counting', n:'Count by 10s',      sub:'Ten, twenty, thirty…',     e:'🔢', open:skipCountBy10},
-                {id:'ns-add', cat:'🧩 Number Sense',  n:'Break Apart',       sub:'Expand and simplify',      e:'🌳', open:numberSense}];
+                {id:'ns-add', cat:'🧩 Number Sense',  n:'Break Apart',       sub:'Expand and simplify',      e:'🌳', open:numberSenseAdd},
+                {id:'ns-sub', cat:'🧩 Number Sense',  n:'Combine',           sub:'Boss battle subtraction',   e:'⚔️', open:numberSenseSub}];
 
 /* ---------- tabs ---------- */
 const ICONS = {
@@ -1415,8 +1429,13 @@ const VIEWS = {
     let lastCat='';
     SKILLS.forEach(s => {
       if(s.cat && s.cat!==lastCat){v.append(h('div',{class:'skill-cat'},s.cat));lastCat=s.cat;}
+      const catIdx=S.catAreas.indexOf(s.id);
+      const earnedCat=catIdx!==-1?S.cats[catIdx]:null;
+      const icoEl=earnedCat
+        ?h('span',{class:'ico',style:'overflow:hidden;padding:0'},h('span',{style:'width:62px;height:62px;display:block;overflow:hidden',html:catSVG(earnedCat)}))
+        :h('span',{class:'ico',style:'background:var(--soft);border:2px dashed var(--line)'},h('span',{style:'width:46px;height:46px;display:block',html:'<svg viewBox="0 0 48 48" fill="none" stroke="var(--mut)" stroke-dasharray="5 3" stroke-width="2.5" aria-hidden="true"><circle cx="24" cy="29" r="13"/><path d="M14 21L10 11L19 18"/><path d="M34 21L38 11L29 18"/><circle cx="20" cy="28" r="2.5" fill="var(--line)" stroke="none"/><circle cx="28" cy="28" r="2.5" fill="var(--line)" stroke="none"/><path d="M22 33q2 2 4 0" stroke-width="2"/></svg>'}));
       v.append(h('button', {class:'skill', onclick:() => { v.replaceChildren(); s.open(v); window.scrollTo(0, 0); }},
-        h('span', {class:'ico'}, s.e), h('span', {}, h('b', {}, s.n), h('span', {class:'hint'}, s.sub)), h('span', {class:'go'}, '›')));
+        icoEl, h('span', {}, h('b', {}, s.n), h('span', {class:'hint'}, s.sub)), h('span', {class:'go'}, '›')));
     });
   },
   guide: v => v.append(soon('📝', 'Study')),

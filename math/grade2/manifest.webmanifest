@@ -1,7 +1,7 @@
 {
-  "name": "Kitty Math",
-  "short_name": "Kitty Math",
-  "description": "Grade 2 math app: draw hundreds, tens, and ones on a place value chart to add.",
+  "name": "Meow Math",
+  "short_name": "Meow Math",
+  "description": "Grade 2 math app: draw hundreds, tens, and ones to add, and earn kittens and rewards.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

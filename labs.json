@@ -19,5 +19,12 @@
     "app_name": "Fraction Lab",
     "subtitle": "5th grade · Adding & subtracting fractions",
     "added": "2026-11-12"
+  },
+  {
+    "path": "math/grade2",
+    "class": "Math",
+    "app_name": "Kitty Math",
+    "subtitle": "2nd grade · Draw to add",
+    "added": "2026-11-14"
   }
 ]

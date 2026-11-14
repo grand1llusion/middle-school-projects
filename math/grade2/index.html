@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Grade 2 math app: draw hundreds, tens, and ones on a place value chart to add.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kitty Math">
+<meta name="theme-color" content="#24397A" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1B2858" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Kitty Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: a calm sapphire-blue room with soft star sparkles. A rounded blue header (name, star count, and a reserved spot for the helper cat), one white card at a time, big thumb-size buttons, five tabs at the bottom. Drawing marks look like pencil; red means "too many", green means "missing". */
+:root{
+  --bg:#3552A3; --bg2:#2A4389; --chrome:#24397A; --chrome-ink:#F3F6FF; --chrome-mut:#B9C6F0;
+  --surf:#FFFFFF; --soft:#EEF2FF; --cell:#F6F8FF; --line:#D5DDF7; --ink:#1D2752; --mut:#5C6896;
+  --pink:#F48FBF; --pinkt:#FDE6F1; --gold:#FFCF5A; --sky:#7FA6F5;
+  --h100:#E9E3FB; --h10:#FCE4EF; --h1:#E2F0FB;
+  --pencil:#2B3463; --ok:#1E9A55; --okt:#DDF5E7; --no:#D93A4A; --not:#FDE3E5; --shadow:rgba(14,24,62,.22);
+  --fd:'Fredoka',ui-rounded,system-ui,sans-serif; --fb:'Nunito',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#152049; --bg2:#0F183A; --chrome:#1B2858; --chrome-ink:#EEF2FF; --chrome-mut:#9FB0E3;
+  --surf:#1E2A5A; --soft:#26346B; --cell:#22305F; --line:#34447E; --ink:#EEF2FF; --mut:#A9B6E3;
+  --pink:#F49BC6; --pinkt:#4A2340; --gold:#FFD36B; --sky:#8FB2FA;
+  --h100:#2C2F6A; --h10:#3A2A55; --h1:#203F63;
+  --pencil:#E6EBFF; --ok:#5ED394; --okt:#173D2B; --no:#FF7A86; --not:#4A1F28; --shadow:rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#152049; --bg2:#0F183A; --chrome:#1B2858; --chrome-ink:#EEF2FF; --chrome-mut:#9FB0E3;
+  --surf:#1E2A5A; --soft:#26346B; --cell:#22305F; --line:#34447E; --ink:#EEF2FF; --mut:#A9B6E3;
+  --pink:#F49BC6; --pinkt:#4A2340; --gold:#FFD36B; --sky:#8FB2FA;
+  --h100:#2C2F6A; --h10:#3A2A55; --h1:#203F63;
+  --pencil:#E6EBFF; --ok:#5ED394; --okt:#173D2B; --no:#FF7A86; --not:#4A1F28; --shadow:rgba(0,0,0,.4); color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;color:var(--ink);font:700 17px/1.4 var(--fb);-webkit-tap-highlight-color:transparent;
+  background:radial-gradient(3px 3px at 12% 18%,rgba(255,255,255,.55),transparent 60%),radial-gradient(2px 2px at 78% 12%,rgba(255,255,255,.5),transparent 60%),radial-gradient(2.5px 2.5px at 88% 46%,rgba(255,255,255,.45),transparent 60%),radial-gradient(2px 2px at 22% 64%,rgba(255,255,255,.4),transparent 60%),radial-gradient(3px 3px at 60% 82%,rgba(255,255,255,.4),transparent 60%),linear-gradient(180deg,var(--bg),var(--bg2));background-attachment:fixed}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+.app{max-width:560px;margin:0 auto;padding:0 16px calc(96px + env(safe-area-inset-bottom,0px))}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;margin:0 -16px 14px;padding:10px 16px;display:flex;align-items:center;gap:10px;background:var(--chrome);color:var(--chrome-ink);border-radius:0 0 22px 22px;box-shadow:0 4px 14px var(--shadow)}
+.top .kick{font:700 12px var(--fb);letter-spacing:.08em;text-transform:uppercase;color:var(--chrome-mut)}
+.top h1{margin:0;font:700 27px/1 var(--fd);letter-spacing:.01em}
+.top h1 b{color:var(--pink);font-weight:700}
+.top .grow{flex:1;min-width:0}
+.stars{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12);font:700 20px var(--fd)}
+.stars i{font-style:normal}
+.pet{width:46px;height:46px;flex:none;border-radius:50%;border:2px dashed var(--chrome-mut);background:rgba(255,255,255,.08);display:grid;place-items:center;padding:0}
+.pet svg{width:34px;height:34px}
+
+/* cards and buttons */
+.card{background:var(--surf);border-radius:22px;padding:16px;box-shadow:0 6px 18px var(--shadow);margin-bottom:14px}
+h2{margin:0 0 4px;font:600 22px var(--fd)}
+.hint{color:var(--mut);font-weight:700;font-size:15px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:58px;border:0;border-radius:18px;background:var(--pink);color:#2A1030;font:600 22px var(--fd);box-shadow:0 4px 0 rgba(0,0,0,.14)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.14)}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.ghost{background:var(--soft);color:var(--ink);box-shadow:none;min-height:46px;font-size:18px;width:auto;padding:0 16px}
+.skill{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;background:var(--surf);border-radius:22px;padding:16px;box-shadow:0 6px 18px var(--shadow);margin-bottom:12px}
+.skill .ico{width:62px;height:62px;flex:none;border-radius:18px;background:var(--pinkt);display:grid;place-items:center;font-size:34px}
+.skill b{display:block;font:600 22px var(--fd)}
+.skill .go{margin-left:auto;font:700 26px var(--fd);color:var(--pink)}
+.soon{text-align:center;padding:28px 16px}
+.soon .big{font-size:56px;line-height:1.1}
+
+/* the place value chart */
+.eq{text-align:center;font:600 38px/1.1 var(--fd);margin:0 0 10px;letter-spacing:.02em}
+.eq span{color:var(--pink)}
+.pv{display:grid;grid-template-columns:58px repeat(3,1fr) 46px;gap:6px;align-items:stretch}
+.pv .hd{text-align:center;font:600 18px var(--fd);color:var(--mut);padding:2px 0}
+.pv .num{display:grid;place-items:center;font:600 22px var(--fd);border-radius:14px;background:var(--soft)}
+.cell{min-height:80px;border:2px solid var(--line);border-radius:14px;padding:4px 2px;display:grid;place-items:center}
+.cell.c100{background:var(--h100)}.cell.c10{background:var(--h10)}.cell.c1{background:var(--h1)}
+.cell:active{filter:brightness(.95)}
+.cell svg{width:100%;height:58px;display:block}
+.cell.right{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok) inset}
+.cell.fix{border-color:var(--no)}
+.erase{border:0;border-radius:14px;background:var(--soft);display:grid;place-items:center;padding:0}
+.erase svg{width:28px;height:28px}
+.legend{display:flex;justify-content:center;gap:16px;font-size:14px;color:var(--mut);margin-top:6px}
+.legend b{font-weight:800}
+.banner{margin:10px 0 0;padding:8px 10px;border-radius:16px;text-align:center;font:600 19px var(--fd)}
+.banner.good{background:var(--okt);color:var(--ok)}
+.banner.bad{background:var(--not);color:var(--no)}
+.acts{margin-top:10px}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pop{animation:pop .35s ease-out}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.shake,.pop{animation:none}}
+
+/* bottom tabs */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);background:var(--chrome);border-radius:22px 22px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 14px var(--shadow)}
+nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;border:0;background:none;border-radius:14px;font-size:11px;font-weight:800;color:var(--chrome-mut)}
+nav button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--chrome-ink);background:rgba(255,255,255,.12)}
+nav button.on svg{stroke:var(--pink)}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;background:var(--ink);color:var(--surf);padding:10px 16px;border-radius:14px;font-weight:800;font-size:15px;max-width:90vw;text-align:center;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+@media (max-width:360px){.eq{font-size:34px}.pv{grid-template-columns:50px repeat(3,1fr) 42px}}
+</style>
+<style>
+/* hosted, full-screen app extras */
+html{background:var(--bg)}
+button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.a2hs{position:fixed;left:12px;right:12px;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:15;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.35;box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:536px;margin-inline:auto}
+.a2hs svg{width:16px;height:16px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.a2hs button{flex:none;width:32px;height:32px;border:0;border-radius:50%;background:rgba(127,127,127,.3);color:inherit;font-size:15px}
+</style>
+</head>
+<body>
+
+
+<div class="app">
+  <header class="top">
+    <div class="grow"><div class="kick">Grade 2 · Math</div><h1>Kitty <b>Math</b></h1></div>
+    <div class="stars" aria-label="Stars"><i>⭐</i><span id="starN">0</span></div>
+    <button class="pet" id="petSlot" aria-label="Helper cat, coming soon"></button>
+  </header>
+  <main id="view"></main>
+</div>
+<nav id="nav" aria-label="Sections"></nav>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+/* ---------- saved progress (on this phone only) ---------- */
+const KEY = 'kitty-math-g2-v1';
+const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}});
+let S = fresh();
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') S = Object.assign(fresh(), s); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+/* ---------- tiny helpers ---------- */
+const $ = s => document.querySelector(s);
+function h(tag, at, ...kids){
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(at || {})){ if (v == null || v === false) continue; if (k === 'html') el.innerHTML = v; else if (k.startsWith('on')) el.addEventListener(k.slice(2), v); else el.setAttribute(k, v === true ? '' : v); }
+  kids.flat().filter(x => x != null && x !== false).forEach(k => el.append(k));
+  return el;
+}
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+let toastT; const toast = t => { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 1600); };
+const paintStars = () => { $('#starN').textContent = S.stars; };
+
+/* the helper cat's spot: a dashed outline until the pet system is added */
+const CAT_OUTLINE = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M9 33c-2-9 0-17 3-21l-1-8 7 5h4l7-5-1 8c3 4 5 12 3 21z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" opacity=".7"/><text x="20" y="28" font-size="12" font-weight="800" text-anchor="middle" fill="currentColor" opacity=".8">?</text></svg>';
+$('#petSlot').innerHTML = CAT_OUTLINE;
+$('#petSlot').addEventListener('click', () => go('me'));
+
+/* ---------- place value marks ---------- */
+const PLACES = [['100s','c100','hundreds'],['10s','c10','tens'],['1s','c1','ones']];
+const digits = n => [Math.floor(n / 100), Math.floor(n / 10) % 10, n % 10];
+/* draw `have` pencil marks; after checking, extra marks get a red X and missing marks are drawn in green */
+function marks(have, want, checked){
+  const shown = checked ? Math.max(have, want) : have, W = 80, gap = 7.2, gg = 5, used = shown ? (shown - 1) * gap + (shown > 5 ? gg : 0) : 0, x0 = (W - used) / 2;
+  let s = '';
+  for (let j = 0; j < shown; j++){
+    const x = (x0 + j * gap + (j >= 5 ? gg : 0)).toFixed(1), miss = checked && j >= have, extra = checked && j >= want && j < have;
+    const col = miss ? 'var(--ok)' : extra ? 'var(--no)' : 'var(--pencil)', tilt = (j % 3 - 1) * .8;
+    s += `<line class="${miss ? 'pop' : ''}" x1="${x}" y1="10" x2="${(+x + tilt).toFixed(1)}" y2="52" stroke="${col}" stroke-width="${miss ? 4.2 : 3.6}" stroke-linecap="round"${miss ? ' data-m="add"' : ''}${extra ? ' opacity=".55"' : ''}/>`;
+    if (extra) s += `<line x1="${(+x + 4).toFixed(1)}" y1="14" x2="${(+x - 4).toFixed(1)}" y2="48" stroke="var(--no)" stroke-width="3.4" stroke-linecap="round" data-m="cross"/>`;
+  }
+  return `<svg viewBox="0 0 80 62" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${s}</svg>`;
+}
+const ERASER = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 21l11-11a3 3 0 014 0l5 5a3 3 0 010 4l-7 7H11z" fill="var(--pink)"/><path d="M6 21l5-5 9 9-1 1h-8z" fill="var(--surf)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 21l11-11a3 3 0 014 0l5 5a3 3 0 010 4l-7 7H11z" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 28h16" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+/* ---------- problems: the worksheet's two first, then new ones like them ---------- */
+const WORKSHEET = [[39, 136], [126, 66]];
+function makeProblem(){
+  for (;;){
+    const big = 100 + rnd(1, 89), small = rnd(11, 89), carry = Math.random() < .8;
+    if (big % 10 === 0 || small % 10 === 0 || big + small > 199) continue;
+    if (carry !== (big % 10 + small % 10 >= 10)) continue;
+    if (S.pv.cur && S.pv.cur.includes(big)) continue;
+    return Math.random() < .5 ? [small, big] : [big, small];
+  }
+}
+const nextProblem = () => { const i = S.pv.i || 0; S.pv.cur = i < WORKSHEET.length ? WORKSHEET[i].slice() : makeProblem(); S.pv.i = i + 1; save(); };
+
+/* ---------- Learn · skill 1: draw on the place value chart ---------- */
+function drawToAdd(v){
+  if (!S.pv.cur) nextProblem();
+  const [a, b] = S.pv.cur, rows = [a, b], want = rows.map(digits);
+  let have = [[0, 0, 0], [0, 0, 0]], checked = false;
+  const cells = [[], []], banner = h('div', {class:'banner', hidden:true});
+  const label = (r, k) => `${rows[r]}, ${PLACES[k][2]}: ${have[r][k]} mark${have[r][k] === 1 ? '' : 's'}`;
+  const paint = () => cells.forEach((row, r) => row.forEach((c, k) => {
+    c.innerHTML = marks(have[r][k], want[r][k], checked); c.setAttribute('aria-label', label(r, k));
+    c.classList.toggle('right', checked && have[r][k] === want[r][k]); c.classList.toggle('fix', checked && have[r][k] !== want[r][k]);
+  }));
+  const grid = h('div', {class:'pv', role:'group', 'aria-label':'Place value chart'}, h('div'), PLACES.map(p => h('div', {class:'hd'}, p[0])), h('div'));
+  rows.forEach((n, r) => {
+    grid.append(h('div', {class:'num'}, String(n)));
+    PLACES.forEach((p, k) => {
+      const c = h('button', {class:'cell ' + p[1], onclick:() => {
+        if (checked) return;
+        if (have[r][k] >= 9){ c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake'); toast('9 is the most in one box!'); return; }
+        have[r][k]++; paint();
+      }});
+      cells[r].push(c); grid.append(c);
+    });
+    grid.append(h('button', {class:'erase', 'aria-label':'Erase the ' + n + ' row', html:ERASER, onclick:() => { if (checked) return; have[r] = [0, 0, 0]; paint(); }}));
+  });
+  const act = h('button', {class:'btn', onclick:() => {
+    if (!checked){
+      checked = true;
+      const right = have.every((row, r) => row.every((x, k) => x === want[r][k]));
+      banner.hidden = false; banner.className = 'banner ' + (right ? 'good' : 'bad');
+      banner.textContent = right ? '⭐ You got it!' : 'Almost! See the red and green.';
+      if (right){ S.stars++; S.solved++; save(); paintStars(); }
+      act.textContent = 'OK ▶'; act.className = 'btn ok'; paint();
+    } else { nextProblem(); render(); }
+  }}, 'Check');
+  const render = () => { v.replaceChildren(); drawToAdd(v); };
+  v.append(
+    h('div', {style:'margin-bottom:12px'}, h('button', {class:'btn ghost', onclick:() => go('learn')}, '← Learn')),
+    h('div', {class:'card'},
+      h('div', {class:'hint', style:'text-align:center;font-size:14px'}, 'Draw on the place value chart to add.'),
+      h('div', {class:'eq'}, String(a), ' ', h('span', {}, '+'), ' ', String(b)),
+      grid,
+      h('div', {class:'legend', 'aria-hidden':'true'}, h('span', {}, 'Tap a box: ', h('b', {}, '+1')), h('span', {}, h('b', {html:ERASER.replace('<svg ', '<svg style="width:18px;height:18px;vertical-align:-4px" ')}), ' clears a row')),
+      banner,
+      h('div', {class:'acts'}, act)));
+  paint();
+}
+
+const SKILLS = [{id:'pv-add', n:'Draw to Add', sub:'Hundreds, tens, and ones', e:'🧮', open:drawToAdd}];
+
+/* ---------- tabs ---------- */
+const ICONS = {
+  learn:'<path d="M12 3v9M7.5 7.5h9M7.5 18h9"/>',
+  guide:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  boss:'<path d="M6 3v18M6 4h11l-2 4 2 4H6"/>',
+  games:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/>',
+  me:'<path d="M5 19V11M12 19V5M19 19v-5"/>'
+};
+const TABS = [['learn','Learn'],['guide','Study Guide'],['boss','Boss Quiz'],['games','Games'],['me','Progress']];
+const soon = (emoji, title) => h('div', {class:'card soon'}, h('div', {class:'big'}, emoji), h('h2', {}, title), h('div', {class:'hint'}, 'Coming soon!'));
+const VIEWS = {
+  learn: v => {
+    v.append(h('div', {class:'hint', style:'color:var(--chrome-mut);margin:0 4px 10px'}, 'Pick a skill'));
+    SKILLS.forEach((s, i) => v.append(h('button', {class:'skill', onclick:() => { v.replaceChildren(); s.open(v); window.scrollTo(0, 0); }},
+      h('span', {class:'ico'}, s.e), h('span', {}, h('b', {}, (i + 1) + ' · ' + s.n), h('span', {class:'hint'}, s.sub)), h('span', {class:'go'}, '›'))));
+  },
+  guide: v => v.append(soon('📝', 'Study Guide')),
+  boss: v => v.append(soon('🐉', 'Boss Quiz')),
+  games: v => v.append(soon('🎮', 'Games')),
+  me: v => v.append(
+    h('div', {class:'card', style:'display:flex;align-items:center;gap:14px'}, h('div', {style:'font-size:44px'}, '⭐'), h('div', {}, h('h2', {}, S.stars + ' star' + (S.stars === 1 ? '' : 's')), h('div', {class:'hint'}, 'You get a star for each problem you get right.'))),
+    h('div', {class:'card soon', id:'petSpace'}, h('div', {style:'color:var(--mut);width:84px;margin:0 auto', html:CAT_OUTLINE.replace('<svg ', '<svg style="width:84px;height:84px" ')}), h('h2', {}, 'A helper cat is coming!'), h('div', {class:'hint'}, 'Keep earning stars ⭐')))
+};
+function go(t){
+  if (!VIEWS[t]) t = 'learn';
+  S.tab = t; save();
+  document.querySelectorAll('#nav button').forEach(b => { const on = b.dataset.t === t; b.classList.toggle('on', on); if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  const v = $('#view'); v.replaceChildren(); VIEWS[t](v); window.scrollTo(0, 0);
+}
+TABS.forEach(([k, l]) => $('#nav').append(h('button', {'data-t':k, onclick:() => go(k)}, h('span', {html:`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`}), l)));
+paintStars(); go(S.tab);
+if (window.__TEST__) window.__T = {S:() => S, digits, makeProblem, marks, go};
+})();
+</script>
+
+<div class="a2hs" id="a2hs" hidden><span>📲 <b>Make it full screen:</b> tap <b>Share</b> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> then <b>Add to Home Screen</b>.</span><button id="a2hsx" aria-label="Dismiss">✕</button></div>
+<script>
+(function(){ try { if (window.navigator.standalone === false && !localStorage.getItem('a2hs-x')){ var b = document.getElementById('a2hs'); b.hidden = false; document.getElementById('a2hsx').onclick = function(){ b.hidden = true; try { localStorage.setItem('a2hs-x','1'); } catch(e){} }; } } catch(e){} })();
+</script>
+</body>
+</html>

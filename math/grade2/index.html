@@ -243,6 +243,13 @@ nav button{font-size:10px}
 .ns-boss-num{font:800 60px/1 var(--fd);display:inline-block;padding:8px 20px;border:4px solid var(--pink);border-radius:24px;background:var(--soft);min-width:110px;text-align:center;margin-bottom:12px}
 .ns-boss-num.hurt{animation:bossHurt .35s ease-out}
 @keyframes bossHurt{0%,100%{transform:scale(1)}35%{transform:scale(1.12)}70%{transform:scale(0.94)}}
+.ns-boss-num.sm{font-size:44px;padding:6px 12px;min-width:0;margin-bottom:0}
+.ns-row2{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px}
+.ns-row2 .ns-attacker{min-width:46px;height:50px;font-size:22px;padding:0 6px;cursor:default}
+.ns-row2 .ns-attacker.ready{cursor:pointer}
+.ns-dig{display:inline-block;border-radius:8px}
+.ns-dig.blink,.ns-attacker.blink{animation:blinkAmber .55s ease-in-out infinite alternate;border-color:var(--gold);color:#E08A00}
+.ns-dig.blink-green,.ns-attacker.blink-green{animation:blinkGreen .55s ease-in-out infinite alternate;border-color:var(--ok);color:var(--ok)}
 .ns-attack-row{display:flex;justify-content:center;gap:12px;margin:4px 0}
 .ns-attacker{min-width:56px;height:56px;border:3px solid var(--line);border-radius:14px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:800 24px/1 var(--fd);user-select:none}
 .ns-attacker.ready{border-color:var(--ok);background:var(--okt);cursor:pointer;animation:pulse .7s ease-in-out infinite alternate}
@@ -1294,142 +1301,136 @@ function nsAdd(v,a,b){
 }
 
 function nsSub(v,a,b){
+  const aStr=String(a), aTensStr=aStr.slice(0,-1), aOnesStr=aStr.slice(-1);
   const aOnes=a%10, bTens=Math.floor(b/10)*10, bOnes=b%10;
   const needSplit=bOnes>aOnes;
   const matchOnes=needSplit?aOnes:0;
   const remOnes=needSplit?bOnes-aOnes:bOnes;
   const parts=needSplit?[bTens,matchOnes,remOnes]:[bTens,bOnes];
 
-  let runningTotal=a, phase=0;
+  let runningTotal=a, attackIdx=0, phase=0, attackEls;
   const banner=h('div',{class:'banner',hidden:true});
   const actBtn=h('button',{class:'btn',hidden:true,onclick:()=>{nextNSSubProblem();v.replaceChildren();numberSenseSub(v);}});
   const container=h('div',{style:'position:relative'});
+  const msg=h('div',{style:'text-align:center;font:700 16px var(--fb);color:var(--mut);min-height:24px;margin:6px 0'},'Tap the second number to break it apart!');
 
-  /* ---- Boss battle area ---- */
-  const bossEl=h('div',{class:'ns-boss-num'},String(a));
-  const attackEls=parts.map((n)=>h('div',{class:'ns-attacker waiting'},String(n)));
-  const attackRow=h('div',{class:'ns-attack-row'},...attackEls);
-  const subBtn=h('button',{class:'btn ok',style:'margin-top:16px;min-height:52px;font-size:20px'},'Subtract! ➖');
-  const bossArea=h('div',{hidden:true,style:'text-align:center;padding:8px 0'},
-    h('div',{style:'font:400 14px var(--fb);color:var(--mut);margin-bottom:8px'},'Tap Subtract to attack!'),
-    bossEl,attackRow,subBtn);
-
-  /* ---- Auto-fire attack sequence ---- */
-  subBtn.addEventListener('click',()=>{
-    subBtn.classList.remove('hint-target','hint-pulse');
-    subBtn.disabled=true; subBtn.style.opacity='0.5';
-    attackEls.forEach(el=>{ el.style.opacity='1'; });
-    const fireSeq=(i)=>{
-      if(i>=parts.length){
-        setTimeout(()=>{
-          banner.hidden=false; banner.className='banner good'; banner.textContent='⭐ You got it!';
-          actBtn.hidden=false; actBtn.textContent='OK ▶'; actBtn.className='btn ok';
-          award('ns-sub');
-        },500);
-        return;
-      }
-      const el=attackEls[i];
-      el.style.opacity='0.3';
-      const cr=container.getBoundingClientRect();
-      const eR=el.getBoundingClientRect(), bR=bossEl.getBoundingClientRect();
-      const sx=eR.left-cr.left+eR.width/2, sy=eR.top-cr.top+eR.height/2;
-      const tx=bR.left-cr.left+bR.width/2, ty=bR.top-cr.top+bR.height/2;
-      const flyer=h('div',{style:'position:absolute;left:'+sx+'px;top:'+sy+'px;transform:translate(-50%,-50%);font:800 22px var(--fd);background:var(--cell);border:3px solid var(--ok);border-radius:10px;padding:4px 10px;pointer-events:none;z-index:10'},String(parts[i]));
-      container.append(flyer);
-      const t0=performance.now(), dur=700;
-      const tick=t=>{
-        const p=Math.min(1,(t-t0)/dur), ep=p<.5?2*p*p:-1+(4-2*p)*p;
-        flyer.style.left=(sx+(tx-sx)*ep)+'px';
-        flyer.style.top=(sy+(ty-sy)*ep)+'px';
-        if(p<1) requestAnimationFrame(tick);
-        else{
-          flyer.remove();
-          runningTotal-=parts[i];
-          const bRn=bossEl.getBoundingClientRect(), crN=container.getBoundingClientRect();
-          const hit=h('div',{class:'ns-hit-label',style:'left:'+(bRn.left-crN.left+bRn.width/2)+'px;top:'+(bRn.top-crN.top+10)+'px'},'-'+parts[i]);
-          container.append(hit);
-          setTimeout(()=>hit.remove(),1150);
-          bossEl.classList.remove('hurt'); void bossEl.offsetWidth; bossEl.classList.add('hurt');
-          setTimeout(()=>{ bossEl.textContent=String(runningTotal); },170);
-          setTimeout(()=>fireSeq(i+1),850);
-        }
-      };
-      requestAnimationFrame(tick);
-    };
-    fireSeq(0);
-  });
-
-  /* ---- Phases 0-3: expansion ---- */
-  const aEl=h('div',{class:'ns2-root'},String(a));
+  const aEl=h('div',{class:'ns2-root',style:'cursor:default'},aStr);
   const bEl=h('div',{class:'ns2-root'},String(b));
-  const aOnesBadge=h('div',{class:'ns-ones-badge',style:'display:none'},String(aOnes));
-  const dropLine=h('div',{class:'ns-drop-line',style:'display:none'});
+  const topRow=h('div',{class:'ns2-row'},aEl,h('div',{class:'ns2-op'},'−'),bEl);
 
-  const bTensEl=h('div',{class:'ns2-leaf'},String(bTens));
-  const bOnesEl=h('div',{class:'ns2-leaf'},String(bOnes));
-  const remEl=h('div',{class:'ns2-leaf'},String(remOnes));
-  const matchEl2=h('div',{class:'ns2-leaf'},String(matchOnes));
+  const onesSpan=h('span',{class:'ns-dig'},aOnesStr);
+  const aDup=h('div',{class:'ns-boss-num sm',style:'position:relative;z-index:5'},h('span',{},aTensStr),onesSpan);
+  const mk=n=>{
+    const el=h('div',{class:'ns-attacker'},String(n));
+    el.addEventListener('click',()=>onAttackTap(attackEls.indexOf(el)));
+    return el;
+  };
+  const tensEl=mk(bTens);
+  let fiveEl=null, matchEl=null, remEl=null, onesEl=null;
+  if(needSplit){ fiveEl=mk(bOnes); matchEl=mk(matchOnes); remEl=mk(remOnes); attackEls=[tensEl,matchEl,remEl]; }
+  else { onesEl=mk(bOnes); attackEls=[tensEl,onesEl]; }
+  const minus=h('div',{class:'ns2-op'},'−');
+  const partsBox=h('div',{style:'display:flex;gap:8px'},tensEl,needSplit?fiveEl:onesEl);
+  const row2=h('div',{class:'ns-row2',hidden:true},aDup,minus,partsBox);
 
-  const bPartsRow=h('div',{class:'ns2-leaves',style:'margin-top:6px;display:none'});
-  if(bTens>0) bPartsRow.append(bTensEl);
-  if(bOnes>0) bPartsRow.append(bOnesEl);
-
-  const goToBoss=()=>{
-    document.querySelectorAll('.hint-target').forEach(e=>e.classList.remove('hint-target'));
-    expandArea.style.transition='opacity .4s';
-    expandArea.style.opacity='0';
-    setTimeout(()=>{ expandArea.hidden=true; bossArea.hidden=false; markNext(subBtn); },420);
+  const startAttack=()=>{
+    phase=4;
+    onesSpan.classList.remove('blink-green');
+    if(matchEl) matchEl.classList.remove('blink-green');
+    msg.textContent='Tap the numbers to attack!';
+    attackEls.forEach((el,i)=>el.classList.add(i===0?'ready':'waiting'));
+    markNext(attackEls[0]);
   };
 
-  aEl.addEventListener('click',()=>{
-    if(phase!==0) return;
-    phase=1; aEl.classList.add('open'); aEl.classList.remove('hint-target');
-    aOnesBadge.style.display='block'; dropLine.style.display='block';
-    markNext(bEl);
-  });
+  const impact=(amt)=>{
+    runningTotal-=amt;
+    const bR=aDup.getBoundingClientRect(), cr=container.getBoundingClientRect();
+    const hit=h('div',{class:'ns-hit-label',style:'left:'+(bR.left-cr.left+bR.width/2)+'px;top:'+(bR.top-cr.top)+'px'},'-'+amt);
+    container.append(hit);
+    setTimeout(()=>hit.remove(),1150);
+    aDup.classList.remove('hurt'); void aDup.offsetWidth; aDup.classList.add('hurt');
+    setTimeout(()=>{aDup.textContent=String(runningTotal);},170);
+    if(attackIdx<attackEls.length){
+      const nx=attackEls[attackIdx];
+      nx.classList.remove('waiting'); nx.classList.add('ready');
+      markNext(nx);
+    } else {
+      markNext();
+      setTimeout(()=>{
+        msg.textContent='';
+        banner.hidden=false;banner.className='banner good';banner.textContent='⭐ You got it!';
+        actBtn.hidden=false;actBtn.textContent='OK ▶';actBtn.className='btn ok';
+        award('ns-sub');
+      },900);
+    }
+  };
+
+  const onAttackTap=(i)=>{
+    if(phase!==4||i!==attackIdx) return;
+    const el=attackEls[i], amt=parts[i];
+    attackIdx++;
+    el.classList.remove('ready'); markNext();
+    el.style.visibility='hidden';
+    const cr=container.getBoundingClientRect();
+    const eR=el.getBoundingClientRect(), bR=aDup.getBoundingClientRect();
+    const sx=eR.left-cr.left+eR.width/2, sy=eR.top-cr.top+eR.height/2;
+    const tx=bR.left-cr.left+bR.width/2, ty=bR.top-cr.top+bR.height/2;
+    const flyer=h('div',{style:'position:absolute;left:'+sx+'px;top:'+sy+'px;transform:translate(-50%,-50%);font:800 22px var(--fd);background:var(--cell);border:3px solid var(--ok);border-radius:10px;padding:4px 10px;pointer-events:none;z-index:10'},String(amt));
+    container.append(flyer);
+    const t0=performance.now(), dur=800;
+    const tick=t=>{
+      const p=Math.min(1,(t-t0)/dur), ep=p<.5?2*p*p:-1+(4-2*p)*p;
+      flyer.style.left=(sx+(tx-sx)*ep)+'px';
+      flyer.style.top=(sy+(ty-sy)*ep-Math.sin(Math.PI*ep)*34)+'px';
+      if(p<1) requestAnimationFrame(tick);
+      else{ flyer.remove(); impact(amt); }
+    };
+    requestAnimationFrame(tick);
+  };
 
   bEl.addEventListener('click',()=>{
-    if(phase!==1) return;
-    phase=2; bEl.classList.add('open'); bEl.classList.remove('hint-target');
-    bPartsRow.style.display='flex';
+    if(phase!==0) return;
+    phase=1; bEl.classList.add('open'); markNext();
+    msg.textContent='';
+    row2.hidden=false;
+    const fr=aEl.getBoundingClientRect(), to=aDup.getBoundingClientRect();
+    const dx=fr.left+fr.width/2-(to.left+to.width/2), dy=fr.top+fr.height/2-(to.top+to.height/2);
+    aDup.style.transition='none';
+    aDup.style.transform='translate('+dx+'px,'+dy+'px)';
+    minus.style.opacity='0'; partsBox.style.opacity='0';
+    void aDup.offsetWidth;
+    aDup.style.transition='transform .8s ease-in-out';
+    aDup.style.transform='translate(0,0)';
+    minus.style.transition=partsBox.style.transition='opacity .5s';
+    minus.style.opacity='1'; partsBox.style.opacity='1';
+    setTimeout(()=>{aDup.style.transition='';aDup.style.transform='';},900);
     if(needSplit){
-      bOnesEl.classList.add('blink');
-      aOnesBadge.classList.add('blink');
+      setTimeout(()=>{
+        phase=2; fiveEl.classList.add('blink'); onesSpan.classList.add('blink');
+        msg.textContent='Tap the blinking number to break it apart!';
+      },900);
     } else {
-      setTimeout(goToBoss,700);
+      setTimeout(startAttack,1500);
     }
   });
 
   if(needSplit){
-    bOnesEl.addEventListener('click',()=>{
+    fiveEl.addEventListener('click',()=>{
       if(phase!==2) return;
-      phase=3;
-      bOnesEl.classList.remove('blink'); aOnesBadge.classList.remove('blink');
-      bOnesEl.replaceWith(remEl,matchEl2);
-      matchEl2.classList.add('blink-green');
-      aOnesBadge.classList.add('blink-green');
-      setTimeout(goToBoss,1300);
+      phase=3; msg.textContent='';
+      fiveEl.classList.remove('blink'); onesSpan.classList.remove('blink');
+      fiveEl.replaceWith(matchEl,remEl);
+      matchEl.classList.add('blink-green'); onesSpan.classList.add('blink-green');
+      setTimeout(startAttack,1500);
     });
   }
 
-  const expandArea=h('div',{},
-    h('div',{class:'ns2-row'},
-      h('div',{style:'display:flex;flex-direction:column;align-items:center'},
-        aEl,dropLine,aOnesBadge),
-      h('div',{class:'ns2-op'},'−'),
-      h('div',{style:'display:flex;flex-direction:column;align-items:center'},
-        bEl,bPartsRow)));
-
-  container.append(expandArea,bossArea);
-
-  markNext(aEl);
+  container.append(topRow,msg,row2);
+  markNext(bEl);
 
   v.append(
     h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
-    h('div',{class:'card'},
-      h('div',{class:'hint',style:'text-align:center;font-size:14px'},'Tap each number to break it apart!'),
-      h('div',{class:'eq'},String(a),' ',h('span',{},'−'),' ',String(b),' = ?'),
-      container,banner,h('div',{class:'acts'},actBtn)));
+    h('div',{class:'card'},container,banner,h('div',{class:'acts'},actBtn)));
 }
 
 const SKILLS = [{id:'pv-add', cat:'🗺️ Places',        n:'Draw to Add',       sub:'Hundreds, tens, and ones', e:'➕', open:drawToAdd},

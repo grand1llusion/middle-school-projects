@@ -40,6 +40,16 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .top .grow{flex:1;min-width:0}
 .stars{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12);font:700 20px var(--fd)}
 .stars i{font-style:normal}
+.stars.bump{animation:starBump .5s ease-out}
+@keyframes starBump{0%{transform:scale(1)}25%{transform:scale(1.3) rotate(-6deg)}50%{transform:scale(1.2) rotate(6deg)}75%{transform:scale(1.1) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}
+.star-fly{position:fixed;left:50%;top:50%;font-size:64px;line-height:1;z-index:9999;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.3);transition:transform .38s cubic-bezier(.2,1.4,.4,1),opacity .2s}
+.sc-body{display:flex;gap:10px;align-items:flex-start}
+.sc-list{width:58px;flex:none;display:flex;flex-direction:column;text-align:center;padding:4px 0;border-right:2px dashed var(--line)}
+.sc-li{font:700 18px/1.55 var(--fd);color:var(--mut)}
+.sc-li.new{color:var(--pink);font-weight:800;animation:numPop .4s ease-out}
+.sc-main{flex:1;min-width:0}
+.sc-flash{animation:scFlash 1s ease-out}
+@keyframes scFlash{0%,100%{background:var(--surf);box-shadow:0 6px 18px var(--shadow)}25%,65%{background:var(--okt);box-shadow:0 0 0 5px var(--ok)}}
 .pet{width:46px;height:46px;flex:none;border-radius:50%;border:2px dashed var(--chrome-mut);background:rgba(255,255,255,.08);display:grid;place-items:center;padding:0}
 .pet svg{width:34px;height:34px}
 .pet.has{border-style:solid;border-color:var(--pink);background:var(--surf);overflow:hidden}
@@ -181,7 +191,7 @@ nav button{font-size:10px}
 /* skill categories */
 .skill-cat{font:700 12px var(--fb);color:var(--chrome-mut);text-transform:uppercase;letter-spacing:.08em;margin:8px 4px 2px}
 /* skip counting — speed round */
-.sc-choice{width:118px;height:94px;border:4px solid var(--line);border-radius:22px;background:var(--soft);font:800 44px/1 var(--fd);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent}
+.sc-choice{flex:1;max-width:118px;min-width:0;height:94px;border:4px solid var(--line);border-radius:22px;background:var(--soft);font:800 40px/1 var(--fd);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent}
 .sc-choice:active{background:var(--pinkt);border-color:var(--pink)}
 .sc-celeb{position:relative;height:52px;overflow:visible;pointer-events:none}
 .sc-float{position:absolute;left:50%;transform:translateX(-50%);font-size:44px;line-height:1;animation:floatUp .85s ease-out forwards;pointer-events:none}
@@ -527,7 +537,20 @@ function h(tag, at, ...kids){
 }
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 let toastT; const toast = t => { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 1600); };
-const paintStars = () => { $('#starN').textContent = S.stars; };
+let starPending = 0;
+const paintStars = () => { $('#starN').textContent = S.stars - starPending; };
+/* an earned star pops in at the middle of the screen, flies up to the star count, and the count bumps as it lands */
+function flyStar(){
+  const box = $('.stars'); starPending++; paintStars();
+  const el = h('div', {class:'star-fly'}, '⭐'); document.body.append(el);
+  const r = box.getBoundingClientRect(), dx = r.left + r.width / 2 - innerWidth / 2, dy = r.top + r.height / 2 - innerHeight / 2;
+  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translate(-50%,-50%) scale(1.7)'; }));
+  setTimeout(() => { el.style.transition = 'transform .75s cubic-bezier(.45,0,.75,.5)'; el.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.4)`; }, 380);
+  setTimeout(() => {
+    el.remove(); starPending = Math.max(0, starPending - 1); paintStars();
+    box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
+  }, 1150);
+}
 
 /* ---------- kittens, rewards and daily care ---------- */
 const CAT_AT = 10;              /* points in a new area that earn a new kitten */
@@ -601,7 +624,7 @@ function showNext(){
 /* a right answer: a star, a little water, and maybe a kitten or a reward */
 function award(area){
   S.stars++; S.solved++; S.area[area] = (S.area[area] || 0) + 1; S.water = Math.min(100, (S.water || 0) + 10);
-  grant();
+  flyStar(); grant();
 }
 /* hand out anything earned: a kitten for 10 in a new area, then rewards every 15 stars */
 function grant(){
@@ -1006,37 +1029,49 @@ function drawToSubtract(v){
 
 /* ---------- Skill 3: Skip Count by 10s ---------- */
 const SKIP_WORKSHEET=[[25,10],[65,10],[145,-10]];
-function makeSkipProblem(){const up=Math.random()<.7;return up?[rnd(10,89),10]:[rnd(70,169),-10];}
+function makeSkipProblem(){const up=Math.random()<.7;return up?[rnd(10,89),10]:[rnd(90,169),-10];}
 const nextSkipProblem=()=>{const i=S.skip.i||0;S.skip.cur=i<SKIP_WORKSHEET.length?SKIP_WORKSHEET[i].slice():makeSkipProblem();S.skip.i=i+1;save();};
 
 function skipCountBy10(v){
-  if(!S.skip.cur) nextSkipProblem();
-  const [start,by]=S.skip.cur;
   const totalRounds=8;
-  let current=start, roundNum=0;
+  if(!S.skip.cur || (S.skip.cur[1]<0 && S.skip.cur[0]+S.skip.cur[1]*totalRounds<0)) nextSkipProblem();
+  const [start,by]=S.skip.cur;
+  let current=start, roundNum=0, locked=false;
 
   const progEl=h('div',{style:'text-align:center;font:400 14px var(--fb);color:var(--mut);margin-top:6px'},
     String(roundNum)+' / '+totalRounds);
   const celebWrap=h('div',{class:'sc-celeb'});
-  const choicesRow=h('div',{style:'display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0'});
+  const choicesRow=h('div',{style:'display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0'});
+  const listEl=h('div',{class:'sc-list'});
+  const addToList=n=>{
+    listEl.querySelectorAll('.new').forEach(e=>e.classList.remove('new'));
+    listEl.append(h('div',{class:'sc-li new'},String(n)));
+  };
+  addToList(start);
+  const card=h('div',{class:'card'});
 
   const showRound=()=>{
+    locked=false;
     const answer=current+by;
-    const wrong=Math.random()<.5?answer-1:answer+1;
+    const wrong=(answer<1||Math.random()<.5)?answer+1:answer-1;
     const leftIsRight=Math.random()<.5;
     const lVal=leftIsRight?answer:wrong, rVal=leftIsRight?wrong:answer;
     const lBtn=h('button',{class:'sc-choice'},String(lVal));
     const rBtn=h('button',{class:'sc-choice'},String(rVal));
     const orEl=h('div',{style:'font:800 20px/1 var(--fb);color:var(--mut)'},'or');
     const onChoice=(wasRight,btn)=>{
+      if(locked) return;
       if(wasRight){
+        locked=true;
         current=answer; roundNum++;
         progEl.textContent=String(roundNum)+' / '+totalRounds;
+        addToList(answer);
         const f=h('div',{class:'sc-float'},'👍');
         celebWrap.append(f); setTimeout(()=>f.remove(),950);
         if(roundNum>=totalRounds){
+          card.classList.add('sc-flash');
           award('skip-10'); nextSkipProblem();
-          setTimeout(()=>{v.replaceChildren();skipCountBy10(v);},1000);
+          setTimeout(()=>{v.replaceChildren();skipCountBy10(v);},1800);
         } else {
           setTimeout(showRound,320);
         }
@@ -1051,9 +1086,9 @@ function skipCountBy10(v){
   };
 
   showRound();
-  v.append(
-    h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
-    h('div',{class:'card'},
+  card.append(h('div',{class:'sc-body'},
+    listEl,
+    h('div',{class:'sc-main'},
       h('div',{style:'text-align:center;margin-bottom:12px'},
         h('div',{style:'font:400 14px var(--fb);color:var(--mut);margin-bottom:2px'},'Start at'),
         h('div',{style:'font:800 52px/1 var(--fd);color:var(--pink)'},String(start)),
@@ -1062,7 +1097,10 @@ function skipCountBy10(v){
           h('span',{style:'font:800 52px/1 var(--fd);color:var(--pink)'},String(Math.abs(by))),
           h('span',{style:'font:800 40px/1 var(--fd);color:'+(by<0?'#ef4444':'#22c55e')},by<0?'↓':'↑'))),
       h('div',{style:'text-align:center;font:400 15px var(--fb);color:var(--mut);margin-bottom:4px'},'Which comes next?'),
-      choicesRow,celebWrap,progEl));
+      choicesRow,celebWrap,progEl)));
+  v.append(
+    h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
+    card);
 }
 
 /* ---------- Skill 4: Number Sense (addition) ---------- */
@@ -1749,6 +1787,6 @@ if (CLOUD_ACTIVE && syncMeta.playerId) {
   const saved = loadState(activeKey); if (saved) Object.assign(S, fresh(), saved);
   CLOUD.refresh().then(() => syncNow()).catch(() => {});
 }
-if (window.__TEST__) window.__T = {S:() => S, digits, makeProblem, marks, go, award, grant, dayTick, REWARDS, cost, catSVG, queue};
+if (window.__TEST__) window.__T = {S:() => S, digits, makeProblem, makeSkipProblem, marks, go, award, grant, dayTick, REWARDS, cost, catSVG, queue};
 })();
 </script>

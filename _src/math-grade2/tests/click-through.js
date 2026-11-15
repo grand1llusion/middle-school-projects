@@ -10,23 +10,23 @@ const click = el => { if (!el) throw new Error('missing element'); el.dispatchEv
 const q$ = (s, r = d) => [...r.querySelectorAll(s)];
 const btn = t => q$('button').find(b => b.textContent.trim().startsWith(t));
 const nav = i => q$('#nav button')[i];
-const cells = () => q$('.cell'), lines = c => q$('line:not([data-m="cross"])', c).length, adds = c => q$('[data-m="add"]', c).length, crosses = c => q$('[data-m="cross"]', c).length;
+const cells = () => q$('.cell').slice(0, 6), lines = c => q$('line:not([data-m="cross"])', c).length, adds = c => q$('[data-m="add"]', c).length, crosses = c => q$('[data-m="cross"]', c).length;
 const eq = () => d.querySelector('.eq').textContent.replace(/\s+/g, ' ').trim();
 const tap = (r, k, n) => { for (let i = 0; i < n; i++) click(cells()[r * 3 + k]); };
 const draw = (a, b) => [a, b].forEach((n, r) => T.digits(n).forEach((x, k) => tap(r, k, x)));
 
 ok(q$('#nav button').length === 6, 'six tabs'); let textOK; ok(d.querySelector('#nav button.on').textContent === 'Learn', 'starts on Learn');
-ok(q$('.skill').length === 1, 'one skill so far');
+ok(q$('.skill').length === 5, 'five skills: ' + q$('.skill b').map(b => b.textContent).join(', '));
 click(q$('.skill')[0]);
 ok(eq() === '39 + 136', 'first problem is worksheet #1: ' + eq());
 ok(q$('.pv .hd').map(x => x.textContent).join(',') === '100s,10s,1s', 'chart columns');
-ok(q$('.pv .num').map(x => x.textContent).join(',') === '39,136', 'row labels');
+ok(q$('.pv .num').map(x => x.textContent).join(',') === '39,136,=', 'row labels');
 /* draw 39 and 136 right: 0|3|9 and 1|3|6 */
 draw(39, 136);
 ok(cells().map(lines).join('') === '039136', 'marks drawn ' + cells().map(lines).join(''));
 click(btn('Check'));
 ok(/You got it/.test(d.querySelector('.banner').textContent), 'right answer banner');
-ok(q$('.cell.right').length === 6, 'all six boxes right'); ok(T.S().stars === 1, 'one star'); ok(d.querySelector('#starN').textContent === '1', 'star shown');
+ok(q$('.cell.right').length === 6, 'all six boxes right'); ok(T.S().stars === 1, 'one star'); ok(d.querySelector('#starN').textContent === '0' && q$('.star-fly').length === 1, 'star in flight, count holds until it lands');
 tap(0, 2, 1); ok(cells().map(lines).join('') === '039136', 'no drawing after check');
 click(btn('OK'));
 ok(eq() === '126 + 66', 'second problem is worksheet #2: ' + eq());
@@ -111,5 +111,9 @@ for (let have = 0; have <= 9; have++) for (let want = 0; want <= 9; want++){ con
   if (L !== Math.max(have, want) || X !== Math.max(0, have - want) || A !== Math.max(0, want - have)) errs.push(`marks ${have}/${want}: ${L} ${X} ${A}`); }
 const m2 = new JSDOM(html, { runScripts:'dangerously', url:'https://example.test/', beforeParse(x){ x.scrollTo = () => {}; x.localStorage.setItem('kitty-math-g2-v1', JSON.stringify({stars:12, solved:12, pv:{i:5, cur:[39,136]}})); x.addEventListener('error', e => errs.push('ERR2 ' + e.message)); }});
 ok(m2.window.__T.S().cats.length === 1 && !m2.window.document.querySelector('#sheet').hidden, 'old save: kitten waiting to be named');
-console.log(errs.length ? errs.join('\n') : 'NO ERRORS · drawing, check, OK, saving, tabs, kittens at 10 per area, rewards every 15, daily food, streak treats, water, feeding, treats, dressing up, ' + N + ' new problems');
-process.exit(0);
+setTimeout(() => {
+  ok(d.querySelector('#starN').textContent === String(T.S().stars) && !q$('.star-fly').length, 'star count catches up after the stars land: ' + d.querySelector('#starN').textContent + ' vs ' + T.S().stars);
+  ok(d.querySelector('.stars').classList.contains('bump'), 'star count bumps');
+  console.log(errs.length ? errs.join('\n') : 'NO ERRORS · drawing, check, OK, saving, tabs, kittens at 10 per area, rewards every 15, daily food, streak treats, water, feeding, treats, dressing up, star flight, ' + N + ' new problems');
+  process.exit(errs.length ? 1 : 0);
+}, 1600);

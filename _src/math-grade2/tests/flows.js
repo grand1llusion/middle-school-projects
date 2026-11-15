@@ -64,10 +64,31 @@ const btn = t => q$('button').find(b => b.textContent.trim().startsWith(t));
   ok(seen.join() === '93,90,87', 'boss counts down ' + seen);
   await sleep(1000); ok(/You got it/.test(d.querySelector('.banner').textContent) && T.S().area['ns-sub'] === 1, 'take away finishes');
 
+  /* ---- fish: daily login, 3 in a row, perfect set ---- */
+  ok(T.S().fish === 5, 'daily 3 + a 3-in-a-row bonus of 2 = 5 fish: ' + T.S().fish);
+  openSkill('Count by 10s');
+  for (let r = 0; r < 8; r++){ const want = T.S().skip.cur[0] + T.S().skip.cur[1] * (r + 1); const cur = q$('.sc-li').map(e => Number(e.textContent)); const c = cur[cur.length - 1] + T.S().skip.cur[1]; click(q$('.sc-choice').find(b => b.textContent === String(c))); await sleep(400); }
+  ok(T.S().fish === 8, 'a perfect Count by 10s set gives 3 fish: ' + T.S().fish);
+  T.miss(); ok(T.S().run === 0, 'a miss resets the streak');
+  const f0 = T.S().fish; T.award('pv-add'); T.award('pv-add'); ok(T.S().fish === f0, 'two right answers: no bonus yet'); T.award('pv-add'); ok(T.S().fish === f0 + 2, 'third in a row: +2 fish');
+
+  /* ---- the shop ---- */
+  ok(q$('#nav button').map(b => b.textContent).join() === 'Learn,Litter,Shop,Progress,Club', 'tabs: Study and Games are gone');
+  click(q$('#nav button').find(b => b.textContent === 'Shop'));
+  ok(q$('.shopc').length === 8 && /Star gifts/.test(d.querySelector('#view').textContent), 'shop shows 8 items and the star gifts');
+  const shopBtn = name => q$('.shopc').find(c => c.textContent.includes(name)).querySelector('button');
+  ok(shopBtn('Cozy sofa').disabled && !shopBtn('Pillow').disabled, 'sofa too expensive, pillow affordable');
+  const fish0 = T.S().fish; click(shopBtn('Pillow'));
+  ok(T.S().fish === fish0 - 4 && T.S().shop.cushion === 1, 'bought the pillow for 4 fish');
+  ok(/In your house/.test(q$('.shopc').find(c => c.textContent.includes('Pillow')).textContent) && !q$('.shopc').find(c => c.textContent.includes('Pillow')).querySelector('button'), 'pillow shows as owned');
+  T.S().fish = 0; click(q$('#nav button').find(b => b.textContent === 'Shop')); ok(q$('.shopc button').every(b => b.disabled), 'nothing affordable with 0 fish');
+  const stars0 = T.S().stars; ok(T.S().stars === stars0, 'stars are untouched by buying'); T.S().fish = 20;
+
   /* ---- the house: rooms, drag furniture, whistle, laser ---- */
   const S = T.S(); S.cats = [{name:'Luna', coat:0, wear:[]}, {name:'Mo', coat:1, wear:[]}]; S.got = 4; S.sel = 0; S.food = 1;
   click(q$('#nav button').find(b => b.textContent === 'Litter'));
   ok(q$('.room .rm').length === 3, 'three rooms');
+  ok(!!d.querySelector('.room .it[data-id="cushion"]'), 'the bought pillow is in the house');
   ok(q$('.house-vp ~ .dress button').map(b => b.textContent.replace(/\s+/g, ' ')).join('|').startsWith('Room 1 · 🐱🐱|Room 2|Room 3'), 'room buttons show where the kittens are: ' + q$('.house-vp ~ .dress button').map(b => b.textContent));
   const vp = d.querySelector('.house-vp'), room = d.querySelector('.room');
   const ptr = (el, type, x, y) => el.dispatchEvent(new w.MouseEvent(type, {bubbles:true, clientX:x, clientY:y}));
@@ -99,7 +120,8 @@ const btn = t => q$('button').find(b => b.textContent.trim().startsWith(t));
   await sleep(900); ok(q$('.cat .bub').length === 2, 'kittens answer the whistle');
   click(btn('🍽️')); await sleep(2400); ok(catXs().every(x => x < 80), 'feeding still sends kittens to the food bowl: ' + catXs());
 
-  await sleep(1300);
+  await sleep(2400);
+  ok(d.querySelector('#fishN').textContent === String(T.S().fish) && !q$('.star-fly').length, 'fish count caught up: ' + d.querySelector('#fishN').textContent + ' vs ' + T.S().fish);
   ok(starN() === String(T.S().stars), 'star count caught up: ' + starN() + ' vs ' + T.S().stars);
   console.log(errs.length ? errs.join('\n') : 'NO ERRORS · count by 10s (no negatives, running list, flash, star), break apart, take away');
   process.exit(errs.length ? 1 : 0);

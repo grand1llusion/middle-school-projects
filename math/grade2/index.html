@@ -58,6 +58,12 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .stars.bump{animation:starBump .5s ease-out}
 @keyframes starBump{0%{transform:scale(1)}25%{transform:scale(1.3) rotate(-6deg)}50%{transform:scale(1.2) rotate(6deg)}75%{transform:scale(1.1) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}
 .star-fly{position:fixed;left:50%;top:50%;font-size:64px;line-height:1;z-index:9999;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.3);transition:transform .38s cubic-bezier(.2,1.4,.4,1),opacity .2s}
+@media (max-width:400px){.top{gap:7px}.top h1{font-size:23px}.stars{font-size:17px;padding:5px 9px}}
+.shopgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.shopc{margin:0;padding:12px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.shopart{height:112px;display:flex;align-items:center;justify-content:center;background:var(--soft);border-radius:14px;overflow:hidden}
+.shopc .btn{min-height:46px;font-size:19px}
+.shopc.owned{opacity:.8}
 .sc-body{display:flex;gap:10px;align-items:flex-start}
 .sc-list{width:58px;flex:none;display:flex;flex-direction:column;text-align:center;padding:4px 0;border-right:2px dashed var(--line)}
 .sc-li{font:700 18px/1.55 var(--fd);color:var(--mut)}
@@ -296,7 +302,8 @@ button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 <div class="app">
   <header class="top">
     <div class="grow"><div class="kick">Grade 2 · Math</div><h1>Meow <b>Math</b></h1></div>
-    <div class="stars" aria-label="Stars"><i>⭐</i><span id="starN">0</span></div>
+    <div class="stars" id="starBox" aria-label="Stars"><i>⭐</i><span id="starN">0</span></div>
+    <div class="stars" id="fishBox" aria-label="Fish"><i>🐟</i><span id="fishN">0</span></div>
     <button class="pet" id="petSlot" aria-label="My kittens"></button>
   </header>
   <main id="view"></main>
@@ -318,7 +325,7 @@ const CLOUD_CLIENT = __CFG__.clientId || null;
 
 /* ---------- saved progress (on this phone only) ---------- */
 const KEY = 'kitty-math-g2-v1';
-const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, pvs:{i:0, cur:null}, skip:{i:0, cur:null}, ns:{i:0, cur:null}, nss:{i:0, cur:null}, deco:{}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
+const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, pvs:{i:0, cur:null}, skip:{i:0, cur:null}, ns:{i:0, cur:null}, nss:{i:0, cur:null}, deco:{}, fish:0, shop:{}, run:0, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
 let S = fresh();
 // Initial state loaded from KEY; if signed in, overwritten below after syncMeta is restored
 try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') S = Object.assign(fresh(), s); } catch (e) {}
@@ -577,19 +584,24 @@ function h(tag, at, ...kids){
 }
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 let toastT; const toast = t => { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 1600); };
-let starPending = 0;
-const paintStars = () => { $('#starN').textContent = S.stars - starPending; };
-/* an earned star pops in at the middle of the screen, flies up to the star count, and the count bumps as it lands */
-function flyStar(){
-  const box = $('.stars'); starPending++; paintStars();
-  const el = h('div', {class:'star-fly'}, '⭐'); document.body.append(el);
-  const r = box.getBoundingClientRect(), dx = r.left + r.width / 2 - innerWidth / 2, dy = r.top + r.height / 2 - innerHeight / 2;
-  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translate(-50%,-50%) scale(1.7)'; }));
-  setTimeout(() => { el.style.transition = 'transform .75s cubic-bezier(.45,0,.75,.5)'; el.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.4)`; }, 380);
-  setTimeout(() => {
-    el.remove(); starPending = Math.max(0, starPending - 1); paintStars();
-    box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
-  }, 1150);
+let starPending = 0, fishPending = 0;
+const paintStars = () => { $('#starN').textContent = S.stars - starPending; const fe = $('#fishN'); if (fe) fe.textContent = (S.fish || 0) - fishPending; };
+/* an earned star or fish pops in at the middle of the screen, flies up to its counter, and the counter bumps as it lands */
+function flyToken(emoji, box, kind, n, delay){
+  const hold = d => { if (kind === 'star') starPending = Math.max(0, starPending + d); else fishPending = Math.max(0, fishPending + d); paintStars(); };
+  hold(n);
+  const el = h('div', {class:'star-fly'}, emoji);
+  const launch = () => {
+    document.body.append(el);
+    const r = box.getBoundingClientRect(), dx = r.left + r.width / 2 - innerWidth / 2, dy = r.top + r.height / 2 - innerHeight / 2;
+    requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translate(-50%,-50%) scale(1.7)'; }));
+    setTimeout(() => { el.style.transition = 'transform .75s cubic-bezier(.45,0,.75,.5)'; el.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.4)`; }, 380);
+    setTimeout(() => {
+      el.remove(); hold(-n);
+      box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
+    }, 1150);
+  };
+  if (delay) setTimeout(launch, delay); else launch();
 }
 
 /* ---------- kittens, rewards and daily care ---------- */
@@ -664,17 +676,29 @@ function showNext(){
 /* a right answer: a star, a little water, and maybe a kitten or a reward */
 function award(area){
   S.stars++; S.solved++; S.area[area] = (S.area[area] || 0) + 1; S.water = Math.min(100, (S.water || 0) + 10);
-  flyStar(); grant();
+  S.run = (S.run || 0) + 1;
+  flyToken('⭐', $('#starBox'), 'star', 1, 0);
+  if (S.run % 3 === 0) giveFish(2, '🔥 3 in a row!');
+  grant();
 }
+/* fish are the shop money: earned by daily visits, streaks and milestones. Stars stay separate. */
+function giveFish(n, why, delay){
+  if (n <= 0) return;
+  S.fish = (S.fish || 0) + n; save();
+  flyToken('🐟', $('#fishBox'), 'fish', n, delay == null ? 900 : delay);
+  if (why) toast(`${why} +${n} 🐟`);
+}
+/* a wrong answer ends the right-answer streak */
+const miss = () => { S.run = 0; save(); };
 /* hand out anything earned: a kitten for 10 in a new area, then rewards every 15 stars */
 function grant(){
   Object.keys(S.area).forEach(area => {
     if (S.area[area] >= CAT_AT && !S.catAreas.includes(area)){
       S.catAreas.push(area); S.cats.push({name:'', coat:S.cats.length % COATS.length, wear:[]});
-      queue.push({type:'name', i:S.cats.length - 1, first:S.cats.length === 1, from:AREAS[area]});
+      queue.push({type:'name', i:S.cats.length - 1, first:S.cats.length === 1, from:AREAS[area]}); giveFish(5, '🐱 New kitten!');
     }
   });
-  while (S.got < REWARDS.length && S.stars >= cost(S.got)){ queue.push({type:'reward', r:REWARDS[S.got]}); S.got++; }
+  while (S.got < REWARDS.length && S.stars >= cost(S.got)){ queue.push({type:'reward', r:REWARDS[S.got]}); S.got++; giveFish(5, '🎁 New reward!'); }
   save(); paintStars(); paintPet(); showNext();
 }
 
@@ -690,7 +714,8 @@ function dayTick(){
   if (S.day) S.water = Math.max(0, (S.water || 0) - 20 * Math.min(gap, 5));
   S.day = t; S.food = 1;
   if (S.streak % 3 === 0){ S.treats = (S.treats || 0) + 2; queue.push({type:'streak', n:S.streak}); }
-  save(); if (S.cats.length) toast('🍽️ Free kitten food today!'); showNext();
+  const daily = 3 + Math.min(Math.max(S.streak - 1, 0), 4); giveFish(daily, null, 1200);
+  save(); toast((S.cats.length ? '🍽️ Free kitten food! ' : '') + `🐟 +${daily} daily fish!`); showNext();
 }
 
 /* ---------- the Litter ---------- */
@@ -703,10 +728,55 @@ const ROOMART = {
   tree:'<svg width="56" height="170" viewBox="0 0 56 170" aria-hidden="true"><rect x="22" y="20" width="12" height="146" fill="#E8C994"/><path d="M22 40h12M22 60h12M22 100h12M22 120h12" stroke="#C49A5E" stroke-width="2"/><rect x="2" y="160" width="52" height="10" rx="4" fill="#A47A55"/><rect x="4" y="76" width="48" height="10" rx="5" fill="#C7B3F5"/><rect x="6" y="12" width="44" height="12" rx="6" fill="#F7A8C8"/></svg>'
 };
 let cleanup = null;
+/* ---------- the Fish shop: furniture bought with fish (stars never buy things) ---------- */
+const SHOPART = {
+  cushion:'<svg width="46" height="28" viewBox="0 0 46 28" aria-hidden="true"><ellipse cx="23" cy="15" rx="21" ry="12" fill="#F28CB8"/><ellipse cx="23" cy="13" rx="15" ry="7.5" fill="#F9B6D2"/><circle cx="23" cy="13" r="2.5" fill="#C9578E"/></svg>',
+  clock:'<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FFFFFF" stroke="#A47A55" stroke-width="4"/><path d="M20 9v11l7 4" stroke="#1D2752" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="20" r="2" fill="#1D2752"/></svg>',
+  plant:'<svg width="44" height="68" viewBox="0 0 44 68" aria-hidden="true"><path d="M22 44C10 38 6 22 10 8c9 4 14 16 12 36z" fill="#4FB477"/><path d="M22 44C34 36 40 24 36 10c-9 4-15 14-14 34z" fill="#3E9E64"/><path d="M22 44c-2-12 0-24 0-34" stroke="#2E7D4F" stroke-width="2" fill="none"/><path d="M9 47h26l-3 19H12z" fill="#D9824E"/><rect x="7" y="42" width="30" height="7" rx="3" fill="#E89562"/></svg>',
+  painting:'<svg width="62" height="50" viewBox="0 0 62 50" aria-hidden="true"><rect width="62" height="50" rx="4" fill="#C9A27F"/><rect x="5" y="5" width="52" height="40" rx="2" fill="#BFE3FF"/><circle cx="44" cy="17" r="6" fill="#FFD66B"/><path d="M5 45V32l14-11 12 10 10-7 16 12v9z" fill="#7BC99A"/></svg>',
+  lamp:'<svg width="36" height="92" viewBox="0 0 36 92" aria-hidden="true"><path d="M7 4h22l7 28H0z" fill="#FFD66B"/><path d="M7 4h22l1.5 6h-25z" fill="#FFE9A8"/><rect x="16.5" y="32" width="3" height="54" fill="#A47A55"/><ellipse cx="18" cy="87" rx="13" ry="4.5" fill="#7A5A3E"/></svg>',
+  table:'<svg width="74" height="50" viewBox="0 0 74 50" aria-hidden="true"><rect x="2" y="6" width="70" height="11" rx="5" fill="#D9A877"/><rect x="2" y="13" width="70" height="4" rx="2" fill="#B98558"/><rect x="9" y="17" width="7" height="31" rx="2" fill="#A47A55"/><rect x="58" y="17" width="7" height="31" rx="2" fill="#A47A55"/></svg>',
+  sofa:'<svg width="110" height="58" viewBox="0 0 110 58" aria-hidden="true"><rect x="8" y="10" width="94" height="34" rx="12" fill="#8E7CE0"/><rect x="2" y="24" width="20" height="28" rx="9" fill="#7765CC"/><rect x="88" y="24" width="20" height="28" rx="9" fill="#7765CC"/><rect x="18" y="28" width="74" height="20" rx="8" fill="#A99BF0"/><rect x="14" y="50" width="6" height="7" rx="2" fill="#5B4AA8"/><rect x="90" y="50" width="6" height="7" rx="2" fill="#5B4AA8"/></svg>',
+  shelf:'<svg width="60" height="100" viewBox="0 0 60 100" aria-hidden="true"><rect x="2" y="2" width="56" height="96" rx="4" fill="#A47A55"/><rect x="7" y="7" width="46" height="86" fill="#7A5A3E"/><rect x="7" y="35" width="46" height="3" fill="#A47A55"/><rect x="7" y="64" width="46" height="3" fill="#A47A55"/><rect x="10" y="14" width="7" height="21" fill="#F48FBF"/><rect x="18" y="18" width="7" height="17" fill="#9CC7FF"/><rect x="26" y="12" width="8" height="23" fill="#FFD66B"/><rect x="35" y="17" width="7" height="18" fill="#9EE0B5"/><rect x="43" y="14" width="7" height="21" fill="#C7B3F5"/><rect x="10" y="44" width="9" height="20" fill="#9EE0B5"/><rect x="20" y="40" width="7" height="24" fill="#F48FBF"/><rect x="28" y="46" width="8" height="18" fill="#FFD66B"/><rect x="38" y="42" width="12" height="22" fill="#9CC7FF"/><rect x="10" y="74" width="8" height="19" fill="#C7B3F5"/><rect x="19" y="71" width="9" height="22" fill="#FFD66B"/><rect x="30" y="76" width="7" height="17" fill="#F48FBF"/><rect x="38" y="72" width="12" height="21" fill="#9EE0B5"/></svg>'
+};
+const SHOP = [
+  {id:'cushion', n:'Pillow',     e:'💗', price:4,  def:[22,174]},
+  {id:'clock',   n:'Wall clock', e:'🕐', price:5,  def:[34,16], z:1},
+  {id:'plant',   n:'House plant', e:'🪴', price:6, def:[76,138]},
+  {id:'painting',n:'Painting',   e:'🖼️', price:8,  def:[55,26], z:1},
+  {id:'lamp',    n:'Floor lamp', e:'💡', price:8,  def:[8,70]},
+  {id:'table',   n:'Little table', e:'🪑', price:8, def:[58,152]},
+  {id:'sofa',    n:'Cozy sofa',  e:'🛋️', price:14, def:[28,118]},
+  {id:'shelf',   n:'Bookshelf',  e:'📚', price:14, def:[80,6]}
+];
+function shopView(v){
+  const draw = () => {
+    v.replaceChildren();
+    const fish = S.fish || 0;
+    const buy = it => {
+      if (S.shop[it.id] || (S.fish || 0) < it.price) return;
+      S.fish -= it.price; S.shop[it.id] = 1; save(); paintStars();
+      toast(`${it.e} ${it.n} is in your house! Open Litter and tap Decorate.`); draw();
+    };
+    v.append(
+      h('div', {class:'card'}, h('h2', {}, '🐟 Fish shop'), h('div', {class:'hint'}, `You have ${fish} fish. Spend them on furniture for the kitten house.`),
+        h('div', {class:'hint', style:'margin-top:8px'}, 'Earn fish: open the app each day (3 or more, extra with a streak), get 3 answers right in a row (+2), finish a perfect Count by 10s set (+3), adopt a kitten or win a star reward (+5).')),
+      h('div', {class:'shopgrid'}, SHOP.map(it => { const own = !!S.shop[it.id];
+        return h('div', {class:'card shopc' + (own ? ' owned' : '')}, h('div', {class:'shopart', html:SHOPART[it.id]}), h('b', {}, it.n),
+          own ? h('div', {class:'hint'}, '✓ In your house') : h('button', {class:'btn', disabled:fish < it.price, 'aria-label':`Buy ${it.n} for ${it.price} fish`, onclick:() => buy(it)}, `${it.price} 🐟`)); })),
+      h('div', {class:'card'}, h('h2', {}, '⭐ Star gifts'), h('div', {class:'hint'}, "These can't be bought. They only come from collecting stars."),
+        h('div', {class:'rw'}, REWARDS.map((r, i) => h('div', {class:i < S.got ? 'got' : ''}, h('b', {}, r.e), r.n, h('br'), i < S.got ? '✓' : cost(i) + ' ⭐')))));
+  };
+  draw();
+}
+
 /* the house: three copies of the room side by side. Positions are in "room widths x 100" (0 to 300) across, pixels down. */
 const HOUSE_ROOMS = 3, ROOM_H = 262;
 const DECO_DEFAULT = {rug:[20,176], tank:[38,26], tree:[82,64], post:[68,110], bed:[2,196], box:[58,196], yarn:[48,140], mouse:[16,150], fly:[30,112], food:[27,222], water:[45,222]};
-const DECO_SPOT = {bed:[4,-20,'Zzz'], yarn:[-4,-6,'🧶'], post:[-6,22,'✨'], box:[-4,-28,'😸'], mouse:[-2,-10,'🐾'], fly:[0,16,'🦋']};
+const DECO_SPOT = {bed:[4,-20,'Zzz'], yarn:[-4,-6,'🧶'], post:[-6,22,'✨'], box:[-4,-28,'😸'], mouse:[-2,-10,'🐾'], fly:[0,16,'🦋'], cushion:[0,-8,'Zzz'], sofa:[8,-10,'😻'], plant:[-12,6,'🌿']};
+SHOP.forEach(it => { DECO_DEFAULT[it.id] = it.def; });
+const SLEEPS = ['bed', 'cushion'];
+const owns = id => REWARDS.some(r => r.id === id) ? has(id) : !!(S.shop && S.shop[id]);
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 let audioCtx = null;
 function chirp(){
@@ -720,7 +790,7 @@ function chirp(){
 }
 function litterView(v){
   const N = HOUSE_ROOMS;
-  S.deco = S.deco || {};
+  S.deco = S.deco || {}; S.shop = S.shop || {};
   const pos = id => S.deco[id] || DECO_DEFAULT[id];
   const room = h('div', {class:'room', style:`width:${N * 100}%`, role:'img', 'aria-label':S.cats.length ? 'Your kittens in their house' : 'An empty kitten house'});
   for (let i = 0; i < N; i++) room.append(h('div', {class:'rm'}, h('div', {class:'win'}), h('div', {class:'base'})));
@@ -737,6 +807,7 @@ function litterView(v){
   if (has('yarn')) place('yarn', '🧶', 'emo');
   if (has('mouse')) place('mouse', '🐁', 'emo');
   if (has('fly')) place('fly', '🦋', 'emo fly', 9);
+  SHOP.forEach(it => { if (S.shop[it.id]) place(it.id, SHOPART[it.id], '', it.z || 2); });
   const food = place('food', BOWL(S.food ? 100 : 0, 'food'), '', 300), water = place('water', BOWL(S.water || 0, 'water'), '', 300);
   water.setAttribute('title', 'Water ' + (S.water || 0) + '%');
 
@@ -795,14 +866,14 @@ function litterView(v){
   });
 
   /* what kittens do on their own: wander (mostly inside their room), nap, play, visit a friend */
-  const spots = () => Object.keys(DECO_SPOT).filter(has).map(id => { const p = pos(id), s = DECO_SPOT[id]; return [id, p[0] + s[0], p[1] + s[1], s[2]]; });
+  const spots = () => Object.keys(DECO_SPOT).filter(owns).map(id => { const p = pos(id), s = DECO_SPOT[id]; return [id, p[0] + s[0], p[1] + s[1], s[2]]; });
   const act = () => {
     const now = Date.now();
     cats.forEach((c, i) => {
       if (c.busy > now || Math.random() < .35) return;
       const r = Math.random(), sp = spots();
       if (r < .25 && cats.length > 1){ const o = cats[(i + 1 + Math.floor(Math.random() * (cats.length - 1))) % cats.length]; moveTo(c, o.x + (o.x % 100 > 40 ? -12 : 12), o.y + 4); timers.push(setTimeout(() => { bubble(c, '💕'); bubble(o, '💕'); }, 2300)); }
-      else if (r < .6 && sp.length){ const s = sp[Math.floor(Math.random() * sp.length)]; moveTo(c, s[1] + Math.random() * 6, s[2]); timers.push(setTimeout(() => { if (s[0] === 'bed'){ c.el.classList.add('sleep'); c.busy = Date.now() + 6000; } else { c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); } bubble(c, s[3]); }, 2300)); }
+      else if (r < .6 && sp.length){ const s = sp[Math.floor(Math.random() * sp.length)]; moveTo(c, s[1] + Math.random() * 6, s[2]); timers.push(setTimeout(() => { if (SLEEPS.includes(s[0])){ c.el.classList.add('sleep'); c.busy = Date.now() + 6000; } else { c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); } bubble(c, s[3]); }, 2300)); }
       else { const rm = Math.floor(c.x / 100), to = Math.random() < .18 ? clamp(rm + (Math.random() < .5 ? -1 : 1), 0, N - 1) : rm; moveTo(c, to * 100 + 4 + Math.random() * 74, 114 + Math.random() * 62); }
     });
     paintNav();
@@ -1086,7 +1157,7 @@ function drawToAdd(v){
         banner.textContent='⭐ You got it!';act.textContent='OK ▶';act.className='btn ok';
         award('pv-add');animateSolution();
       } else {
-        banner.textContent='Almost! See the red and green.';act.textContent='OK ▶';act.className='btn ok';
+        miss();banner.textContent='Almost! See the red and green.';act.textContent='OK ▶';act.className='btn ok';
         revealAns();
       }
     } else {nextProblem();render();}
@@ -1167,7 +1238,7 @@ function drawToSubtract(v){
       banner.hidden=false;banner.className='banner '+(right?'good':'bad');
       paint();revealAns();
       if(right){banner.textContent='⭐ You got it!';act.textContent='OK ▶';act.className='btn ok';award('pv-sub');}
-      else{banner.textContent='Almost! Check the red boxes.';act.textContent='OK ▶';act.className='btn ok';}
+      else{miss();banner.textContent='Almost! Check the red boxes.';act.textContent='OK ▶';act.className='btn ok';}
     }else{nextSubProblem();render();}
   }},'Check');
   const render=()=>{v.replaceChildren();drawToSubtract(v);};
@@ -1192,7 +1263,7 @@ function skipCountBy10(v){
   const totalRounds=8;
   if(!S.skip.cur || (S.skip.cur[1]<0 && S.skip.cur[0]+S.skip.cur[1]*totalRounds<0)) nextSkipProblem();
   const [start,by]=S.skip.cur;
-  let current=start, roundNum=0, locked=false;
+  let current=start, roundNum=0, locked=false, missed=false;
 
   const progEl=h('div',{style:'text-align:center;font:400 14px var(--fb);color:var(--mut);margin-top:6px'},
     String(roundNum)+' / '+totalRounds);
@@ -1226,12 +1297,13 @@ function skipCountBy10(v){
         celebWrap.append(f); setTimeout(()=>f.remove(),950);
         if(roundNum>=totalRounds){
           card.classList.add('sc-flash');
-          award('skip-10'); nextSkipProblem();
-          setTimeout(()=>{v.replaceChildren();skipCountBy10(v);},1800);
+          award('skip-10'); if(!missed) giveFish(3,'✨ Perfect set!'); nextSkipProblem();
+          setTimeout(()=>{if(!card.isConnected)return;v.replaceChildren();skipCountBy10(v);},1800);
         } else {
           setTimeout(showRound,320);
         }
       } else {
+        missed=true; miss();
         btn.classList.add('shake');
         setTimeout(()=>btn.classList.remove('shake'),500);
       }
@@ -1611,14 +1683,12 @@ const SKILLS = [{id:'pv-add', cat:'🗺️ Places',        n:'Draw to Add',     
 /* ---------- tabs ---------- */
 const ICONS = {
   learn:'<path d="M12 3v9M7.5 7.5h9M7.5 18h9"/>',
-  guide:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
   litter:'<path d="M5.5 10.5V4l4.2 3.2h4.6L18.5 4v6.5"/><path d="M5.5 10.5C4.5 16 7.8 20 12 20s7.5-4 6.5-9.5"/><path d="M8.6 12.6q1.1-1.2 2.2 0M13.2 12.6q1.1-1.2 2.2 0"/><path d="M10 15.4q2 1.8 4 0"/>',
-  games:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/>',
+  shop:'<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6.5a3 3 0 016 0V8"/>',
   me:'<path d="M5 19V11M12 19V5M19 19v-5"/>',
   club:'<circle cx="9" cy="7" r="3"/><circle cx="15" cy="7" r="3"/><path d="M3 19c0-3.3 2.7-6 6-6h6c3.3 0 6 2.7 6 6"/>'
 };
-const TABS = [['learn','Learn'],['guide','Study'],['litter','Litter'],['games','Games'],['me','Progress'],['club','Club']];
-const soon = (emoji, title) => h('div', {class:'card soon'}, h('div', {class:'big'}, emoji), h('h2', {}, title), h('div', {class:'hint'}, 'Coming soon!'));
+const TABS = [['learn','Learn'],['litter','Litter'],['shop','Shop'],['me','Progress'],['club','Club']];
 const VIEWS = {
   learn: v => {
     v.append(h('div', {class:'hint', style:'color:var(--chrome-mut);margin:0 4px 10px'}, 'Pick a skill'));
@@ -1634,14 +1704,13 @@ const VIEWS = {
         icoEl, h('span', {}, h('b', {}, s.n), h('span', {class:'hint'}, s.sub)), h('span', {class:'go'}, '›')));
     });
   },
-  guide: v => v.append(soon('📝', 'Study')),
   litter: v => litterView(v),
-  games: v => v.append(soon('🎮', 'Games')),
+  shop: v => shopView(v),
   club: v => { clubView(v); },
   me: v => {
     const next = REWARDS[S.got];
     v.append(
-      h('div', {class:'card'}, h('div', {style:'display:flex;align-items:center;gap:14px'}, h('div', {style:'font-size:44px'}, '⭐'), h('div', {}, h('h2', {}, S.stars + ' star' + (S.stars === 1 ? '' : 's')), h('div', {class:'hint'}, `🔥 ${S.streak || 0}-day streak · 🍬 ${S.treats || 0} treat${S.treats === 1 ? '' : 's'}`))),
+      h('div', {class:'card'}, h('div', {style:'display:flex;align-items:center;gap:14px'}, h('div', {style:'font-size:44px'}, '⭐'), h('div', {}, h('h2', {}, S.stars + ' star' + (S.stars === 1 ? '' : 's')), h('div', {class:'hint'}, `🔥 ${S.streak || 0}-day streak · 🍬 ${S.treats || 0} treat${S.treats === 1 ? '' : 's'} · 🐟 ${S.fish || 0} fish`))),
         next ? h('div', {class:'hint', style:'margin-top:10px'}, `Next: ${next.e} ${next.n} at ${cost(S.got)} ⭐`) : null,
         next ? h('div', {class:'bar'}, h('i', {style:`width:${Math.max(0, Math.min(100, (S.stars - (S.got ? cost(S.got - 1) : 0)) / (cost(S.got) - (S.got ? cost(S.got - 1) : 0)) * 100))}%`})) : null),
       h('div', {class:'card'}, h('h2', {}, '🐱 My kittens'), S.cats.length ? h('div', {class:'dress', style:'margin-top:6px'}, S.cats.map(c => h('span', {class:'chipb', style:'display:inline-flex;align-items:center;gap:4px;padding-left:4px'}, h('span', {style:'width:34px;height:34px;display:inline-block', html:catSVG(c)}), c.name || '…'))) : h('div', {class:'hint'}, `Get ${CAT_AT} right in a skill to adopt a kitten. Every new skill area brings a new kitten!`)),
@@ -1943,7 +2012,7 @@ if (CLOUD_ACTIVE && syncMeta.playerId) {
   const saved = loadState(activeKey); if (saved) Object.assign(S, fresh(), saved);
   CLOUD.refresh().then(() => syncNow()).catch(() => {});
 }
-if (window.__TEST__) window.__T = {S:() => S, digits, makeProblem, makeSkipProblem, marks, go, award, grant, dayTick, REWARDS, cost, catSVG, queue};
+if (window.__TEST__) window.__T = {S:() => S, digits, makeProblem, makeSkipProblem, giveFish, miss, SHOP, marks, go, award, grant, dayTick, REWARDS, cost, catSVG, queue};
 })();
 </script>
 

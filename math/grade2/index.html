@@ -120,7 +120,21 @@ nav button.on svg{stroke:var(--pink)}
 #toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;background:var(--ink);color:var(--surf);padding:10px 16px;border-radius:14px;font-weight:800;font-size:15px;max-width:90vw;text-align:center;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
 /* the litter: a little room for her kittens */
-.room{position:relative;height:262px;border-radius:22px;overflow:hidden;box-shadow:0 6px 18px var(--shadow);background:linear-gradient(180deg,var(--wall) 0 104px,var(--floor) 104px);margin-bottom:12px;user-select:none;-webkit-user-select:none}
+.house-vp{position:relative;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;border-radius:22px;box-shadow:0 6px 18px var(--shadow);margin-bottom:10px;scrollbar-width:none;overscroll-behavior-x:contain}
+.house-vp::-webkit-scrollbar{display:none}
+.room{position:relative;display:flex;height:262px;background:linear-gradient(180deg,var(--wall) 0 104px,var(--floor) 104px);user-select:none;-webkit-user-select:none}
+.room .rm{flex:1;position:relative;scroll-snap-align:start;height:100%}
+.room .rm+.rm{border-left:6px solid var(--trim)}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.chipb.tool{display:flex;align-items:center;justify-content:center;min-height:52px;padding:0 6px;font-size:16px}
+.house-vp.decor-on .it{outline:2px dashed var(--pink);outline-offset:3px;cursor:grab;touch-action:none}
+.house-vp .it.drag{cursor:grabbing;filter:drop-shadow(0 8px 6px rgba(0,0,0,.3))}
+.house-vp.decor-on .cat,.house-vp.laser-on .cat{pointer-events:none}
+.house-vp.laser-on{touch-action:none;cursor:crosshair}
+.cat.chase{transition:left .7s ease-out,top .7s ease-out}
+.laser{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#FF2D3D;box-shadow:0 0 12px 6px rgba(255,45,61,.55);z-index:500;pointer-events:none}
+.ripple{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:4px solid var(--gold);z-index:5;pointer-events:none;animation:ripple .9s ease-out forwards}
+@keyframes ripple{to{transform:scale(7);opacity:0}}
 .room .base{position:absolute;left:0;right:0;top:100px;height:8px;background:var(--trim)}
 .room .win{position:absolute;left:7%;top:16px;width:74px;height:58px;border-radius:10px;background:linear-gradient(180deg,#9CC7FF,#D9ECFF);border:5px solid var(--surf);box-shadow:0 2px 0 var(--trim)}
 .room .win::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--surf)}
@@ -304,7 +318,7 @@ const CLOUD_CLIENT = __CFG__.clientId || null;
 
 /* ---------- saved progress (on this phone only) ---------- */
 const KEY = 'kitty-math-g2-v1';
-const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, pvs:{i:0, cur:null}, skip:{i:0, cur:null}, ns:{i:0, cur:null}, nss:{i:0, cur:null}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
+const fresh = () => ({tab:'learn', stars:0, solved:0, pv:{i:0, cur:null}, pvs:{i:0, cur:null}, skip:{i:0, cur:null}, ns:{i:0, cur:null}, nss:{i:0, cur:null}, deco:{}, area:{}, catAreas:[], cats:[], got:0, sel:0, food:0, treats:0, water:0, streak:0, day:''});
 let S = fresh();
 // Initial state loaded from KEY; if signed in, overwritten below after syncMeta is restored
 try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && typeof s === 'object') S = Object.assign(fresh(), s); } catch (e) {}
@@ -689,58 +703,171 @@ const ROOMART = {
   tree:'<svg width="56" height="170" viewBox="0 0 56 170" aria-hidden="true"><rect x="22" y="20" width="12" height="146" fill="#E8C994"/><path d="M22 40h12M22 60h12M22 100h12M22 120h12" stroke="#C49A5E" stroke-width="2"/><rect x="2" y="160" width="52" height="10" rx="4" fill="#A47A55"/><rect x="4" y="76" width="48" height="10" rx="5" fill="#C7B3F5"/><rect x="6" y="12" width="44" height="12" rx="6" fill="#F7A8C8"/></svg>'
 };
 let cleanup = null;
+/* the house: three copies of the room side by side. Positions are in "room widths x 100" (0 to 300) across, pixels down. */
+const HOUSE_ROOMS = 3, ROOM_H = 262;
+const DECO_DEFAULT = {rug:[20,176], tank:[38,26], tree:[82,64], post:[68,110], bed:[2,196], box:[58,196], yarn:[48,140], mouse:[16,150], fly:[30,112], food:[27,222], water:[45,222]};
+const DECO_SPOT = {bed:[4,-20,'Zzz'], yarn:[-4,-6,'🧶'], post:[-6,22,'✨'], box:[-4,-28,'😸'], mouse:[-2,-10,'🐾'], fly:[0,16,'🦋']};
+const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+let audioCtx = null;
+function chirp(){
+  try {
+    const A = window.AudioContext || window.webkitAudioContext; if (!A) return;
+    audioCtx = audioCtx || new A(); const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(1700, t); o.frequency.linearRampToValueAtTime(2700, t + .22); o.frequency.linearRampToValueAtTime(2100, t + .4);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.14, t + .04); g.gain.exponentialRampToValueAtTime(.0001, t + .45);
+    o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + .5);
+  } catch (e) {}
+}
 function litterView(v){
-  const room = h('div', {class:'room', role:'img', 'aria-label':S.cats.length ? 'Your kittens in their room' : 'An empty kitten room'}, h('div', {class:'win'}), h('div', {class:'base'}));
-  const place = (html, left, top, cls, z) => { const el = h('div', {class:'it ' + (cls || ''), style:`left:${left}%;top:${top}px;z-index:${z || 2}`, html}); room.append(el); return el; };
-  if (has('rug')) place(ROOMART.rug, 20, 176, '', 1);
-  if (has('tank')) place(ROOMART.tank, 38, 26);
-  if (has('tree')) place(ROOMART.tree, 82, 64);
-  if (has('post')) place(ROOMART.post, 68, 110);
-  if (has('bed')) place(ROOMART.bed, 2, 196, '', 1);
-  if (has('box')) place('📦', 58, 196, 'emo');
-  if (has('yarn')) place('🧶', 48, 140, 'emo');
-  if (has('mouse')) place('🐁', 16, 150, 'emo');
-  if (has('fly')) place('🦋', 30, 112, 'emo fly', 9);
-  const food = place(BOWL(S.food ? 100 : 0, 'food'), 27, 222, '', 300), water = place(BOWL(S.water || 0, 'water'), 45, 222, '', 300);
+  const N = HOUSE_ROOMS;
+  S.deco = S.deco || {};
+  const pos = id => S.deco[id] || DECO_DEFAULT[id];
+  const room = h('div', {class:'room', style:`width:${N * 100}%`, role:'img', 'aria-label':S.cats.length ? 'Your kittens in their house' : 'An empty kitten house'});
+  for (let i = 0; i < N; i++) room.append(h('div', {class:'rm'}, h('div', {class:'win'}), h('div', {class:'base'})));
+  const vp = h('div', {class:'house-vp'}, room);
+  const items = {};
+  const putAt = (el, id) => { const p = pos(id); el.style.left = (p[0] / N) + '%'; el.style.top = p[1] + 'px'; };
+  const place = (id, html, cls, z) => { const el = h('div', {class:'it ' + (cls || ''), 'data-id':id, style:`z-index:${z || 2}`, html}); el._z = z || 2; putAt(el, id); room.append(el); items[id] = el; return el; };
+  if (has('rug')) place('rug', ROOMART.rug, '', 1);
+  if (has('tank')) place('tank', ROOMART.tank);
+  if (has('tree')) place('tree', ROOMART.tree);
+  if (has('post')) place('post', ROOMART.post);
+  if (has('bed')) place('bed', ROOMART.bed, '', 1);
+  if (has('box')) place('box', '📦', 'emo');
+  if (has('yarn')) place('yarn', '🧶', 'emo');
+  if (has('mouse')) place('mouse', '🐁', 'emo');
+  if (has('fly')) place('fly', '🦋', 'emo fly', 9);
+  const food = place('food', BOWL(S.food ? 100 : 0, 'food'), '', 300), water = place('water', BOWL(S.water || 0, 'water'), '', 300);
   water.setAttribute('title', 'Water ' + (S.water || 0) + '%');
 
-  const W = () => room.clientWidth || 340, cats = [];
+  const W = () => vp.clientWidth || 340, cats = [], timers = [];
+  let mode = '', lastPtr = null, edgeDir = 0, edgeRaf = 0, onTick = null, navKey = '';
+
+  /* auto-scroll to the next room when a finger is held near the edge */
+  const edgeLoop = () => { if (!edgeDir){ edgeRaf = 0; return; } vp.scrollLeft += edgeDir * 9; if (onTick) onTick(); edgeRaf = requestAnimationFrame(edgeLoop); };
+  const setEdge = cx => {
+    const r = vp.getBoundingClientRect(); edgeDir = !r.width ? 0 : cx < r.left + 34 ? -1 : cx > r.right - 34 ? 1 : 0;
+    vp.style.scrollSnapType = edgeDir ? 'none' : ''; if (edgeDir && !edgeRaf) edgeRaf = requestAnimationFrame(edgeLoop);
+  };
+  const stopEdge = () => { edgeDir = 0; onTick = null; vp.style.scrollSnapType = ''; };
+  const curRoom = () => clamp(Math.round(vp.scrollLeft / W()), 0, N - 1);
+
+  /* drag furniture (Decorate mode) */
+  const wireDrag = (el, id) => {
+    el.addEventListener('pointerdown', e => {
+      if (mode !== 'decor') return;
+      e.preventDefault();
+      const er = el.getBoundingClientRect(), gx = e.clientX - er.left, gy = e.clientY - er.top;
+      if (el.setPointerCapture && e.pointerId != null) try { el.setPointerCapture(e.pointerId); } catch (x) {}
+      el.classList.add('drag'); el.style.zIndex = 400;
+      const move = (cx, cy) => {
+        const r = room.getBoundingClientRect();
+        const x = clamp((cx - r.left - gx) / W() * 100, 0, N * 100 - (el.offsetWidth || 40) / W() * 100);
+        const y = clamp(cy - r.top - gy, 0, ROOM_H - (el.offsetHeight || 30));
+        S.deco[id] = [Math.round(x * 10) / 10, Math.round(y)]; putAt(el, id);
+      };
+      lastPtr = {cx:e.clientX, cy:e.clientY}; onTick = () => move(lastPtr.cx, lastPtr.cy);
+      const mv = ev => { lastPtr = {cx:ev.clientX, cy:ev.clientY}; move(ev.clientX, ev.clientY); setEdge(ev.clientX); };
+      const up = () => {
+        el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+        stopEdge(); el.classList.remove('drag'); el.style.zIndex = el._z; save(); paintNav();
+      };
+      el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    });
+  };
+  Object.keys(items).forEach(id => wireDrag(items[id], id));
+
+  /* kittens */
   const bubble = (c, t) => { const b = h('span', {class:'bub'}, t); c.el.append(b); setTimeout(() => b.remove(), 1800); };
-  const moveTo = (c, x, y) => {
-    x = Math.max(2, Math.min(80, x)); y = Math.max(112, Math.min(178, y));
-    c.el.classList.toggle('flip', x < c.x); c.el.classList.add('walk'); c.el.classList.remove('sleep');
-    c.el.style.left = x + '%'; c.el.style.top = y + 'px'; c.el.style.zIndex = 10 + Math.round(y);
-    c.x = x; c.y = y; setTimeout(() => c.el.classList.remove('walk'), 2200);
+  const moveTo = (c, x, y, fast) => {
+    x = clamp(x, 2, N * 100 - 20); y = clamp(y, 112, 178);
+    c.el.classList.toggle('flip', x < c.x); c.el.classList.add('walk'); c.el.classList.remove('sleep'); c.el.classList.toggle('chase', !!fast);
+    c.el.style.left = (x / N) + '%'; c.el.style.top = y + 'px'; c.el.style.zIndex = 10 + Math.round(y);
+    c.x = x; c.y = y; clearTimeout(c.wt); c.wt = setTimeout(() => c.el.classList.remove('walk'), fast ? 750 : 2200);
   };
   const select = i => { S.sel = i; save(); cats.forEach((c, j) => c.el.classList.toggle('sel', j === i)); paintDress(); };
   S.cats.forEach((cat, i) => {
     const el = h('button', {class:'cat' + (i === (S.sel || 0) ? ' sel' : ''), 'aria-label':`Pet ${cat.name || 'your kitten'}`}, h('div', {class:'in', html:catSVG(cat)}), h('span', {class:'tag'}, cat.name || '…'));
     const c = {el, cat, x:8 + (i * 23) % 70, y:140 + (i * 17) % 36, busy:0};
-    el.style.left = c.x + '%'; el.style.top = c.y + 'px'; el.style.zIndex = 10 + c.y;
+    el.style.left = (c.x / N) + '%'; el.style.top = c.y + 'px'; el.style.zIndex = 10 + c.y;
     el.addEventListener('click', () => { select(i); el.classList.remove('purr', 'sleep'); void el.offsetWidth; el.classList.add('purr'); bubble(c, '💖'); c.busy = Date.now() + 2500; });
     cats.push(c); room.append(el);
   });
-  /* what kittens do on their own: wander, nap, play, visit a friend */
-  const spots = () => [['bed', 6, 176, 'Zzz'], ['yarn', 44, 134, '🧶'], ['post', 62, 132, '✨'], ['box', 54, 168, '😸'], ['mouse', 14, 140, '🐾'], ['fly', 30, 128, '🦋']].filter(s => has(s[0]));
-  const timers = [];
+
+  /* what kittens do on their own: wander (mostly inside their room), nap, play, visit a friend */
+  const spots = () => Object.keys(DECO_SPOT).filter(has).map(id => { const p = pos(id), s = DECO_SPOT[id]; return [id, p[0] + s[0], p[1] + s[1], s[2]]; });
   const act = () => {
     const now = Date.now();
     cats.forEach((c, i) => {
       if (c.busy > now || Math.random() < .35) return;
       const r = Math.random(), sp = spots();
-      if (r < .25 && cats.length > 1){ const o = cats[(i + 1 + Math.floor(Math.random() * (cats.length - 1))) % cats.length]; moveTo(c, o.x + (o.x > 40 ? -12 : 12), o.y + 4); timers.push(setTimeout(() => { bubble(c, '💕'); bubble(o, '💕'); }, 2300)); }
+      if (r < .25 && cats.length > 1){ const o = cats[(i + 1 + Math.floor(Math.random() * (cats.length - 1))) % cats.length]; moveTo(c, o.x + (o.x % 100 > 40 ? -12 : 12), o.y + 4); timers.push(setTimeout(() => { bubble(c, '💕'); bubble(o, '💕'); }, 2300)); }
       else if (r < .6 && sp.length){ const s = sp[Math.floor(Math.random() * sp.length)]; moveTo(c, s[1] + Math.random() * 6, s[2]); timers.push(setTimeout(() => { if (s[0] === 'bed'){ c.el.classList.add('sleep'); c.busy = Date.now() + 6000; } else { c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); } bubble(c, s[3]); }, 2300)); }
-      else moveTo(c, 4 + Math.random() * 74, 114 + Math.random() * 62);
+      else { const rm = Math.floor(c.x / 100), to = Math.random() < .18 ? clamp(rm + (Math.random() < .5 ? -1 : 1), 0, N - 1) : rm; moveTo(c, to * 100 + 4 + Math.random() * 74, 114 + Math.random() * 62); }
     });
+    paintNav();
   };
   const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const loop = still ? null : setInterval(act, 3000);
-  cleanup = () => { if (loop) clearInterval(loop); timers.forEach(clearTimeout); };
+  cleanup = () => { if (loop) clearInterval(loop); timers.forEach(clearTimeout); if (edgeRaf) cancelAnimationFrame(edgeRaf); cats.forEach(c => clearTimeout(c.wt)); };
+
+  /* room buttons: which room you are in and how many kittens are there */
+  const nav = h('div', {class:'dress', style:'justify-content:center;margin-bottom:12px'});
+  const goRoom = r => { const left = r * W(); if (vp.scrollTo) vp.scrollTo({left, behavior:'smooth'}); else vp.scrollLeft = left; };
+  const paintNav = () => {
+    const cur = curRoom(), counts = Array.from({length:N}, (_, r) => cats.filter(c => Math.floor(c.x / 100) === r).length), key = cur + ':' + counts.join(',');
+    if (key === navKey) return; navKey = key;
+    nav.replaceChildren(...counts.map((n, r) => h('button', {class:'chipb' + (r === cur ? ' on' : ''), 'aria-label':`Go to room ${r + 1}`, onclick:() => goRoom(r)}, `Room ${r + 1}` + (n ? ' · ' + '🐱'.repeat(Math.min(n, 4)) : ''))));
+  };
+  let scrollT = 0; vp.addEventListener('scroll', () => { clearTimeout(scrollT); scrollT = setTimeout(paintNav, 80); });
+
+  /* whistle: every kitten runs to the middle of the room you are looking at */
+  const whistle = () => {
+    if (!cats.length) return; chirp();
+    const fx = curRoom() * 100 + 34, fy = 150, rip = h('div', {class:'ripple', style:`left:${(fx + 9) / N}%;top:178px`}); room.append(rip); setTimeout(() => rip.remove(), 1000);
+    cats.forEach((c, i) => { c.busy = Date.now() + 5000; moveTo(c, fx + ((i % 3) - 1) * 14 + (i > 2 ? 7 : 0), fy + (i % 2) * 10, true); timers.push(setTimeout(() => bubble(c, '🎵'), 800)); });
+    paintNav();
+  };
+
+  /* laser pointer: hold and drag on the room, the kittens chase the red dot and pounce when it stops */
+  const dot = h('div', {class:'laser', hidden:true}); room.append(dot);
+  let laserDown = false, chaseT = 0, dotT = 0;
+  const laserTo = (cx, cy) => {
+    const r = room.getBoundingClientRect(), x = (cx - r.left) / W() * 100, y = cy - r.top;
+    dot.hidden = false; dot.style.left = (x / N) + '%'; dot.style.top = y + 'px';
+    const now = Date.now(); if (now - chaseT < 260) return; chaseT = now;
+    cats.forEach((c, i) => { c.busy = now + 4000; moveTo(c, x - 8 + ((i % 3) - 1) * 15, y - 40 + (i % 2) * 10, true); });
+  };
+  vp.addEventListener('pointerdown', e => {
+    if (mode !== 'laser') return; e.preventDefault(); laserDown = true; clearTimeout(dotT);
+    if (vp.setPointerCapture && e.pointerId != null) try { vp.setPointerCapture(e.pointerId); } catch (x) {}
+    lastPtr = {cx:e.clientX, cy:e.clientY}; onTick = () => laserTo(lastPtr.cx, lastPtr.cy); laserTo(e.clientX, e.clientY);
+  });
+  vp.addEventListener('pointermove', e => { if (mode !== 'laser' || !laserDown) return; lastPtr = {cx:e.clientX, cy:e.clientY}; laserTo(e.clientX, e.clientY); setEdge(e.clientX); });
+  const laserUp = () => {
+    if (!laserDown) return; laserDown = false; stopEdge();
+    timers.push(setTimeout(() => cats.forEach(c => { c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); bubble(c, '😼'); }), 750));
+    dotT = setTimeout(() => { dot.hidden = true; }, 1500);
+  };
+  vp.addEventListener('pointerup', laserUp); vp.addEventListener('pointercancel', laserUp);
+
+  /* tools */
+  const modeHint = h('div', {class:'hint', style:'text-align:center;margin:-2px 0 10px', hidden:true});
+  const decorBtn = h('button', {class:'chipb tool', onclick:() => setMode(mode === 'decor' ? '' : 'decor')}, '🛋️ Decorate');
+  const laserBtn = h('button', {class:'chipb tool', onclick:() => setMode(mode === 'laser' ? '' : 'laser')}, '🔴 Laser');
+  const whistleBtn = h('button', {class:'chipb tool', onclick:whistle}, '📣 Whistle');
+  function setMode(m){
+    mode = m; if (m !== 'laser'){ dot.hidden = true; laserDown = false; }
+    vp.classList.toggle('decor-on', m === 'decor'); vp.classList.toggle('laser-on', m === 'laser');
+    decorBtn.classList.toggle('on', m === 'decor'); laserBtn.classList.toggle('on', m === 'laser');
+    modeHint.hidden = !m; modeHint.textContent = m === 'decor' ? 'Drag things to move them. Hold one near the edge to carry it to another room.' : m === 'laser' ? 'Touch and drag in the room. The kittens chase the red dot!' : '';
+  }
 
   /* care buttons */
   const feed = h('button', {class:'btn', onclick:() => {
     if (!S.food || !cats.length) return;
-    S.food = 0; save(); cats.forEach((c, i) => { c.busy = Date.now() + 4500; moveTo(c, 22 + i * 9 % 30, 168 + (i % 2) * 6); timers.push(setTimeout(() => bubble(c, '😋'), 2300)); });
+    const fx = pos('food')[0];
+    S.food = 0; save(); cats.forEach((c, i) => { c.busy = Date.now() + 4500; moveTo(c, fx - 5 + i * 9 % 30, 168 + (i % 2) * 6); timers.push(setTimeout(() => bubble(c, '😋'), 2300)); });
     timers.push(setTimeout(() => { food.innerHTML = BOWL(0, 'food'); }, 2600)); paintDock();
   }});
   const treat = h('button', {class:'btn', onclick:() => {
@@ -764,11 +891,14 @@ function litterView(v){
   const first = !S.cats.length;
   v.append(...[
     first ? h('div', {class:'card'}, h('h2', {}, '🐾 Your first kitten'), h('div', {class:'hint'}, `Get ${CAT_AT} problems right to adopt a kitten! You have ${Math.min(S.area['pv-add'] || 0, CAT_AT)}.`), h('div', {class:'bar'}, h('i', {style:`width:${Math.min(100, (S.area['pv-add'] || 0) / CAT_AT * 100)}%`}))) : null,
-    room,
+    vp,
+    nav,
+    first ? null : h('div', {class:'tools'}, whistleBtn, laserBtn, decorBtn),
+    first ? null : modeHint,
     first ? null : h('div', {class:'dock'}, feed, treat),
     h('div', {class:'card', hidden:true}, dress),
     h('div', {class:'card'}, h('div', {class:'hint'}, `💧 Water: ${S.water || 0}%. Every right answer adds water.`), next ? h('div', {class:'hint', style:'margin-top:4px'}, `🎁 Next: ${next.e} ${next.n} at ${cost(S.got)} ⭐ (${cost(S.got) - S.stars} more)`) : h('div', {class:'hint'}, '🎁 You found every reward!'))].filter(Boolean));
-  paintDock(); paintDress();
+  paintDock(); paintDress(); paintNav();
 }
 
 /* ---------- place value marks ---------- */

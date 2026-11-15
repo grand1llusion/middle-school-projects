@@ -11,6 +11,7 @@ const q$ = (s, r = d) => [...r.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const openSkill = name => { click(q$('#nav button')[0]); click(q$('.skill').find(s => s.textContent.includes(name))); };
 const starN = () => d.querySelector('#starN').textContent;
+const btn = t => q$('button').find(b => b.textContent.trim().startsWith(t));
 
 (async () => {
   /* ---- Count by 10s ---- */
@@ -62,6 +63,41 @@ const starN = () => d.querySelector('#starN').textContent;
   for (const p of parts){ click(p); await sleep(1300); seen.push(boss()); }
   ok(seen.join() === '93,90,87', 'boss counts down ' + seen);
   await sleep(1000); ok(/You got it/.test(d.querySelector('.banner').textContent) && T.S().area['ns-sub'] === 1, 'take away finishes');
+
+  /* ---- the house: rooms, drag furniture, whistle, laser ---- */
+  const S = T.S(); S.cats = [{name:'Luna', coat:0, wear:[]}, {name:'Mo', coat:1, wear:[]}]; S.got = 4; S.sel = 0; S.food = 1;
+  click(q$('#nav button').find(b => b.textContent === 'Litter'));
+  ok(q$('.room .rm').length === 3, 'three rooms');
+  ok(q$('.house-vp ~ .dress button').map(b => b.textContent.replace(/\s+/g, ' ')).join('|').startsWith('Room 1 · 🐱🐱|Room 2|Room 3'), 'room buttons show where the kittens are: ' + q$('.house-vp ~ .dress button').map(b => b.textContent));
+  const vp = d.querySelector('.house-vp'), room = d.querySelector('.room');
+  const ptr = (el, type, x, y) => el.dispatchEvent(new w.MouseEvent(type, {bubbles:true, clientX:x, clientY:y}));
+  const bed = room.querySelector('.it[data-id="bed"]'), bowlLeft = room.querySelector('.it[data-id="food"]').style.left;
+  ptr(bed, 'pointerdown', 10, 10); ptr(bed, 'pointermove', 500, 60); ptr(bed, 'pointerup', 500, 60);
+  ok(!S.deco.bed, 'furniture does not move unless Decorate is on');
+  click(btn('🛋️')); ok(vp.classList.contains('decor-on') && q$('.hint').some(e => !e.hidden && /Drag things/.test(e.textContent)), 'decorate mode on, with its hint');
+  ptr(bed, 'pointerdown', 10, 10); ptr(bed, 'pointermove', 500, 60); ptr(bed, 'pointerup', 500, 60);
+  ok(S.deco.bed && S.deco.bed[0] > 100 && S.deco.bed[0] < 200, 'bed dragged into room 2: ' + JSON.stringify(S.deco.bed));
+  ok(Math.abs(parseFloat(bed.style.left) * 3 - S.deco.bed[0]) < .5 && !bed.classList.contains('drag'), 'bed drawn where it was dropped');
+  ok(JSON.parse(w.localStorage.getItem('kitty-math-g2-v1')).deco.bed[0] === S.deco.bed[0], 'furniture position saved');
+  ok(room.querySelector('.it[data-id="food"]').style.left === bowlLeft, 'other furniture stays put');
+  ptr(room.querySelector('.it[data-id="yarn"]'), 'pointerdown', 5, 5); ptr(room.querySelector('.it[data-id="yarn"]'), 'pointermove', 9999, 9999); ptr(room.querySelector('.it[data-id="yarn"]'), 'pointerup', 9999, 9999);
+  ok(S.deco.yarn[0] <= 300 && S.deco.yarn[1] <= 262, 'furniture stays inside the house: ' + JSON.stringify(S.deco.yarn));
+  click(btn('🔴')); ok(vp.classList.contains('laser-on') && !vp.classList.contains('decor-on'), 'laser replaces decorate');
+  const catXs = () => q$('.cat').map(c => parseFloat(c.style.left) * 3);
+  ptr(vp, 'pointerdown', 200, 150); await sleep(20);
+  ok(!d.querySelector('.laser').hidden, 'red dot shows');
+  ok(catXs().every(x => x > 35 && x < 75) && q$('.cat').every(c => c.classList.contains('chase')), 'kittens chase the dot: ' + catXs());
+  ptr(vp, 'pointermove', 100, 140); await sleep(300); ptr(vp, 'pointermove', 100, 140);
+  ok(catXs().every(x => x >= 2 && x < 40), 'kittens follow it left: ' + catXs());
+  ptr(vp, 'pointerup', 100, 140); await sleep(900);
+  ok(q$('.cat').every(c => c.classList.contains('jump')), 'kittens pounce when it stops');
+  await sleep(800); ok(d.querySelector('.laser').hidden, 'dot fades away');
+  click(btn('🔴')); ok(!vp.classList.contains('laser-on'), 'laser off');
+  ptr(vp, 'pointerdown', 200, 150); ok(d.querySelector('.laser').hidden, 'no dot when laser is off');
+  click(btn('📣')); ok(q$('.ripple').length === 1, 'whistle ripple');
+  ok(catXs().every(x => x > 15 && x < 60), 'whistle gathers kittens in the middle of room 1: ' + catXs());
+  await sleep(900); ok(q$('.cat .bub').length === 2, 'kittens answer the whistle');
+  click(btn('🍽️')); await sleep(2400); ok(catXs().every(x => x < 80), 'feeding still sends kittens to the food bowl: ' + catXs());
 
   await sleep(1300);
   ok(starN() === String(T.S().stars), 'star count caught up: ' + starN() + ' vs ' + T.S().stars);

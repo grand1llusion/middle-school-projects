@@ -212,7 +212,7 @@ nav button{font-size:10px}
 .ns2-leaf.ones{border-color:#a855f7;color:#a855f7}
 .ns2-leaf.sel{background:var(--pinkt);border-color:var(--pink);color:var(--ink)}
 .ns2-leaf.paired{opacity:.38;cursor:default}
-.ns2-leaf.auto{opacity:.32;cursor:default;border-style:dashed;font-size:18px}
+.ns2-leaf.auto{cursor:default;border-style:dashed;border-color:var(--pink);background:var(--pinkt);color:var(--pink)}
 .ns2-sum{font:700 17px/1.4 var(--fd);padding:5px 9px;border-radius:12px;cursor:default;border-bottom:3px solid currentColor;user-select:none;transition:opacity .4s;white-space:nowrap}
 .ns2-sum.tens{color:var(--ok)}
 .ns2-sum.ones{color:#a855f7}
@@ -574,7 +574,7 @@ const REWARDS = [
 ];
 const cost = i => CAT_AT + STEP * (i + 1);   /* 25, 40, 55 ... */
 const has = id => REWARDS.findIndex(r => r.id === id) < S.got;
-const AREAS = {'pv-add':'Draw to Add','pv-sub':'Draw to Subtract','skip-10':'Count by 10s','ns-add':'Break Apart','ns-sub':'Combine'};
+const AREAS = {'pv-add':'Draw to Add','pv-sub':'Draw to Subtract','skip-10':'Count by 10s','ns-add':'Break Apart','ns-sub':'Take Away'};
 const COATS = [
   {n:'gray', b:'#A7AFC4', s:'#7F89A3'}, {n:'orange', b:'#F5A95F', s:'#D9823A'}, {n:'white', b:'#FBF8F2', s:'#DCD3C3'},
   {n:'black', b:'#3F3F50', s:'#2A2A36'}, {n:'cream', b:'#F3DDB8', s:'#D8B988'}, {n:'blue', b:'#93A9D0', s:'#6F86B0'}
@@ -1157,14 +1157,14 @@ function nsAdd(v,a,b){
   const finalEl=h('div',{class:'ns2-final',style:'opacity:0'},String(a+b));
 
   const compDefs=[];
-  if(aH>0) compDefs.push({key:'h',val:aH,color:'#999'});
+  if(aH>0) compDefs.push({key:'h',val:aH,color:'#F48FBF'});
   compDefs.push({key:'t',val:tensSumVal,color:'var(--ok)'});
   compDefs.push({key:'o',val:onesSumVal,color:'#a855f7'});
   const compEls={};
   let compDone=0;
 
   const compTileEls=compDefs.map(d=>{
-    const el=h('div',{class:'ns2-leaf',style:'cursor:default;border-color:'+d.color+';color:'+d.color},String(d.val));
+    const el=h('div',{class:'ns2-leaf',style:'cursor:default;border-color:'+d.color+';color:'+d.color+(d.key==='h'?';border-style:dashed;background:var(--pinkt)':'')},String(d.val));
     compEls[d.key]=el;
     el.addEventListener('click',()=>{
       if(el.dataset.tapped||el.style.cursor==='default') return;
@@ -1204,6 +1204,7 @@ function nsAdd(v,a,b){
     compTileEls.forEach(el=>{el.style.cursor='pointer';});
     drawLine(tensSumEl,compEls['t'],'var(--ok)',0.1);
     drawLine(onesSumEl,compEls['o'],'#a855f7',0.2);
+    if(compEls['h']) drawLine(leafAH,compEls['h'],'#F48FBF',0.3);
     setTimeout(()=>markNext(...compTileEls),250);
   };
 
@@ -1437,7 +1438,7 @@ const SKILLS = [{id:'pv-add', cat:'🗺️ Places',        n:'Draw to Add',     
                 {id:'pv-sub', cat:'🗺️ Places',        n:'Draw to Subtract',  sub:'Cross out on the chart',   e:'➖', open:drawToSubtract},
                 {id:'skip-10',cat:'🔢 Skip Counting', n:'Count by 10s',      sub:'Ten, twenty, thirty…',     e:'🔢', open:skipCountBy10},
                 {id:'ns-add', cat:'🧩 Number Sense',  n:'Break Apart',       sub:'Expand and simplify',      e:'🌳', open:numberSenseAdd},
-                {id:'ns-sub', cat:'🧩 Number Sense',  n:'Combine',           sub:'Boss battle subtraction',   e:'⚔️', open:numberSenseSub}];
+                {id:'ns-sub', cat:'🧩 Number Sense',  n:'Take Away',         sub:'Beat the big number',  e:'⚔️', open:numberSenseSub}];
 
 /* ---------- tabs ---------- */
 const ICONS = {

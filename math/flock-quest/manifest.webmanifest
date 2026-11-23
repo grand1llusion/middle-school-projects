@@ -1,0 +1,24 @@
+{
+  "name": "Flock Quest",
+  "short_name": "Flock Quest",
+  "description": "Practice math, rescue sheep, grow an endless meadow and beat the Neon Wizard G.O.A.T.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#E7EFE2",
+  "theme_color": "#D8E7CE",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

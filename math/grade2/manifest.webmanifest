@@ -1,7 +1,7 @@
 {
   "name": "Meow Math",
   "short_name": "Meow Math",
-  "description": "2nd grade · Math",
+  "description": "2nd grade · Draw to add · Kittens to earn",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

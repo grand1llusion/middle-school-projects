@@ -21,17 +21,17 @@
     "added": "2026-11-12"
   },
   {
-    "path": "math/grade2",
-    "class": "Math",
-    "app_name": "Meow Math",
-    "subtitle": "2nd grade · Math",
-    "added": "2026-11-14"
-  },
-  {
     "path": "math/flock-quest",
     "class": "Math",
     "app_name": "Flock Quest",
     "subtitle": "6th grade · Adv Math 7 · Rescue the flock",
     "added": "2026-11-22"
+  },
+  {
+    "path": "math/grade2",
+    "class": "Math",
+    "app_name": "Meow Math",
+    "subtitle": "2nd grade · Draw to add · Kittens to earn",
+    "added": "2026-11-14"
   }
 ]

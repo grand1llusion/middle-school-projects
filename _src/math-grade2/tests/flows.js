@@ -123,6 +123,25 @@ const btn = t => q$('button').find(b => b.textContent.trim().startsWith(t));
   await sleep(2400);
   ok(d.querySelector('#fishN').textContent === String(T.S().fish) && !q$('.star-fly').length, 'fish count caught up: ' + d.querySelector('#fishN').textContent + ' vs ' + T.S().fish);
   ok(starN() === String(T.S().stars), 'star count caught up: ' + starN() + ' vs ' + T.S().stars);
-  console.log(errs.length ? errs.join('\n') : 'NO ERRORS · count by 10s (no negatives, running list, flash, star), break apart, take away');
+  /* ---- Share Fish ---- */
+  for (let t = 0; t < 3000; t++){ T.S().sh = {n:t % 12, cur:null}; const [k, e] = T.makeShareProblem(null); if (k < 2 || k > 5 || e < 2 || e > 5 || k * e > 20) { errs.push('bad share problem ' + k + ' ' + e); break; } }
+  T.S().sh = {n:0, cur:[3, 4]}; const star0 = T.S().stars;
+  openSkill('Share Fish');
+  ok(/12\s*÷\s*3\s*=\s*\?/.test(d.querySelector('.sf-eq').textContent), 'equation on top: ' + d.querySelector('.sf-eq').textContent);
+  ok(q$('.sf-bowl').length === 3 && q$('.sf-pile .sf-f').length === 12, 'three bowls, twelve fish');
+  ok(d.querySelector('.acts .btn').disabled, 'check disabled while fish remain');
+  click(q$('.sf-pile .sf-f')[0]); ok(q$('.sf-pile .sf-f.sel').length === 1, 'fish selected');
+  const bowls = () => q$('.sf-bowl');
+  for (let i = 0; i < 12; i++) click(bowls()[i === 11 ? 0 : i % 3]);       /* unfair: 5,4,3 */
+  ok(q$('.sf-pile .sf-f').length === 0 && !d.querySelector('.acts .btn').disabled, 'pile empty, check enabled');
+  click(d.querySelector('.acts .btn')); ok(/Not fair/.test(d.querySelector('.sf-msg').textContent) && T.S().stars === star0, 'unfair share is not rewarded');
+  ok(bowls()[2].classList.contains('need'), 'short bowl wiggles');
+  click(q$('.sf-dish .sf-f', bowls()[0])[0]); click(bowls()[2]);        /* move one fish from bowl 1 to bowl 3 */
+  ok(q$('.sf-pile .sf-f').length === 0, 'fish back in pile then dropped');
+  click(d.querySelector('.acts .btn')); ok(T.S().stars === star0 + 1, 'fair share earns a star');
+  ok(/12\s*÷\s*3\s*=\s*4/.test(d.querySelector('.sf-eq').textContent) && /3 × 4 = 12/.test(d.querySelector('.sf-eq').textContent), 'equation fills in: ' + d.querySelector('.sf-eq').textContent);
+  click(btn('Next fish')); ok(/÷/.test(d.querySelector('.sf-eq').textContent) && !/[^\d]\d+\s*÷\s*3\s*=\s*4/.test('x') , 'next problem loads'); ok(T.S().sh.n === 1, 'counter advanced');
+
+  console.log(errs.length ? errs.join('\n') : 'NO ERRORS · share fish, count by 10s (no negatives, running list, flash, star), break apart, take away');
   process.exit(errs.length ? 1 : 0);
 })().catch(e => { console.log('CRASH ' + e.stack); process.exit(1); });

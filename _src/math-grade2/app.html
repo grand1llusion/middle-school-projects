@@ -54,6 +54,24 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .sc-li{font:700 18px/1.55 var(--fd);color:var(--mut)}
 .sc-li.new{color:var(--pink);font-weight:800;animation:numPop .4s ease-out}
 .sc-main{flex:1;min-width:0}
+.sf-eq{text-align:center;font:800 46px/1.1 var(--fd);color:var(--ink);background:var(--soft);border-radius:16px;padding:10px 6px;display:flex;justify-content:center;align-items:baseline;gap:.25em;flex-wrap:wrap}
+.sf-eq .op{color:var(--mut)} .sf-eq .q{color:var(--pink)} .sf-eq .ans{color:var(--ok);animation:numPop .5s ease-out}
+.sf-eq small{flex-basis:100%;font:700 18px var(--fb);color:var(--mut);margin-top:2px}
+.sf-pile{position:relative;background:var(--soft);border-radius:14px;padding:22px 8px 8px;display:flex;flex-wrap:wrap;gap:2px;min-height:76px;align-content:flex-start}
+.sf-tag{position:absolute;left:10px;top:4px;font:700 13px var(--fb);color:var(--mut)}
+.sf-f{width:36px;height:36px;padding:0;border:2px solid transparent;border-radius:10px;background:none;font-size:23px;line-height:1;display:grid;place-items:center}
+.sf-f.sel{border-color:var(--gold);background:rgba(255,207,90,.28);transform:translateY(-3px)}
+.sf-bowls{display:grid;gap:6px}
+.sf-bowl{border:3px solid var(--line);border-radius:16px;padding:6px 2px 8px;text-align:center;min-width:0;background:var(--cell);display:flex;flex-direction:column;align-items:center;gap:2px;font:inherit;color:inherit}
+.sf-bowl.ok{border-color:var(--ok);background:var(--okt)}
+.sf-bowl.need{animation:shake .45s;border-color:var(--gold)}
+.sf-cat{font-size:32px;line-height:1.1}
+.sf-dish{display:flex;flex-wrap:wrap;justify-content:center;min-height:44px;align-content:flex-start;width:100%}
+.sf-dish .sf-f{width:34px;height:34px;font-size:23px;border-radius:8px}
+.sf-bowls.many .sf-dish .sf-f{width:26px;height:26px;font-size:18px}
+.sf-pile+.sf-bowls+.sf-msg+.acts .btn:disabled,.sf-card .btn:disabled{opacity:.4}
+.sf-n{font:800 18px var(--fd);color:var(--mut)}
+.sf-msg{text-align:center;font:700 16px/1.3 var(--fb);min-height:22px}
 .sc-flash{animation:scFlash 1s ease-out}
 @keyframes scFlash{0%,100%{background:var(--surf);box-shadow:0 6px 18px var(--shadow)}25%,65%{background:var(--okt);box-shadow:0 0 0 5px var(--ok)}}
 .pet{width:46px;height:46px;flex:none;border-radius:50%;border:2px dashed var(--chrome-mut);background:rgba(255,255,255,.08);display:grid;place-items:center;padding:0}
@@ -597,7 +615,7 @@ const REWARDS = [
 ];
 const cost = i => CAT_AT + STEP * (i + 1);   /* 25, 40, 55 ... */
 const has = id => REWARDS.findIndex(r => r.id === id) < S.got;
-const AREAS = {'pv-add':'Draw to Add','pv-sub':'Draw to Subtract','skip-10':'Count by 10s','ns-add':'Break Apart','ns-sub':'Take Away'};
+const AREAS = {'pv-add':'Draw to Add','pv-sub':'Draw to Subtract','skip-10':'Count by 10s','ns-add':'Break Apart','ns-sub':'Take Away','share':'Share Fish'};
 const COATS = [
   {n:'gray', b:'#A7AFC4', s:'#7F89A3'}, {n:'orange', b:'#F5A95F', s:'#D9823A'}, {n:'white', b:'#FBF8F2', s:'#DCD3C3'},
   {n:'black', b:'#3F3F50', s:'#2A2A36'}, {n:'cream', b:'#F3DDB8', s:'#D8B988'}, {n:'blue', b:'#93A9D0', s:'#6F86B0'}
@@ -1648,11 +1666,69 @@ function nsSub(v,a,b){
     h('div',{class:'card'},container,banner,h('div',{class:'acts'},actBtn)));
 }
 
+/* ---------- Skill 6: Share Fish (division as fair sharing) ---------- */
+const SF_CATS=['🐱','😺','😸','🐈','😼'];
+function makeShareProblem(prev){
+  const n=(S.sh&&S.sh.n)||0, hi=Math.min(5,2+Math.floor(n/2));
+  for(let t=0;t<50;t++){const k=rnd(2,hi),e=rnd(2,hi);if(k*e>20)continue;if(prev&&prev[0]===k&&prev[1]===e)continue;return [k,e];}
+  return [2,3];
+}
+function shareFish(v){
+  S.sh=S.sh||{n:0,cur:null};
+  if(!S.sh.cur) S.sh.cur=makeShareProblem(null);
+  const [k,e]=S.sh.cur, total=k*e;
+  let pile=total, bowls=Array(k).fill(0), sel=false, locked=false, missed=false;
+  const eqEl=h('div',{class:'sf-eq'});
+  const paintEq=(done)=>{eqEl.replaceChildren(h('span',{},String(total)),h('span',{class:'op'},'÷'),h('span',{},String(k)),h('span',{class:'op'},'='),
+    done?h('span',{class:'ans'},String(e)):h('span',{class:'q'},'?'),
+    h('small',{},done?`Check: ${k} × ${e} = ${total}`:`Share ${total} fish with ${k} kittens. Each gets the same.`));};
+  paintEq(false);
+  const pileEl=h('div',{class:'sf-pile'}), bowlsEl=h('div',{class:'sf-bowls'+(k>3?' many':''),style:`grid-template-columns:repeat(${k},1fr)`});
+  const msg=h('div',{class:'sf-msg'},'Tap a fish, then tap a kitten’s bowl.');
+  const check=h('button',{class:'btn ok',disabled:true},'Check bowls');
+  const bowlEls=[];
+  const paint=()=>{
+    pileEl.replaceChildren(h('span',{class:'sf-tag'},pile?`Fish left: ${pile}`:'All shared!'),
+      ...Array.from({length:pile},(_,i)=>h('button',{class:'sf-f'+(sel&&i===pile-1?' sel':''),'aria-label':'Fish',onclick:()=>{if(locked)return;sel=!sel;paint();}},'🐟')));
+    bowls.forEach((n,i)=>{const b=bowlEls[i];b.querySelector('.sf-dish').replaceChildren(...Array.from({length:n},()=>h('span',{class:'sf-f',role:'button','aria-label':'Take fish back',onclick:ev=>{ev.stopPropagation();if(locked)return;bowls[i]--;pile++;sel=false;paint();}},'🐟')));b.querySelector('.sf-n').textContent=String(n);});
+    check.disabled=locked||pile>0;
+    if(pile===0&&!locked) markNext(check); else markNext();
+  };
+  for(let i=0;i<k;i++){
+    const b=h('div',{class:'sf-bowl',role:'button',tabindex:'0','aria-label':'Kitten '+(i+1)+' bowl'},h('div',{class:'sf-cat'},SF_CATS[i]),h('div',{class:'sf-dish'}),h('div',{class:'sf-n'},'0'));
+    const drop=()=>{if(locked||pile<1)return;pile--;bowls[i]++;sel=false;msg.textContent='';paint();};
+    b.addEventListener('click',drop); b.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();drop();}});
+    bowlEls.push(b); bowlsEl.append(b);
+  }
+  check.addEventListener('click',()=>{
+    if(locked||pile>0)return;
+    const fair=bowls.every(n=>n===e);
+    if(fair){
+      locked=true; paintEq(true); msg.textContent='Fair! Every kitten got '+e+'.';
+      bowlEls.forEach(b=>b.classList.add('ok'));
+      award('share'); if(!missed) giveFish(3,'✨ Fair on the first try!');
+      S.sh.n++; S.sh.cur=makeShareProblem(S.sh.cur); save(); paint();
+      const nxt=h('button',{class:'btn ok',onclick:()=>{v.replaceChildren();shareFish(v);window.scrollTo(0,0);}},'Next fish');
+      acts.replaceChildren(nxt); markNext(nxt);
+    } else {
+      missed=true; miss();
+      const avg=total/k;
+      bowls.forEach((n,i)=>{if(n<avg){bowlEls[i].classList.remove('need');void bowlEls[i].offsetWidth;bowlEls[i].classList.add('need');}});
+      msg.textContent='Not fair yet! Tap fish in a bowl to take them back, then share again.';
+    }
+  });
+  const acts=h('div',{class:'acts'},check);
+  paint();
+  v.append(h('div',{style:'margin-bottom:12px'},h('button',{class:'btn ghost',onclick:()=>go('learn')},'← Learn')),
+    h('div',{class:'card sf-card',style:'display:flex;flex-direction:column;gap:12px'},eqEl,pileEl,bowlsEl,msg,acts));
+}
+
 const SKILLS = [{id:'pv-add', cat:'🗺️ Places',        n:'Draw to Add',       sub:'Hundreds, tens, and ones', e:'➕', open:drawToAdd},
                 {id:'pv-sub', cat:'🗺️ Places',        n:'Draw to Subtract',  sub:'Cross out on the chart',   e:'➖', open:drawToSubtract},
                 {id:'skip-10',cat:'🔢 Skip Counting', n:'Count by 10s',      sub:'Ten, twenty, thirty…',     e:'🔢', open:skipCountBy10},
                 {id:'ns-add', cat:'🧩 Number Sense',  n:'Break Apart',       sub:'Expand and simplify',      e:'🌳', open:numberSenseAdd},
-                {id:'ns-sub', cat:'🧩 Number Sense',  n:'Take Away',         sub:'Beat the big number',  e:'⚔️', open:numberSenseSub}];
+                {id:'ns-sub', cat:'🧩 Number Sense',  n:'Take Away',         sub:'Beat the big number',  e:'⚔️', open:numberSenseSub},
+                {id:'share', cat:'➗ Sharing', n:'Share Fish', sub:'Fair shares for kittens', e:'🐟', open:shareFish}];
 
 /* ---------- tabs ---------- */
 const ICONS = {
@@ -1986,6 +2062,6 @@ if (CLOUD_ACTIVE && syncMeta.playerId) {
   const saved = loadState(activeKey); if (saved) Object.assign(S, fresh(), saved);
   CLOUD.refresh().then(() => syncNow()).catch(() => {});
 }
-if (window.__TEST__) window.__T = {S:() => S, digits, makeProblem, makeSkipProblem, giveFish, miss, SHOP, marks, go, award, grant, dayTick, REWARDS, cost, catSVG, queue};
+if (window.__TEST__) window.__T = {S:() => S, makeShareProblem, digits, makeProblem, makeSkipProblem, giveFish, miss, SHOP, marks, go, award, grant, dayTick, REWARDS, cost, catSVG, queue};
 })();
 </script>

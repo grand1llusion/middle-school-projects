@@ -16,7 +16,7 @@ const tap = (r, k, n) => { for (let i = 0; i < n; i++) click(cells()[r * 3 + k])
 const draw = (a, b) => [a, b].forEach((n, r) => T.digits(n).forEach((x, k) => tap(r, k, x)));
 
 ok(q$('#nav button').length === 5, 'five tabs'); let textOK; ok(d.querySelector('#nav button.on').textContent === 'Learn', 'starts on Learn');
-ok(q$('.skill').length === 5, 'five skills: ' + q$('.skill b').map(b => b.textContent).join(', '));
+ok(q$('.skill').length === 6, 'six skills: ' + q$('.skill b').map(b => b.textContent).join(', '));
 click(q$('.skill')[0]);
 ok(eq() === '39 + 136', 'first problem is worksheet #1: ' + eq());
 ok(q$('.pv .hd').map(x => x.textContent).join(',') === '100s,10s,1s', 'chart columns');

@@ -140,6 +140,15 @@ nav button.on svg{stroke:var(--pink)}
 .house-vp .it.drag{cursor:grabbing;filter:drop-shadow(0 8px 6px rgba(0,0,0,.3))}
 .house-vp.decor-on .cat,.house-vp.laser-on .cat{pointer-events:none}
 .house-vp.laser-on{touch-action:none;cursor:crosshair}
+.wbird{animation:wfly 7s linear infinite}
+@keyframes wfly{0%{transform:translate(8px,40px);opacity:0}10%{opacity:1}85%{opacity:1}100%{transform:translate(56px,12px);opacity:0}}
+.cat.inbox .in{clip-path:inset(0 0 46% 0)}
+.cat.gone{opacity:0}
+.cat .carry{position:absolute;left:58%;top:38%;width:22px;height:18px;z-index:4;pointer-events:none}
+.room .it.lit{filter:drop-shadow(0 0 10px #FFE08A) brightness(1.15)}
+.room .it.tap{cursor:pointer}
+.ftoy{position:absolute;font-size:22px;line-height:1;z-index:600;pointer-events:none;animation:ftoy 1.5s ease-out forwards}
+@keyframes ftoy{0%{transform:translate(0,0) scale(.5);opacity:0}20%{opacity:1}50%{transform:translate(14px,-46px) scale(1.1)}100%{transform:translate(30px,6px) scale(1);opacity:0}}
 .cat.chase{transition:left .7s ease-out,top .7s ease-out}
 .laser{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#FF2D3D;box-shadow:0 0 12px 6px rgba(255,45,61,.55);z-index:500;pointer-events:none}
 .ripple{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:4px solid var(--gold);z-index:5;pointer-events:none;animation:ripple .9s ease-out forwards}
@@ -187,7 +196,7 @@ nav button.on svg{stroke:var(--pink)}
 .sheet .art svg{width:100%;height:100%}
 .sheet input{width:100%;min-height:54px;margin:12px 0;border-radius:16px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font:600 24px var(--fd);text-align:center;padding:0 12px}
 .sheet input:focus{outline:none;border-color:var(--pink)}
-@media (prefers-reduced-motion:reduce){.cat,.cat .tl,.cat.walk svg,.room .fly,.bub{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){.wbird,.ftoy,.cat,.cat .tl,.cat.walk svg,.room .fly,.bub{animation:none!important;transition:none!important}}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 @media (max-width:360px){.eq{font-size:34px}.pv{grid-template-columns:50px repeat(3,1fr) 42px}}
 /* club tab */
@@ -731,6 +740,14 @@ const SHOPART = {
   sofa:'<svg width="110" height="58" viewBox="0 0 110 58" aria-hidden="true"><rect x="8" y="10" width="94" height="34" rx="12" fill="#8E7CE0"/><rect x="2" y="24" width="20" height="28" rx="9" fill="#7765CC"/><rect x="88" y="24" width="20" height="28" rx="9" fill="#7765CC"/><rect x="18" y="28" width="74" height="20" rx="8" fill="#A99BF0"/><rect x="14" y="50" width="6" height="7" rx="2" fill="#5B4AA8"/><rect x="90" y="50" width="6" height="7" rx="2" fill="#5B4AA8"/></svg>',
   shelf:'<svg width="60" height="100" viewBox="0 0 60 100" aria-hidden="true"><rect x="2" y="2" width="56" height="96" rx="4" fill="#A47A55"/><rect x="7" y="7" width="46" height="86" fill="#7A5A3E"/><rect x="7" y="35" width="46" height="3" fill="#A47A55"/><rect x="7" y="64" width="46" height="3" fill="#A47A55"/><rect x="10" y="14" width="7" height="21" fill="#F48FBF"/><rect x="18" y="18" width="7" height="17" fill="#9CC7FF"/><rect x="26" y="12" width="8" height="23" fill="#FFD66B"/><rect x="35" y="17" width="7" height="18" fill="#9EE0B5"/><rect x="43" y="14" width="7" height="21" fill="#C7B3F5"/><rect x="10" y="44" width="9" height="20" fill="#9EE0B5"/><rect x="20" y="40" width="7" height="24" fill="#F48FBF"/><rect x="28" y="46" width="8" height="18" fill="#FFD66B"/><rect x="38" y="42" width="12" height="22" fill="#9CC7FF"/><rect x="10" y="74" width="8" height="19" fill="#C7B3F5"/><rect x="19" y="71" width="9" height="22" fill="#FFD66B"/><rect x="30" y="76" width="7" height="17" fill="#F48FBF"/><rect x="38" y="72" width="12" height="21" fill="#9EE0B5"/></svg>'
 };
+
+const RANG1 = '<svg width="22" height="18" viewBox="-11 -9 22 18" aria-hidden="true"><path d="M0-8Q3-3 9 0Q3 3 0 8Q-3 3-9 0Q-3-3 0-8z" fill="#E8A93C" stroke="#B9761F" stroke-width="1.3"/><circle r="2.2" fill="#F6D27A"/></svg>';
+const RANG = n => `<svg width="74" height="38" viewBox="0 0 74 38" aria-label="Plate of crab rangoons"><ellipse cx="37" cy="26" rx="35" ry="11" fill="#FFFFFF" stroke="#7FA6F5" stroke-width="3"/><ellipse cx="37" cy="25" rx="24" ry="6.5" fill="#EEF2FF"/>${[[22,20],[37,15],[52,20]].slice(0, n).map(([x, y]) => `<g transform="translate(${x} ${y}) scale(1.15)"><path d="M0-8Q3-3 9 0Q3 3 0 8Q-3 3-9 0Q-3-3 0-8z" fill="#E8A93C" stroke="#B9761F" stroke-width="1.3"/><circle r="2.2" fill="#F6D27A"/></g>`).join('')}</svg>`;
+SHOPART.window = '<svg width="74" height="112" viewBox="0 0 74 112" aria-hidden="true"><rect x="3" y="2" width="68" height="68" rx="7" fill="#C9A27F"/><rect x="9" y="8" width="56" height="56" rx="3" fill="#BFE3FF"/><circle cx="52" cy="22" r="7" fill="#FFE08A"/><ellipse cx="22" cy="24" rx="11" ry="5" fill="#fff"/><ellipse cx="30" cy="21" rx="8" ry="5" fill="#fff"/><path d="M37 8v56M9 36h56" stroke="#C9A27F" stroke-width="3"/><g class="wbird"><path d="M0 0q4-5 8 0q4-5 8 0" stroke="#3B3B52" fill="none" stroke-width="2" stroke-linecap="round"/></g><rect x="0" y="68" width="74" height="9" rx="3" fill="#D9A877"/><rect x="7" y="77" width="60" height="24" rx="9" fill="#8E7CE0"/><rect x="11" y="79" width="52" height="9" rx="4" fill="#A99AEE"/><rect x="12" y="99" width="6" height="11" rx="2" fill="#A47A55"/><rect x="56" y="99" width="6" height="11" rx="2" fill="#A47A55"/></svg>';
+SHOPART.basket = '<svg width="58" height="48" viewBox="0 0 58 48" aria-hidden="true"><circle cx="18" cy="12" r="9" fill="#8E7CE0"/><path d="M11 10q7 4 14 0M12 15q6 3 12-1" stroke="#fff" stroke-width="1.6" fill="none"/><circle cx="40" cy="10" r="7" fill="#7BD389"/><ellipse cx="29" cy="14" rx="7" ry="5" fill="#C9CEDF"/><circle cx="25" cy="12" r="1.6" fill="#1D2752"/><path d="M36 14q10 6 16 2" stroke="#C9CEDF" stroke-width="2" fill="none"/><path d="M3 18h52l-4 26a4 4 0 01-4 3H11a4 4 0 01-4-3z" fill="#C9A27F"/><path d="M6 25h46M8 33h42M10 41h38" stroke="#A47A55" stroke-width="2"/><path d="M18 18l-2 29M29 18v29M40 18l2 29" stroke="#A47A55" stroke-width="2"/></svg>';
+SHOPART.rangoons = RANG(3);
+SHOPART.tunnel = '<svg width="104" height="54" viewBox="0 0 104 54" aria-hidden="true"><path d="M20 6h64a14 14 0 010 42H20z" fill="#3FB8AF"/><path d="M34 6v42M50 6v42M66 6v42" stroke="#2A948C" stroke-width="3"/><ellipse cx="20" cy="27" rx="12" ry="21" fill="#1F6F69"/><ellipse cx="20" cy="27" rx="8" ry="16" fill="#103F3C"/><ellipse cx="86" cy="27" rx="12" ry="21" fill="#3FB8AF" stroke="#2A948C" stroke-width="3"/><ellipse cx="86" cy="27" rx="7" ry="15" fill="#103F3C"/></svg>';
+SHOPART.hammock = '<svg width="92" height="62" viewBox="0 0 92 62" aria-hidden="true"><rect x="2" y="4" width="7" height="56" rx="3" fill="#A47A55"/><rect x="83" y="4" width="7" height="56" rx="3" fill="#A47A55"/><path d="M8 12Q46 62 84 12" fill="none" stroke="#7FA6F5" stroke-width="3"/><path d="M8 12Q46 56 84 12Q46 32 8 12z" fill="#7FA6F5"/><path d="M8 12Q46 44 84 12" fill="none" stroke="#A9C4FA" stroke-width="5" stroke-linecap="round"/></svg>';
 const SHOP = [
   {id:'cushion', n:'Pillow',     e:'💗', price:4,  def:[22,174]},
   {id:'clock',   n:'Wall clock', e:'🕐', price:5,  def:[34,16], z:1},
@@ -739,7 +756,12 @@ const SHOP = [
   {id:'lamp',    n:'Floor lamp', e:'💡', price:8,  def:[8,70]},
   {id:'table',   n:'Little table', e:'🪑', price:8, def:[58,152]},
   {id:'sofa',    n:'Cozy sofa',  e:'🛋️', price:14, def:[28,118]},
-  {id:'shelf',   n:'Bookshelf',  e:'📚', price:14, def:[80,6]}
+  {id:'shelf',   n:'Bookshelf',  e:'📚', price:14, def:[80,6]},
+  {id:'rangoons', n:'Crab rangoons', e:'🥟', price:6, def:[44,192]},
+  {id:'basket',  n:'Toy basket', e:'🧺', price:8,  def:[10,196]},
+  {id:'tunnel',  n:'Play tunnel', e:'🚇', price:10, def:[60,200]},
+  {id:'window',  n:'Window seat', e:'🪟', price:12, def:[66,14], z:1},
+  {id:'hammock', n:'Cat hammock', e:'😴', price:12, def:[30,160]}
 ];
 function shopView(v){
   const draw = () => {
@@ -748,7 +770,7 @@ function shopView(v){
     const buy = it => {
       if (S.shop[it.id] || (S.fish || 0) < it.price) return;
       S.fish -= it.price; S.shop[it.id] = 1; save(); paintStars();
-      toast(`${it.e} ${it.n} is in your house! Open Litter and tap Decorate.`); draw();
+      toast(`${it.e} ${it.n} is in your house! Open Litter. Tap it to call a kitten.`); draw();
     };
     v.append(
       h('div', {class:'card'}, h('h2', {}, '🐟 Fish shop'), h('div', {class:'hint'}, `You have ${fish} fish. Spend them on furniture for the kitten house.`),
@@ -765,9 +787,9 @@ function shopView(v){
 /* the house: three copies of the room side by side. Positions are in "room widths x 100" (0 to 300) across, pixels down. */
 const HOUSE_ROOMS = 3, ROOM_H = 262;
 const DECO_DEFAULT = {rug:[20,176], tank:[38,26], tree:[82,64], post:[68,110], bed:[2,196], box:[58,196], yarn:[48,140], mouse:[16,150], fly:[30,112], food:[27,222], water:[45,222]};
-const DECO_SPOT = {bed:[4,-20,'Zzz'], yarn:[-4,-6,'🧶'], post:[-6,22,'✨'], box:[-4,-28,'😸'], mouse:[-2,-10,'🐾'], fly:[0,16,'🦋'], cushion:[0,-8,'Zzz'], sofa:[8,-10,'😻'], plant:[-12,6,'🌿']};
+const DECO_SPOT = {rangoons:[-8,16,'😼'], basket:[-6,14,'🎾'], tunnel:[-6,18,'🐾'], window:[10,76,'👀🐦'], hammock:[8,-8,'Zzz'], table:[4,-6,'😼'], shelf:[-10,34,'📚'], lamp:[-10,56,'✨'], bed:[4,-20,'Zzz'], yarn:[-4,-6,'🧶'], post:[-6,22,'✨'], box:[-4,-28,'😸'], mouse:[-2,-10,'🐾'], fly:[0,16,'🦋'], cushion:[0,-8,'Zzz'], sofa:[8,-10,'😻'], plant:[-12,6,'🌿']};
 SHOP.forEach(it => { DECO_DEFAULT[it.id] = it.def; });
-const SLEEPS = ['bed', 'cushion'];
+const SLEEPS = ['bed', 'cushion', 'hammock'];
 const owns = id => REWARDS.some(r => r.id === id) ? has(id) : !!(S.shop && S.shop[id]);
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 let audioCtx = null;
@@ -857,19 +879,60 @@ function litterView(v){
     cats.push(c); room.append(el);
   });
 
-  /* what kittens do on their own: wander (mostly inside their room), nap, play, visit a friend */
+  /* what kittens do on their own: wander (mostly inside their room), nap, play, visit a friend, use furniture */
   const spots = () => Object.keys(DECO_SPOT).filter(owns).map(id => { const p = pos(id), s = DECO_SPOT[id]; return [id, p[0] + s[0], p[1] + s[1], s[2]]; });
+  let rang = 3;
+  const cool = (c, ms) => { c.busy = Date.now() + ms; };
+  const arrive = (c, id, s) => {
+    if (id === 'box'){ c.el.classList.add('inbox'); bubble(c, s[3]); cool(c, 4200); timers.push(setTimeout(() => { c.el.classList.remove('inbox'); c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); bubble(c, '😹'); }, 3600)); return; }
+    if (id === 'rangoons'){
+      if (rang < 1){ bubble(c, '😿'); return; }
+      rang--; if (items.rangoons) items.rangoons.innerHTML = RANG(rang);
+      const cr = h('span', {class:'carry', html:RANG1}); c.el.append(cr); bubble(c, '😼'); cool(c, 6500);
+      timers.push(setTimeout(() => { const rm = Math.floor(c.x / 100), to = (rm + 1 + Math.floor(Math.random() * (N - 1))) % N; moveTo(c, to * 100 + 8 + Math.random() * 60, 120 + Math.random() * 50, true); }, 600));
+      timers.push(setTimeout(() => { cr.remove(); bubble(c, '😋'); }, 4200));
+      timers.push(setTimeout(() => { rang = Math.min(3, rang + 1); if (items.rangoons) items.rangoons.innerHTML = RANG(rang); }, 14000));
+      return;
+    }
+    if (id === 'tunnel'){
+      cool(c, 4000); c.el.classList.add('gone'); const rx = c.x + 21, ry = c.y;
+      timers.push(setTimeout(() => { c.el.style.transition = 'none'; c.el.style.left = (rx / N) + '%'; c.x = rx; void c.el.offsetWidth; c.el.style.transition = ''; c.el.classList.remove('gone'); c.el.classList.remove('flip'); c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); bubble(c, '😹'); }, 1100));
+      return;
+    }
+    if (id === 'basket'){
+      const t = h('span', {class:'ftoy'}, ['🧶', '🎾', '🐁'][Math.floor(Math.random() * 3)]); t.style.left = (c.x / N) + '%'; t.style.top = (c.y - 6) + 'px'; room.append(t); timers.push(setTimeout(() => t.remove(), 1600));
+      c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); bubble(c, s[3]); cool(c, 2600); return;
+    }
+    if (SLEEPS.includes(id)){ c.el.classList.add('sleep'); cool(c, 6000); } else { c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); if (id === 'window') cool(c, 5000); }
+    bubble(c, s[3]);
+  };
+  /* send a kitten to a piece of furniture; it does the thing when it gets there */
+  const visit = (c, id) => {
+    const s = spots().find(x => x[0] === id); if (!s) return false;
+    cool(c, 7000); c.el.classList.remove('inbox'); moveTo(c, s[1] + Math.random() * 4, s[2]); timers.push(setTimeout(() => arrive(c, id, s), 2300)); return true;
+  };
   const act = () => {
     const now = Date.now();
     cats.forEach((c, i) => {
       if (c.busy > now || Math.random() < .35) return;
       const r = Math.random(), sp = spots();
       if (r < .25 && cats.length > 1){ const o = cats[(i + 1 + Math.floor(Math.random() * (cats.length - 1))) % cats.length]; moveTo(c, o.x + (o.x % 100 > 40 ? -12 : 12), o.y + 4); timers.push(setTimeout(() => { bubble(c, '💕'); bubble(o, '💕'); }, 2300)); }
-      else if (r < .6 && sp.length){ const s = sp[Math.floor(Math.random() * sp.length)]; moveTo(c, s[1] + Math.random() * 6, s[2]); timers.push(setTimeout(() => { if (SLEEPS.includes(s[0])){ c.el.classList.add('sleep'); c.busy = Date.now() + 6000; } else { c.el.classList.remove('jump'); void c.el.offsetWidth; c.el.classList.add('jump'); } bubble(c, s[3]); }, 2300)); }
+      else if (r < .6 && sp.length){ visit(c, sp[Math.floor(Math.random() * sp.length)][0]); }
       else { const rm = Math.floor(c.x / 100), to = Math.random() < .18 ? clamp(rm + (Math.random() < .5 ? -1 : 1), 0, N - 1) : rm; moveTo(c, to * 100 + 4 + Math.random() * 74, 114 + Math.random() * 62); }
     });
     paintNav();
   };
+  /* tap any piece of furniture and the nearest kitten comes to use it */
+  Object.keys(items).forEach(id => {
+    if (!DECO_SPOT[id] && id !== 'lamp') return;
+    items[id].classList.add('tap');
+    items[id].addEventListener('click', () => {
+      if (mode || !cats.length) return;
+      if (id === 'lamp') items[id].classList.toggle('lit');
+      const fx = pos(id)[0], c = cats.slice().sort((a, b) => Math.abs(a.x - fx) - Math.abs(b.x - fx))[0];
+      if (!visit(c, id)) bubble(c, '🐾');
+    });
+  });
   const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const loop = still ? null : setInterval(act, 3000);
   cleanup = () => { if (loop) clearInterval(loop); timers.forEach(clearTimeout); if (edgeRaf) cancelAnimationFrame(edgeRaf); cats.forEach(c => clearTimeout(c.wt)); };

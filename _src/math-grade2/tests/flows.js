@@ -75,7 +75,7 @@ const btn = t => q$('button').find(b => b.textContent.trim().startsWith(t));
   /* ---- the shop ---- */
   ok(q$('#nav button').map(b => b.textContent).join() === 'Learn,Litter,Shop,Progress,Club', 'tabs: Study and Games are gone');
   click(q$('#nav button').find(b => b.textContent === 'Shop'));
-  ok(q$('.shopc').length === 8 && /Star gifts/.test(d.querySelector('#view').textContent), 'shop shows 8 items and the star gifts');
+  ok(q$('.shopc').length === 13 && /Star gifts/.test(d.querySelector('#view').textContent), 'shop shows 13 items and the star gifts');
   const shopBtn = name => q$('.shopc').find(c => c.textContent.includes(name)).querySelector('button');
   ok(shopBtn('Cozy sofa').disabled && !shopBtn('Pillow').disabled, 'sofa too expensive, pillow affordable');
   const fish0 = T.S().fish; click(shopBtn('Pillow'));
@@ -142,6 +142,20 @@ const btn = t => q$('button').find(b => b.textContent.trim().startsWith(t));
   ok(/12\s*÷\s*3\s*=\s*4/.test(d.querySelector('.sf-eq').textContent) && /3 × 4 = 12/.test(d.querySelector('.sf-eq').textContent), 'equation fills in: ' + d.querySelector('.sf-eq').textContent);
   click(btn('Next fish')); ok(/÷/.test(d.querySelector('.sf-eq').textContent) && !/[^\d]\d+\s*÷\s*3\s*=\s*4/.test('x') , 'next problem loads'); ok(T.S().sh.n === 1, 'counter advanced');
 
-  console.log(errs.length ? errs.join('\n') : 'NO ERRORS · share fish, count by 10s (no negatives, running list, flash, star), break apart, take away');
+  /* ---- interactive furniture ---- */
+  { const S0 = T.S(); S0.cats = [{name:'Luna', coat:0, wear:[]}, {name:'Mo', coat:1, wear:[]}]; S0.got = 12; S0.fish = 99; S0.shop = {rangoons:1, basket:1, tunnel:1, window:1, hammock:1, lamp:1, table:1};
+    click(q$('#nav button')[1]); const it = id => d.querySelector('.it[data-id="' + id + '"]'), cat = i => q$('.cat')[i];
+    ok(q$('.it').length >= 12, 'new furniture placed: ' + q$('.it').length);
+    click(it('rangoons')); await sleep(2700);
+    ok(q$('.carry').length === 1, 'a kitten carries a crab rangoon'); ok(q$('g', it('rangoons')).length === 2, 'plate has 2 left: ' + q$('g', it('rangoons')).length);
+    click(it('tunnel')); await sleep(2500); ok(q$('.cat.gone').length >= 1, 'kitten goes through the tunnel'); await sleep(1300); ok(q$('.cat.gone').length === 0, 'kitten comes out');
+    click(it('basket')); await sleep(2500); ok(q$('.ftoy').length >= 1, 'a toy pops out of the basket');
+    click(it('box')); await sleep(2500); ok(q$('.cat.inbox').length >= 1, 'kitten hops in the box'); await sleep(4000); ok(q$('.cat.inbox').length === 0, 'kitten pops out');
+    click(it('hammock')); await sleep(2500); ok(q$('.cat.sleep').length >= 1, 'kitten naps in the hammock');
+    click(it('window')); await sleep(2500); ok(q$('.bub').some(b => /🐦/.test(b.textContent)), 'kitten watches the window');
+    click(it('lamp')); ok(it('lamp').classList.contains('lit'), 'lamp lights up'); click(it('lamp')); ok(!it('lamp').classList.contains('lit'), 'lamp switches off');
+    click(btn('🎨') || btn('🛋️')); click(it('rangoons')); await sleep(300); ok(q$('.carry').length <= 1, 'decorate mode does not call kittens');
+    click(q$('#nav button')[0]); }
+  console.log(errs.length ? errs.join('\n') : 'NO ERRORS · furniture, share fish, count by 10s (no negatives, running list, flash, star), break apart, take away');
   process.exit(errs.length ? 1 : 0);
 })().catch(e => { console.log('CRASH ' + e.stack); process.exit(1); });
